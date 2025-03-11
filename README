@@ -7,3 +7,9 @@ This code will download:
 
 Then will run with the same parameters and output the result as a static website and publish it on github pages.
 
+To generate the static site (linux/macos only):
+
+```bash
+bash run.sh
+```
+
