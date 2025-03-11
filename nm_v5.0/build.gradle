@@ -20,17 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation(fileTree(include: ['*.jar'], dir: 'input/scriptrunnerv5.0/lib'))
-}
-
-testing {
-    suites {
-        // Configure the built-in test suite
-        test {
-            // Use Spock test framework
-            useSpock('2.2-groovy-3.0')
-        }
-    }
+    implementation(fileTree('../input/scriptrunnerv5.0/lib'))
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
