@@ -21,6 +21,7 @@
 
 import groovy.sql.Sql
 import org.h2gis.api.ProgressVisitor
+import org.noise_planet.noisemodelling.wps.Acoustic_Tools.Create_Isosurface
 import org.noise_planet.noisemodelling.wps.NoiseModelling.Noise_level_from_source
 import org.noise_planet.noisemodelling.wps.NoiseModelling.Road_Emission_from_Traffic
 import org.noise_planet.noisemodelling.wps.Receivers.Delaunay_Grid
@@ -30,7 +31,12 @@ import org.noise_planet.noisemodelling.wps.Import_and_Export.Export_Table
 import org.noise_planet.noisemodelling.wps.Import_and_Export.Import_Asc_File
 import org.noise_planet.noisemodelling.wps.Import_and_Export.Import_File
 import org.h2gis.utilities.JDBCUtilities
+
+import java.lang.management.ManagementFactory
+import java.lang.management.ThreadInfo
+import java.lang.management.ThreadMXBean
 import java.sql.Connection
+import java.util.concurrent.TimeUnit
 
 title = 'NoiseModelling benchmark simulation'
 description = 'NoiseModelling benchmark simulation'
@@ -39,10 +45,25 @@ inputs = [:]
 
 outputs = [result: [name: 'Result output string', title: 'Result output string', description: 'This type of result does not allow the blocks to be linked together.', type: String.class]]
 
+private static String threadDump(boolean lockedMonitors, boolean lockedSynchronizers) {
+    StringBuffer threadDump = new StringBuffer(System.lineSeparator());
+    ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+    for(ThreadInfo threadInfo : threadMXBean.dumpAllThreads(lockedMonitors, lockedSynchronizers)) {
+        threadDump.append(threadInfo.toString());
+    }
+    return threadDump.toString();
+}
+
 static def exec(Connection connection, input) {
+
+    def outputFolder = new File("output/v5.0")
+    if (!outputFolder.exists()) {
+        outputFolder.mkdir()
+    }
 
     def redoDelaunayGrid = false
     def redoRoadsEmission = false
+    def redoCompute = true
 
     if (!JDBCUtilities.tableExists(connection, "BUILDINGS")) {
         new Import_File().exec(connection,
@@ -143,24 +164,55 @@ static def exec(Connection connection, input) {
                  "tableToExport": "LW_ROADS_LW"])
     }
 
-    new Noise_level_from_source().exec(connection,
-            ["tableBuilding"     : "BUILDINGS",
-             "tableSources"      : "LW_ROADS",
-             "tableReceivers"    : "RECEIVERS",
-             "tableDEM"          : "DEM",
-             "tableGroundAbs"    : "GROUNDS",
-             "confReflOrder"     : 1,
-             "confMaxSrcDist"    : 300,
-             "confDiffHorizontal": true,
-             "confMaxError"      : 0
-            ])
+    long elapsed = 0
 
-    def outputFolder = new File("output/v5.0")
-    if(!outputFolder.exists()){
-        outputFolder.mkdir()
+    if(redoCompute) {
+        long startCompute = System.currentTimeMillis()
+
+        new Noise_level_from_source().exec(connection,
+                ["tableBuilding"     : "BUILDINGS",
+                 "tableSources"      : "LW_ROADS",
+                 "tableReceivers"    : "RECEIVERS",
+                 "tableDEM"          : "DEM",
+                 "tableGroundAbs"    : "GROUNDS",
+                 "confReflOrder"     : 1,
+                 "confMaxSrcDist"    : 300,
+                 "confDiffHorizontal": true,
+                 "confMaxError"      : 0
+                ])
+
+        elapsed = System.currentTimeMillis() - startCompute
+
+        new Export_Table().exec(connection,
+                ["exportPath"   : "$outputFolder/RECEIVERS_LEVEL.shp",
+                 "tableToExport": "RECEIVERS_LEVEL"])
     }
 
+    new Create_Isosurface().exec(connection,
+        ["resultTable": "RECEIVERS_LEVEL",
+         "keepTriangles": true,
+         "smoothCoefficient" : 0])
+
+    sql.execute("DROP TABLE IF EXISTS KEPLERGL")
+
+    sql.execute("CREATE TABLE KEPLERGL AS SELECT ST_Transform(THE_GEOM, 4326) THE_GEOM, ISOLABEL FROM CONTOURING_NOISE_MAP WHERE PERIOD='DEN'")
+
     new Export_Table().exec(connection,
-            ["exportPath"   : "$outputFolder/RECEIVERS_LEVEL.shp",
-             "tableToExport": "RECEIVERS_LEVEL"])
+            ["exportPath"   : "$outputFolder/KEPLERGL.geojson",
+             "tableToExport": "KEPLERGL"])
+
+    threadDump(true, true)
+
+
+    def cpt = sql.firstRow("SELECT COUNT(*) FROM RECEIVERS")[0] as Integer
+
+    long hours = TimeUnit.MILLISECONDS.toHours(elapsed)
+    elapsed -= TimeUnit.HOURS.toMillis(hours)
+    long minutes = TimeUnit.MILLISECONDS.toMinutes(elapsed)
+    elapsed -= TimeUnit.MINUTES.toMillis(minutes)
+    long seconds = TimeUnit.MILLISECONDS.toSeconds(elapsed)
+    String timeString = String.format(Locale.ROOT, "%02d:%02d:%02d", hours, minutes, seconds)
+
+    println("Compuation of $cpt receivers in $timeString ( ${elapsed/cpt} milliseconds per receiver")
+
 }
