@@ -291,7 +291,7 @@ static def exec(Connection connection, Map input) {
             ]
                 def outFile = new File("$outputFolder/stats_${version}.json")
                 outFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(result))
-        
+
     }
     else{
             long maxUsedMemory = 0
