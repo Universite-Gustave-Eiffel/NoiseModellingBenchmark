@@ -143,7 +143,7 @@ run_simulation() {
         local groovy_out="output/${version}/stats_${version}.json"
         if [ -f "$groovy_out" ]; then
             cp "$groovy_out" "$stats_file"
-        fi    
+        fi
     fi
 }
 
