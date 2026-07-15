@@ -14,3 +14,4 @@
 *.prj filter=lfs diff=lfs merge=lfs -text
 *.shx filter=lfs diff=lfs merge=lfs -text
 DEM.geojson filter=lfs diff=lfs merge=lfs -text
+input/clisson/clisson/DEM.geojson filter=lfs diff=lfs merge=lfs -text
