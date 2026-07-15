@@ -85,7 +85,7 @@ static def exec(Connection connection, Map input) {
 
     if (!JDBCUtilities.tableExists(connection, "BUILDINGS")) {
         new Import_File().exec(connection,
-                ["pathFile" : "input/clisson/clisson/BUILDINGS.shp",
+                ["pathFile" : "input/clisson/clisson/BUILDINGS.geojson",
                  "inputSRID": "2154",
                  "tableName": "BUILDINGS"])
     }
@@ -100,7 +100,7 @@ static def exec(Connection connection, Map input) {
 
     if (!JDBCUtilities.tableExists(connection, "GROUNDS")) {
         new Import_File().exec(connection,
-                ["pathFile" : "input/clisson/clisson/GROUNDS.shp",
+                ["pathFile" : "input/clisson/clisson/GROUNDS.geojson",
                  "inputSRID": "2154",
                  "tableName": "GROUNDS"])
     }
@@ -114,14 +114,14 @@ static def exec(Connection connection, Map input) {
 
     if (!JDBCUtilities.tableExists(connection, "RECEIVERS")) {
         new Import_File().exec(connection,
-                ["pathFile" : "input/clisson/clisson/RECEIVERS.shp",
+                ["pathFile" : "input/clisson/clisson/RECEIVERS.geojson",
                  "inputSRID": "2154",
                  "tableName": "RECEIVERS"])
     }
 
     if (!JDBCUtilities.tableExists(connection, "TRIANGLES")) {
         new Import_File().exec(connection,
-                ["pathFile" : "input/clisson/clisson/TRIANGLES.shp",
+                ["pathFile" : "input/clisson/clisson/TRIANGLES.geojson",
                  "inputSRID": "2154",
                  "tableName": "TRIANGLES"])
     }
@@ -150,7 +150,7 @@ static def exec(Connection connection, Map input) {
     if (redoRoadsEmission) {
         if (!JDBCUtilities.tableExists(connection, "ROADS")) {
             new Import_File().exec(connection,
-                    ["pathFile" : "input/clisson/clisson/ROADS.shp",
+                    ["pathFile" : "input/clisson/clisson/ROADS.geojson",
                      "inputSRID": "2154",
                      "tableName": "ROADS"])
         }
