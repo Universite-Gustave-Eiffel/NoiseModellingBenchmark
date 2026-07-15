@@ -80,6 +80,7 @@ find_wps_binary() {
         return 1
     fi
     chmod +x "$bin"
+    echo "$bin"
 }
 find_wps_binary_v6() {
     local nm_dir="$1"
@@ -89,6 +90,7 @@ find_wps_binary_v6() {
         return 1
     fi
     chmod +x "$bin"
+    echo "$bin"
 }
 
 run_simulation() {
@@ -141,6 +143,7 @@ run_simulation() {
         local groovy_out="output/${version}/stats_${version}.json"
         if [ -f "$groovy_out" ]; then
             cp "$groovy_out" "$stats_file"
+        fi    
     fi
 }
 
@@ -187,6 +190,7 @@ copy_geojson() {
 }
 
 main() {
+    download_clisson
     local failed_versions=()
     for version in "${!NM_VERSIONS[@]}"; do
 
