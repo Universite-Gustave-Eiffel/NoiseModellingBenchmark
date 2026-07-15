@@ -32,6 +32,18 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      - name: Check BUILDINGS.geojson
+        run: |
+          echo "File info:"
+          file input/clisson/clisson/BUILDINGS.geojson
+      
+          echo "First lines:"
+          head -5 input/clisson/clisson/BUILDINGS.geojson
+      
+          echo "Search version:"
+          grep -n "version" input/clisson/clisson/BUILDINGS.geojson || true
+    
       - name: Cache NM binaries only
         uses: actions/cache@v4
         with:
