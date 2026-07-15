@@ -48,6 +48,11 @@ jobs:
       - name: Run benchmark
         run: |
           bash -x benchmark_run.sh
+      - name: Show simulation logs
+        if: always()
+        run: |
+          find output -name simulation.log -exec sh -c 'echo ==== $1 ====; tail -100 "$1"' _ {} \;
+    
 
 
       - name: Upload Pages artifact
