@@ -12,7 +12,6 @@ NM_VERSIONS["v5.0.0"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelli
 NM_VERSIONS["v5.0.1"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v5.0.1/NoiseModelling_without_gui-5.0.1.zip"
 NM_VERSIONS["v6.0.0"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v6.0.0/NoiseModelling_6.0.0.zip"
 
-CLISSON_URL="https://github.com/Universite-Gustave-Eiffel/NoiseModellingBenchmark/releases/download/datav1/clisson.zip"
 GROOVY_SCRIPT="nm_v5.0/src/main/groovy/runscriptV5.0.groovy"
 GROOVY_SCRIPT_v6="nm_v5.0/src/main/groovy/runscriptV6.0.groovy"
 
@@ -29,18 +28,7 @@ download_clisson() {
     if [ -d "$clisson_dir/clisson" ]; then
         return 0
     fi
-
-    local zip="$INPUT_DIR/clisson.zip"
-
-    if [ ! -f "$zip" ]; then
-        curl -fL "$CLISSON_URL" -o "$zip" \
-            --progress-bar \
-            || { return 1; }
-    fi
-
-
-    unzip -q "$zip" -d "$clisson_dir" \
-        || { return 1; }
+    cp -r "clisson/" "$clisson_dir/"
 
 }
 
@@ -55,19 +43,16 @@ download_nm_version() {
         return 0
     fi
 
-    echo "teléléchargement NM $version..."
     curl -fL "$url" -o "$zip_name" \
         --progress-bar \
         || { return 1; }
 
-    echo "extraction"
 
     local tmp_dir
     tmp_dir=$(mktemp -d)
 
     unzip -q "$zip_name" -d "$tmp_dir" \
         || {
-            echo "echec NM $version."
             rm -rf "$tmp_dir"
             return 1
         }
@@ -84,7 +69,6 @@ download_nm_version() {
 
     rm -rf "$tmp_dir"
 
-    echo "NModelling $version prêt "
 
 }
 
@@ -96,7 +80,6 @@ find_wps_binary() {
         return 1
     fi
     chmod +x "$bin"
-    echo "$bin"
 }
 find_wps_binary_v6() {
     local nm_dir="$1"
@@ -106,7 +89,6 @@ find_wps_binary_v6() {
         return 1
     fi
     chmod +x "$bin"
-    echo "$bin"
 }
 
 run_simulation() {
@@ -116,7 +98,6 @@ run_simulation() {
     local stats_file="$out_dir/stats_${version}.json"
 
     mkdir -p "$out_dir"
-    echo "Lancement simulaton NM $version..."
 
     local wps_bin
     if [ $version = "v6.0.0" ]; then
@@ -130,9 +111,6 @@ run_simulation() {
 
     local start_ts
     start_ts=$(date +%s)
-    local db
-    db="dbtest4_1"
-    echo "avant sum"
     if [ $version = "v4.0.0" ] || [ $version = "v4.0.1" ]; then
         "$wps_bin" \
             -w"$workspace" \
@@ -152,8 +130,6 @@ run_simulation() {
           -NM_version "$version" \
           > "$out_dir/simulation.log" 2>&1
     fi
-      #-w./ -snoisemodelling/wps/Import_and_Export/Import_File.groovy pathFile=resources/org/noise_planet/noisemodelling/wps/ground_type.shp
-    echo "after sum"
     local exit_code=$?
 
     if [ $exit_code -ne 0 ]; then
@@ -165,9 +141,6 @@ run_simulation() {
         local groovy_out="output/${version}/stats_${version}.json"
         if [ -f "$groovy_out" ]; then
             cp "$groovy_out" "$stats_file"
-        else
-            echo "fichier stats introuvable."
-        fi
     fi
 }
 
@@ -178,7 +151,6 @@ aggregate_results() {
     for version in "${!NM_VERSIONS[@]}"; do
         local stats="$OUTPUT_DIR/$version/stats_${version}.json"
         if [ ! -f "$stats" ]; then
-            echo "stats manquants pour $version"
             continue
         fi
 
@@ -210,42 +182,31 @@ copy_geojson() {
             mkdir -p "$DATA_DIR/$version"
             cp "$geojson" "$DATA_DIR/$version/KEPLERGL.geojson"
             cp "$receivgeojson" "$DATA_DIR/$version/RECEIVERS_LEVEL.geojson"
-        else
-            echo "pas de geojson  pour $version."
         fi
     done
 }
 
 main() {
-    #download_clisson
     local failed_versions=()
-#    for version in "${!NM_VERSIONS[@]}"; do
-#
-#        download_nm_version "$version" "${NM_VERSIONS[$version]}" || {
-#           failed_versions+=("$version")
-#            continue
-#        }
-#
-#        run_simulation "$version" || {
-#            failed_versions+=("$version")
-#            continue
-#        }
-#    done
+    for version in "${!NM_VERSIONS[@]}"; do
 
-    echo ""
+        download_nm_version "$version" "${NM_VERSIONS[$version]}" || {
+           failed_versions+=("$version")
+            continue
+        }
+
+        run_simulation "$version" || {
+            failed_versions+=("$version")
+            continue
+        }
+    done
+
+
     aggregate_results
     copy_geojson
 
-    #echo ""
-    echo "generation du site statique..."
     python3 generate_site.py
 
-    echo ""
-    if [ ${#failed_versions[@]} -eq 0 ]; then
-        echo " terminé succes"
-    else
-        echo "terminé erreurs "
-    fi
 }
 
 main "$@"

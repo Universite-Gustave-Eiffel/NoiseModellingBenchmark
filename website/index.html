@@ -6,6 +6,8 @@
   <title>NoiseModelling — Benchmark</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
   <style>
@@ -253,6 +255,55 @@
       margin-bottom: 1rem;
     }
 
+    /* ── PAIR SELECTOR ── */
+    .pair-selector {
+      display: flex;
+      align-items: flex-end;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .pair-field {
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+      min-width: 180px;
+      flex: 1;
+    }
+
+    .pair-field label {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .pair-field select {
+      font-family: var(--font-mono);
+      font-size: .82rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: .55rem .7rem;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color .15s;
+    }
+
+    .pair-field select:hover,
+    .pair-field select:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    .pair-arrow {
+      color: var(--accent);
+      font-size: 1.1rem;
+      padding-bottom: .55rem;
+    }
+
     .map-btn {
       font-family: var(--font-mono);
       font-size: .72rem;
@@ -368,7 +419,6 @@
 
 <header>
   <div class="logo-block">
-    <span class="logo-label">Université Gustave Eiffel · UMRAE · Lab-STICC</span>
     <h1>Noise<span>Modelling</span><br>Benchmark</h1>
   </div>
   <div class="header-meta" id="header-meta">
@@ -386,52 +436,59 @@
     </div>
   </section>
 
-  <!-- ── CHART ── -->
+
+  <!-- ── HISTOGRAM ── -->
   <section>
-    <div class="section-title">LAEQ mean &amp; std — version comparison</div>
+    <div class="section-title">LAEQ distribution — receivers per noise band</div>
     <div class="chart-wrap">
-      <canvas id="chart" height="220"></canvas>
+      <div class="map-controls" id="histo-controls"></div>
+      <canvas id="histo-chart" height="220"></canvas>
     </div>
   </section>
 
-  <!-- ── TABLE ── -->
+
+  <!-- ── BOXPLOT ── -->
   <section>
-    <div class="section-title">Full results table</div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Version</th>
-            <th>Mean LAEQ (dB)</th>
-            <th>Std dev (dB)</th>
-            <th>Computation time</th>
-            <th>Receivers</th>
-            <th>ms / receiver</th>
-          </tr>
-        </thead>
-        <tbody id="table-body">
-          <tr><td colspan="6" style="text-align:center;color:var(--text-muted)">Loading…</td></tr>
-        </tbody>
-      </table>
+    <div class="section-title">LAEQ distribution per version — boxplot</div>
+    <div class="chart-wrap">
+      <canvas id="boxplot-chart" style="width:100%;min-height:420px"></canvas>
+      <div id="boxplot-nodata" style="display:none;padding:2rem;text-align:center;font-family:'Space Mono',monospace;font-size:.8rem;color:var(--text-muted)">
+        No data — run the benchmark with at least 1 version.
+      </div>
     </div>
   </section>
 
-  <!-- ── MAP ── -->
+
+  <!-- ── VERSION PAIR SELECTOR ── -->
   <section>
-    <div class="section-title">Noise map — Clisson</div>
-    <div class="map-controls" id="map-controls"></div>
-    <div id="map"></div>
-    <div class="noise-legend">
-      <span class="legend-label">LAEQ DEN (dBA) :</span>
-      <div class="legend-item"><div class="legend-swatch" style="background:#2196f3"></div>&lt; 45</div>
-      <div class="legend-item"><div class="legend-swatch" style="background:#4caf50"></div>45–50</div>
-      <div class="legend-item"><div class="legend-swatch" style="background:#8bc34a"></div>50–55</div>
-      <div class="legend-item"><div class="legend-swatch" style="background:#ffeb3b"></div>55–60</div>
-      <div class="legend-item"><div class="legend-swatch" style="background:#ff9800"></div>60–65</div>
-      <div class="legend-item"><div class="legend-swatch" style="background:#f44336"></div>65–70</div>
-      <div class="legend-item"><div class="legend-swatch" style="background:#9c27b0"></div>&gt; 70</div>
+    <div class="section-title">Version comparison</div>
+    <div class="pair-selector">
+      <div class="pair-field">
+        <label for="select-vA">Version A</label>
+        <select id="select-vA"></select>
+      </div>
+      <div class="pair-arrow">&#8596;</div>
+      <div class="pair-field">
+        <label for="select-vB">Version B</label>
+        <select id="select-vB"></select>
+      </div>
+    </div>
+    <div id="comparisons-wrap">
+      <div class="empty">Loading…</div>
     </div>
   </section>
+
+  <!-- ── DENSITY ── -->
+  <section>
+    <div class="section-title">Delta LAEQ density — distribution of differences per receiver</div>
+    <div class="chart-wrap">
+      <canvas id="density-chart" style="width:100%;min-height:320px"></canvas>
+      <div id="density-nodata" style="display:none;padding:2rem;text-align:center;font-family:'Space Mono',monospace;font-size:.8rem;color:var(--text-muted)">
+        No delta data — run benchmark with at least 2 versions.
+      </div>
+    </div>
+  </section>
+
 
 </main>
 
@@ -446,6 +503,7 @@
 
 <!-- Chart.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
 
 <script>
 // ─────────────────────────────────────────────
@@ -456,49 +514,11 @@ const RESULTS_URL = 'data/results.json';
 // Color palette per version index
 const PALETTE = ['#00e5ff','#ff6b35','#7fff6b','#f7d716','#c77dff'];
 
-// Noise iso-color map (matches NoiseModelling defaults)
-const ISO_COLORS = {
-  '< 45':  '#2196f3',
-  '45-50': '#4caf50',
-  '50-55': '#8bc34a',
-  '55-60': '#ffeb3b',
-  '60-65': '#ff9800',
-  '65-70': '#f44336',
-  '> 70':  '#9c27b0',
-};
-
-function isoColor(label) {
-  if (!label) return '#888';
-  const l = label.trim();
-  for (const [k, v] of Object.entries(ISO_COLORS)) {
-    if (l.includes(k) || k.includes(l)) return v;
-  }
-  // Fallback: try to parse numeric range
-  const num = parseFloat(l);
-  if (!isNaN(num)) {
-    if (num < 45) return '#2196f3';
-    if (num < 50) return '#4caf50';
-    if (num < 55) return '#8bc34a';
-    if (num < 60) return '#ffeb3b';
-    if (num < 65) return '#ff9800';
-    if (num < 70) return '#f44336';
-    return '#9c27b0';
-  }
-  return '#888';
-}
-
 // ─────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────
 function fmt(n, dec = 2) {
   return typeof n === 'number' ? n.toFixed(dec) : '—';
-}
-
-function msPerReceiver(row) {
-  if (!row.time || !row.nb_receiver) return null;
-  const [h, m, s] = row.time.split(':').map(Number);
-  const ms = ((h * 3600 + m * 60 + s) * 1000);
-  return (ms / row.nb_receiver).toFixed(1);
 }
 
 // ─────────────────────────────────────────────
@@ -509,142 +529,43 @@ function renderCards(data) {
   if (!data.length) { grid.innerHTML = '<div class="empty">No results found.</div>'; return; }
 
   grid.innerHTML = data.map((row, i) => {
-    const color = PALETTE[i % PALETTE.length];
-    const msPR = msPerReceiver(row);
+    const color = PALETTE[i];
     return `
       <div class="card" style="--card-accent:${color}">
         <div class="card-version">${row.version}</div>
         <div class="card-stats">
           <div class="stat-row">
             <span class="stat-label">Mean LAEQ</span>
-            <span class="stat-value" style="color:${color}">${fmt(row.mean)} dB</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Std dev</span>
-            <span class="stat-value accent2">± ${fmt(row.std)} dB</span>
+            <span class="stat-value accent">${fmt(row.mean)} dB</span>
           </div>
           <div class="stat-row">
             <span class="stat-label">Compute time</span>
             <span class="stat-value accent3">${row.time || '—'}</span>
           </div>
           <div class="stat-row">
-            <span class="stat-label">Receivers</span>
-            <span class="stat-value">${row.nb_receiver?.toLocaleString() ?? '—'}</span>
+            <span class="stat-label">Compute time Per Receiver</span>
+            <span class="stat-value accent2">${row.timePerReceive  || '—'} ms</span>
           </div>
-          ${msPR ? `<div class="stat-row">
-            <span class="stat-label">ms / receiver</span>
-            <span class="stat-value" style="color:var(--text-muted)">${msPR}</span>
-          </div>` : ''}
+          <div class="stat-row">
+            <span class="stat-label">Rays's number</span>
+            <span class="stat-value">${row.nbRays || '—'}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Compute time Per Ray</span>
+            <span class="stat-value">${row.timePerRays || '—'}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Conf Max Error</span>
+            <span class="stat-value">${row.confMaxError || '—'}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Max Used Memory</span>
+            <span class="stat-value accent2"> ${fmt(row.memory)} Go</span>
+          </div>
         </div>
       </div>
     `;
   }).join('');
-}
-
-// ─────────────────────────────────────────────
-// RENDER TABLE
-// ─────────────────────────────────────────────
-function renderTable(data) {
-  const tbody = document.getElementById('table-body');
-  if (!data.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty">No results.</td></tr>'; return; }
-
-  // Find best mean (lowest = quietest) for highlighting
-  const means = data.map(r => r.mean).filter(Boolean);
-  const bestMean = Math.min(...means);
-
-  tbody.innerHTML = data.map(row => {
-    const msPR = msPerReceiver(row);
-    const isBest = Math.abs(row.mean - bestMean) < 0.01;
-    return `<tr>
-      <td class="mono">${row.version}</td>
-      <td class="${isBest ? 'good' : ''}">${fmt(row.mean)} dB</td>
-      <td>± ${fmt(row.std)} dB</td>
-      <td class="good">${row.time || '—'}</td>
-      <td>${row.nb_receiver?.toLocaleString() ?? '—'}</td>
-      <td>${msPR ?? '—'}</td>
-    </tr>`;
-  }).join('');
-}
-
-// ─────────────────────────────────────────────
-// RENDER CHART
-// ─────────────────────────────────────────────
-function renderChart(data) {
-  const labels = data.map(r => r.version);
-  const means  = data.map(r => r.mean);
-  const stds   = data.map(r => r.std);
-
-  const ctx = document.getElementById('chart').getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Mean LAEQ (dB)',
-          data: means,
-          backgroundColor: data.map((_, i) => PALETTE[i % PALETTE.length] + '33'),
-          borderColor:     data.map((_, i) => PALETTE[i % PALETTE.length]),
-          borderWidth: 2,
-          borderRadius: 2,
-          yAxisID: 'y',
-        },
-        {
-          label: 'Std dev (dB)',
-          data: stds,
-          type: 'line',
-          borderColor: '#ff6b35',
-          backgroundColor: 'transparent',
-          pointBackgroundColor: '#ff6b35',
-          pointRadius: 5,
-          borderWidth: 2,
-          tension: 0.3,
-          yAxisID: 'y2',
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      interaction: { mode: 'index' },
-      plugins: {
-        legend: {
-          labels: {
-            color: '#6b7280',
-            font: { family: 'Space Mono', size: 11 },
-          }
-        },
-        tooltip: {
-          backgroundColor: '#12161f',
-          borderColor: '#252b3b',
-          borderWidth: 1,
-          titleColor: '#00e5ff',
-          bodyColor: '#e8eaf0',
-          titleFont: { family: 'Space Mono' },
-          bodyFont:  { family: 'Space Mono' },
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color: '#6b7280', font: { family: 'Space Mono', size: 11 } },
-          grid:  { color: '#252b3b' },
-        },
-        y: {
-          position: 'left',
-          ticks: { color: '#00e5ff', font: { family: 'Space Mono', size: 11 } },
-          grid:  { color: '#252b3b' },
-          title: { display: true, text: 'LAEQ (dB)', color: '#00e5ff',
-                   font: { family: 'Space Mono', size: 11 } },
-        },
-        y2: {
-          position: 'right',
-          ticks: { color: '#ff6b35', font: { family: 'Space Mono', size: 11 } },
-          grid:  { drawOnChartArea: false },
-          title: { display: true, text: 'Std dev (dB)', color: '#ff6b35',
-                   font: { family: 'Space Mono', size: 11 } },
-        }
-      }
-    }
-  });
 }
 
 // ─────────────────────────────────────────────
@@ -656,86 +577,665 @@ function renderHeaderMeta(data) {
   el.innerHTML = `
     <b>${data.length}</b> version${data.length > 1 ? 's' : ''} compared<br>
     Input: <b>Clisson, France</b><br>
-    Generated: <b>${date}</b>
   `;
   document.getElementById('footer-date').textContent = `Generated ${date}`;
 }
-
 // ─────────────────────────────────────────────
-// MAP
+// RENDER COMPARISONS
 // ─────────────────────────────────────────────
-let map, currentLayer = null;
+let pairComparisons = [];
 
-function initMap() {
-  map = L.map('map', { zoomControl: true }).setView([47.086, -1.27], 13);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
-  }).addTo(map);
+function findComparison(vA, vB) {
+  return pairComparisons.find(c =>
+    (c.version_a === vA && c.version_b === vB) ||
+    (c.version_a === vB && c.version_b === vA)
+  ) || null;
 }
 
-function loadGeoJSON(version) {
-  if (currentLayer) { map.removeLayer(currentLayer); currentLayer = null; }
+function renderComparisonCard(c, vA, vB) {
+  const wrap = document.getElementById('comparisons-wrap');
+  if (!c) {
+    wrap.innerHTML = '<div class="empty">No comparison data for this pair.</div>';
+    return;
+  }
 
-  fetch(`data/${version}/RECEIVERS_LEVEL.geojson`)
-    .then(r => {
-      if (!r.ok) throw new Error('GeoJSON not found');
-      return r.json();
-    })
-    .then(geojson => {
-      currentLayer = L.geoJSON(geojson, {
-        style: feature => {
-          const label = feature.properties?.ISOLABEL || '';
-          return {
-            fillColor: isoColor(label),
-            fillOpacity: 0.65,
-            color: 'transparent',
-            weight: 0,
-          };
+  const stable = c.rmse < 0.1;
+  const warn   = c.rmse >= 0.1 && c.rmse < 0.5;
+  const badgeColor = stable ? 'var(--accent3)' : warn ? 'var(--accent2)' : '#f44336';
+  const verdict = stable ? 'Numerically stable' : warn ? 'Minor differences' : 'Significant differences';
+  wrap.innerHTML = `
+    <div class="card" style="--card-accent:${badgeColor}">
+      <div class="card-version">
+        ${vA} → ${vB}
+        <span style="margin-left:.75rem;font-size:.65rem;color:${badgeColor}">${verdict}</span>
+      </div>
+      <div class="card-stats">
+        <div class="stat-row">
+          <span class="stat-label">Max delta / receiver</span>
+          <span class="stat-value accent2">${fmt(c.max_delta)} dB</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Mean |delta|</span>
+          <span class="stat-value">${fmt(c.mean_delta)} dB</span>
+        </div>
+        ${c.n_only_a || c.n_only_b ? `<div class="stat-row">
+          <span class="stat-label">Only in A / B</span>
+          <span class="stat-value" style="color:var(--text-muted);font-size:.8rem">${c.n_only_a} / ${c.n_only_b}</span>
+        </div>` : ''}
+      </div>
+    </div>`;
+}
+
+async function loadComparisons() {
+  try {
+    const res = await fetch('data/comparisons.json');
+    if (!res.ok) throw new Error();
+    pairComparisons = await res.json();
+  } catch(e) {
+    pairComparisons = [];
+  }
+  return pairComparisons;
+}
+
+function setupPairSelector() {
+  const selA = document.getElementById('select-vA');
+  const selB = document.getElementById('select-vB');
+
+  const versionSet = new Set();
+  pairComparisons.forEach(c => { versionSet.add(c.version_a); versionSet.add(c.version_b); });
+  const versions = [...versionSet].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+  if (!versions.length) {
+    document.getElementById('comparisons-wrap').innerHTML =
+            '<div class="empty">No comparison data yet — run benchmark with at least 2 versions.</div>';
+    return;
+  }
+
+  function fillSelect(sel, exclude) {
+    sel.innerHTML = versions
+      .filter(v => v !== exclude)
+      .map(v => `<option value="${v}">${v}</option>`)
+      .join('');
+  }
+
+  fillSelect(selA, null);
+  fillSelect(selB, null);
+
+
+  selA.value = versions[Math.max(0, versions.length - 2)];
+  selB.value = versions[versions.length - 1];
+  if (selA.value === selB.value && versions.length > 1) {
+    selA.value = versions[0];
+  }
+
+  function refresh() {
+    const vA = selA.value;
+    const vB = selB.value;
+    const c = findComparison(vA, vB);
+    renderComparisonCard(c, vA, vB);
+    drawDensityForPair(vA, vB, c);
+  }
+
+  selA.addEventListener('change', () => {
+    if (selA.value === selB.value) {
+      const alt = versions.find(v => v !== selA.value);
+      if (alt) selB.value = alt;
+    }
+    refresh();
+  });
+  selB.addEventListener('change', () => {
+    if (selB.value === selA.value) {
+      const alt = versions.find(v => v !== selB.value);
+      if (alt) selA.value = alt;
+    }
+    refresh();
+  });
+
+  refresh();
+}
+
+// ─────────────────────────────────────────────
+// HISTOGRAM
+// ─────────────────────────────────────────────
+const HISTO_BINS = ['<35','35-40','40-45','45-50','50-55','55-60','60-65','65-70','70-75','>75'];
+const HISTO_COLORS = [
+  '#2196f3','#2196f3','#4caf50','#4caf50','#8bc34a',
+  '#ffeb3b','#ff9800','#f44336','#9c27b0','#9c27b0'
+];
+
+let histoChart = null;
+
+function renderHistogram(data) {
+  const ctrl = document.getElementById('histo-controls');
+  const ctx  = document.getElementById('histo-chart').getContext('2d');
+
+  ctrl.innerHTML = data.map((row, i) =>
+    `<button class="map-btn${i === 0 ? ' active' : ''}" data-idx="${i}">${row.version}</button>`
+  ).join('');
+
+  function drawHisto(idx) {
+    const row    = data[idx];
+    const histo  = row.histogram || {};
+    const counts = HISTO_BINS.map(b => histo[b] || 0);
+    const total  = counts.reduce((a, b) => a + b, 0);
+    const ypcts   = counts.map(c => total ? +c : 0);
+
+    const noData = document.getElementById('histo-nodata');
+    if (total === 0) {
+      if (noData) noData.style.display = 'block';
+      return;
+    }
+    if (noData) noData.style.display = 'none';
+
+    if (histoChart) histoChart.destroy();
+
+    histoChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: HISTO_BINS,
+        datasets: [{
+          label: 'Receivers (%)',
+          data: ypcts,
+          backgroundColor: HISTO_COLORS.map(c => c + 'bb'),
+          borderColor: HISTO_COLORS,
+          borderWidth: 1,
+          borderRadius: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#12161f',
+            borderColor: '#252b3b',
+            borderWidth: 1,
+            titleColor: '#00e5ff',
+            bodyColor: '#e8eaf0',
+            titleFont: { family: 'Space Mono' },
+            bodyFont:  { family: 'Space Mono' },
+            callbacks: {
+              label: ctx => {
+                const pct =  total ? +((ctx.parsed.y / total) * 100) : 0;
+                const abs = counts[ctx.dataIndex];
+                return ` ${fmt(pct)}%  (${abs.toLocaleString()} receivers)`;
+              }
+            }
+          }
         },
-        onEachFeature: (feature, layer) => {
-          const label = feature.properties?.ISOLABEL || '?';
-          layer.bindTooltip(`${label} dBA`, {
-            className: 'leaflet-tooltip-dark',
-            sticky: true,
-          });
+        scales: {
+          x: {
+            ticks: { color: '#00e5ff', font: { family: 'Space Mono', size: 11 } },
+            grid:  { color: '#252b3b' },
+            title: { display: true, text: 'LAEQ band (dB)', color: '#00e5ff',
+                     font: { family: 'Space Mono', size: 11 } },
+          },
+          y: {
+            ticks: { color: '#00e5ff', font: { family: 'Space Mono', size: 11 },
+                     callback: v => v  },
+            grid:  { color: '#252b3b' },
+            title: { display: true, text: 'Receivers', color: '#00e5ff',
+                     font: { family: 'Space Mono', size: 11 } },
+          }
         }
-      }).addTo(map);
-
-      // Fit map to geojson bounds
-      try { map.fitBounds(currentLayer.getBounds(), { padding: [30, 30] }); } catch(e) {}
-    })
-    .catch(() => {
-      // No geojson for this version yet — silently ignore
+      }
     });
-}
-
-function renderMapControls(data) {
-  const ctrl = document.getElementById('map-controls');
-  ctrl.innerHTML = data.map((row, i) => `
-    <button class="map-btn${i === 0 ? ' active' : ''}" data-version="${row.version}">
-      ${row.version}
-    </button>
-  `).join('');
+  }
 
   ctrl.querySelectorAll('.map-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       ctrl.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      loadGeoJSON(btn.dataset.version);
+      drawHisto(+btn.dataset.idx);
     });
   });
 
-  // Load first version by default
-  if (data.length) loadGeoJSON(data[0].version);
+  if (data.length) drawHisto(0);
+}
+
+// ─────────────────────────────────────────────
+// BOXPLOT (distribution LAEQ par version)
+// ─────────────────────────────────────────────
+let boxplotChart = null;
+
+function quantile(sortedArr, q) {
+  const pos = (sortedArr.length - 1) * q;
+  const base = Math.floor(pos);
+  const rest = pos - base;
+  if (sortedArr[base + 1] !== undefined) {
+    return sortedArr[base] + rest * (sortedArr[base + 1] - sortedArr[base]);
+  }
+  return sortedArr[base];
+}
+
+function computeBoxStats(values) {
+  const sorted = [...values].sort((a, b) => a - b);
+  const q1 = quantile(sorted, 0.25);
+  const median = quantile(sorted, 0.5);
+  const q3 = quantile(sorted, 0.75);
+  const iqr = q3 - q1;
+  const lowerFence = q1 - 1.5 * iqr;
+  const upperFence = q3 + 1.5 * iqr;
+  const whiskerMin = sorted.find(v => v >= lowerFence) ?? sorted[0];
+  const whiskerMax = [...sorted].reverse().find(v => v <= upperFence) ?? sorted[sorted.length - 1];
+  const outliers = sorted.filter(v => v < whiskerMin || v > whiskerMax);
+  return { min: whiskerMin, q1, median, q3, max: whiskerMax, outliers, n: sorted.length };
+}
+
+async function renderBoxplot() {
+  const wrapper = document.getElementById('boxplot-chart').parentElement;
+  const nodata  = document.getElementById('boxplot-nodata');
+
+
+  let comparisons = (typeof pairComparisons !== 'undefined' && pairComparisons.length)
+    ? pairComparisons : [];
+  if (!comparisons.length) {
+    try { const r = await fetch('data/comparisons.json'); if (r.ok) comparisons = await r.json(); } catch(e) {}
+  }
+
+  const valuesByVersion = {};
+  comparisons.forEach(c => {
+    if (!c.scatter || !c.scatter.length) return;
+    if (!valuesByVersion[c.version_a]) valuesByVersion[c.version_a] = c.scatter.map(p => p[0]);
+    if (!valuesByVersion[c.version_b]) valuesByVersion[c.version_b] = c.scatter.map(p => p[1]);
+  });
+
+  if (!Object.keys(valuesByVersion).length) {
+    try {
+      const r = await fetch('data/results.json');
+      if (r.ok) {
+        const results = await r.json();
+        const BIN_MIDS = {'<35':32,'35-40':37.5,'40-45':42.5,'45-50':47.5,
+                          '50-55':52.5,'55-60':57.5,'60-65':62.5,'65-70':67.5,'70-75':72.5,'>75':78};
+        results.forEach(row => {
+          if (!row.histogram) return;
+          const vals = [];
+          Object.entries(row.histogram).forEach(([bin, count]) => {
+            const mid = BIN_MIDS[bin] ?? 50;
+            for (let i = 0; i < count; i++) vals.push(mid + (Math.random() - 0.5) * 4);
+          });
+          if (vals.length) valuesByVersion[row.version] = vals;
+        });
+      }
+    } catch(e) {}
+  }
+
+  const versions = Object.keys(valuesByVersion)
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+  if (!versions.length) {
+    nodata.style.display = 'block';
+    return;
+  }
+  nodata.style.display = 'none';
+
+  const stats = versions.map(v => computeBoxStats(valuesByVersion[v]));
+
+  const oldSvg = wrapper.querySelector('svg.boxplot-svg');
+  if (oldSvg) oldSvg.remove();
+
+  const canvas = document.getElementById('boxplot-chart');
+  canvas.style.display = 'none';
+
+  const margin = { top: 30, right: 30, bottom: 50, left: 60 };
+  const totalW  = wrapper.clientWidth || 900;
+  const totalH  = 420;
+  const W = totalW - margin.left - margin.right;
+  const H = totalH - margin.top  - margin.bottom;
+
+  const svg = d3.select(wrapper)
+    .append('svg')
+    .attr('class', 'boxplot-svg')
+    .attr('width', totalW)
+    .attr('height', totalH);
+
+  const g = svg.append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+
+  const x = d3.scaleBand()
+    .domain(versions)
+    .range([0, W])
+    .padding(0.4);
+
+  const allVals = stats.flatMap(s => [s.min, s.max, ...s.outliers]);
+  const yMin = Math.floor(Math.min(...allVals) / 5) * 5 - 5;
+  const yMax = Math.ceil( Math.max(...allVals) / 5) * 5 + 5;
+
+  const y = d3.scaleLinear()
+    .domain([yMin, yMax+20])
+    .range([H, 0]);
+
+
+  g.append('g')
+    .attr('class', 'grid')
+    .call(d3.axisLeft(y).tickSize(-W).tickFormat(''))
+    .selectAll('line')
+    .attr('stroke', '#252b3b')
+    .attr('stroke-width', 0.5);
+  g.select('.grid .domain').remove();
+
+  g.append('g')
+    .attr('transform', `translate(0,${H})`)
+    .call(d3.axisBottom(x))
+    .selectAll('text')
+    .attr('fill', '#6b7280')
+    .attr('font-family', 'Space Mono, monospace')
+    .attr('font-size', '11px');
+  g.select('.domain').attr('stroke', '#252b3b');
+  g.selectAll('.tick line').attr('stroke', '#252b3b');
+
+  g.append('g')
+    .call(d3.axisLeft(y).ticks(8).tickFormat(d => d + ' dB'))
+    .selectAll('text')
+    .attr('fill', '#00e5ff')
+    .attr('font-family', 'Space Mono, monospace')
+    .attr('font-size', '11px');
+
+  g.append('text')
+    .attr('transform', 'rotate(-90)')
+    .attr('x', -H / 2)
+    .attr('y', -48)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#00e5ff')
+    .attr('font-family', 'Space Mono, monospace')
+    .attr('font-size', '11px')
+    .text('LAEQ,D (dB)');
+
+
+  g.append('text')
+    .attr('x', W / 2)
+    .attr('y', H + 42)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#6b7280')
+    .attr('font-family', 'Space Mono, monospace')
+    .attr('font-size', '11px')
+    .text('Versions');
+
+  const boxW = x.bandwidth();
+
+  versions.forEach((v, i) => {
+    const s = stats[i];
+    const cx = x(v) + boxW / 2;
+    const capW = boxW * 0.35;
+
+    // (min → Q1)
+    g.append('line')
+      .attr('x1', cx).attr('x2', cx)
+      .attr('y1', y(s.min)).attr('y2', y(s.q1))
+      .attr('stroke', '#e8eaf0').attr('stroke-width', 1.5);
+
+    // (Q3 → max)
+    g.append('line')
+      .attr('x1', cx).attr('x2', cx)
+      .attr('y1', y(s.q3)).attr('y2', y(s.max))
+      .attr('stroke', '#e8eaf0').attr('stroke-width', 1.5);
+
+
+    g.append('line')
+      .attr('x1', cx - capW).attr('x2', cx + capW)
+      .attr('y1', y(s.min)).attr('y2', y(s.min))
+      .attr('stroke', '#e8eaf0').attr('stroke-width', 1.5);
+
+
+    g.append('line')
+      .attr('x1', cx - capW).attr('x2', cx + capW)
+      .attr('y1', y(s.max)).attr('y2', y(s.max))
+      .attr('stroke', '#e8eaf0').attr('stroke-width', 1.5);
+
+    // B(Q1 → Q3)
+    g.append('rect')
+      .attr('x', x(v))
+      .attr('y', y(s.q3))
+      .attr('width', boxW)
+      .attr('height', y(s.q1) - y(s.q3))
+      .attr('fill', 'rgba(0,229,255,0.15)')
+      .attr('stroke', '#00e5ff')
+      .attr('stroke-width', 2);
+
+
+    g.append('line')
+      .attr('x1', x(v)).attr('x2', x(v) + boxW)
+      .attr('y1', y(s.median)).attr('y2', y(s.median))
+      .attr('stroke', '#ff6b35')
+      .attr('stroke-width', 2.5);
+
+
+    s.outliers.forEach(val => {
+      g.append('circle')
+        .attr('cx', cx)
+        .attr('cy', y(val))
+        .attr('r', 2.5)
+        .attr('fill', 'rgba(255,107,53,0.5)')
+        .attr('stroke', 'none');
+    });
+  });
+
+
+  const legend = svg.append('g')
+    .attr('transform', `translate(${margin.left + W / 2 - 120}, 8)`);
+
+  [
+    { color: '#00e5ff', fill: 'rgba(0,229,255,0.15)', label: 'IQR (Q1–Q3)', rect: true },
+    { color: '#ff6b35', label: 'Médiane', rect: true },
+    { color: 'rgba(255,107,53,0.5)', label: 'Outliers', rect: false },
+  ].forEach((item, i) => {
+    const lx = i * 130;
+    if (item.rect) {
+      legend.append('rect')
+        .attr('x', lx).attr('y', 2)
+        .attr('width', 18).attr('height', 10)
+        .attr('fill', item.fill || item.color)
+        .attr('stroke', item.color).attr('stroke-width', 1.5);
+    } else {
+      legend.append('circle')
+        .attr('cx', lx + 9).attr('cy', 7)
+        .attr('r', 4).attr('fill', item.color);
+    }
+    legend.append('text')
+      .attr('x', lx + 24).attr('y', 11)
+      .attr('fill', '#6b7280')
+      .attr('font-family', 'Space Mono, monospace')
+      .attr('font-size', '10px')
+      .text(item.label);
+  });
+}
+// ─────────────────────────────────────────────
+// DENSITY PLOT (KDE sur delta LAEQ)
+// ─────────────────────────────────────────────
+let densityChart = null;
+
+// Gaussian KDE
+function kde(values, bandwidth, xPoints) {
+  const n = values.length;
+  const sigma = std(values);
+  if (sigma === 0) return xPoints.map(() => 0);
+  const h = bandwidth || (1.06 * sigma * Math.pow(n, -0.2)); // règle de Silverman
+  return xPoints.map(x => {
+    const sum = values.reduce((acc, xi) => {
+      const u = (x - xi) / h;
+      return acc + Math.exp(-0.5 * u * u) / Math.sqrt(2 * Math.PI);
+    }, 0);
+    return sum / (n * h);
+  });
+}
+
+function std(arr) {
+  const m = arr.reduce((a, b) => a + b, 0) / arr.length;
+  return Math.sqrt(arr.reduce((a, b) => a + (b - m) ** 2, 0) / arr.length);
+}
+
+function linspace(min, max, n) {
+  const step = (max - min) / (n - 1);
+  return Array.from({ length: n }, (_, i) => min + i * step);
+}
+
+function drawDensityForPair(vA, vB, c) {
+  const nodata = document.getElementById('density-nodata');
+  const canvas = document.getElementById('density-chart');
+
+  if (!c || !c.deltas_signed || !c.deltas_signed.length) {
+    nodata.style.display = 'block';
+    canvas.style.display = 'none';
+    if (densityChart) { densityChart.destroy(); densityChart = null; }
+    return;
+  }
+  nodata.style.display = 'none';
+  canvas.style.display = 'block';
+
+  const flip = c.version_a !== vA;
+  const rawDeltas = flip ? c.deltas_signed.map(d => -d) : c.deltas_signed;
+
+
+  const minD = Math.min(...rawDeltas);
+  const maxD = Math.max(...rawDeltas);
+  const pad  = (maxD - minD) * 0.15 || 2;
+  const xMin = minD - pad;
+  const xMax = maxD + pad;
+  const N_POINTS = 300;
+  const xs = linspace(xMin, xMax, N_POINTS);
+  const ys = kde(rawDeltas, null, xs);
+
+
+  const maxY = Math.max(...ys);
+  Math.min(...ys);
+  if (!maxY) {
+    nodata.innerHTML = '<div class="empty">Versions identiques — Δ LAEQ = 0 pour tous les receivers.</div>';
+    nodata.style.display = 'block';
+    canvas.style.display = 'none';
+    if (densityChart) { densityChart.destroy(); densityChart = null; }
+    return;
+  }
+
+  const binWidth = (xMax - xMin) / N_POINTS;
+  const n = rawDeltas.length;
+  const toReceivers = (d) => d * n * binWidth;
+
+  const posPoints = xs.map((x, i) => ({ x: +x.toFixed(3), y: x >= 0 ? toReceivers(ys[i]) : 0 }));
+  const negPoints = xs.map((x, i) => ({ x: +x.toFixed(3), y: x <= 0 ? toReceivers(ys[i]) : 0 }));
+  const allPoints = xs.map((x, i) => ({ x: +x.toFixed(3), y: toReceivers(ys[i]) }));
+
+  if (densityChart) densityChart.destroy();
+
+  const ctx = canvas.getContext('2d');
+  densityChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+          label: `${vB} louder (Δ > 0)`,
+          data: posPoints,
+          borderColor: '#f44336',
+          backgroundColor: 'rgba(244,67,54,0.25)',
+          fill: true,
+          pointRadius: 0,
+          borderWidth: 0,
+          tension: 0.4,
+          order: 2,
+        },
+        {
+          label: `${vB} quieter (Δ < 0)`,
+          data: negPoints,
+          borderColor: '#2196f3',
+          backgroundColor: 'rgba(33,150,243,0.25)',
+          fill: true,
+          pointRadius: 0,
+          borderWidth: 0,
+          tension: 0.4,
+          order: 2,
+        },
+        {
+          label: 'Density',
+          data: allPoints,
+          borderColor: '#00e5ff',
+          backgroundColor: 'transparent',
+          fill: false,
+          pointRadius: 0,
+          borderWidth: 2,
+          tension: 0.4,
+          order: 1,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      animation: false,
+      parsing: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: '#6b7280',
+            font: { family: 'Space Mono', size: 11 },
+            filter: item => item.datasetIndex !== 2,
+          }
+        },
+        tooltip: {
+          backgroundColor: '#12161f',
+          borderColor: '#252b3b',
+          borderWidth: 1,
+          titleColor: '#00e5ff',
+          bodyColor: '#e8eaf0',
+          titleFont: { family: 'Space Mono' },
+          bodyFont:  { family: 'Space Mono' },
+          callbacks: {
+            title: items => `Δ = ${fmt(items[0].parsed.x)} dB, ${fmt(items[0].parsed.y)}`,
+            label: () => null,
+          }
+        },
+        annotation: {
+          annotations: {
+            zeroline: {
+              type: 'line',
+              xMin: 0, xMax: 0,
+              borderColor: 'rgba(255,255,255,0.4)',
+              borderWidth: 1,
+              borderDash: [4, 4],
+              label: {
+                display: true,
+                color: '#6b7280',
+                font: { family: 'Space Mono', size: 10 },
+                position: 'start',
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          ticks: {
+            color: '#6b7280',
+            font: { family: 'Space Mono', size: 11 },
+            callback: v => (v >= 0 ? '+' : '') + fmt(v) + ' dB'
+          },
+          grid: { color: '#252b3b' },
+          title: {
+            display: true,
+            text: `Δ LAEQ (dB)  =  ${vB} − ${vA}`,
+            color: '#ffeb3b',
+            font: { family: 'Space Mono', size: 11 }
+          },
+        },
+        y: {
+          ticks: { color: '#00e5ff', font: { family: 'Space Mono', size: 11 },
+                   callback: v => v  },
+          grid: { color: '#252b3b' },
+          title: {
+            display: true,
+            text: 'Relative density',
+            color: '#00e5ff',
+            font: { family: 'Space Mono', size: 11 }
+          },
+        }
+      }
+    }
+  });
 }
 
 // ─────────────────────────────────────────────
 // BOOTSTRAP
 // ─────────────────────────────────────────────
 async function init() {
-  // Sort versions naturally
   let data = [];
   try {
     const res = await fetch(RESULTS_URL);
@@ -743,7 +1243,6 @@ async function init() {
     data = await res.json();
     data.sort((a, b) => a.version.localeCompare(b.version, undefined, { numeric: true }));
   } catch (e) {
-    // Demo mode with fake data so the page still renders nicely
     console.warn('Could not load results.json, using demo data.', e);
     data = [
       { version: 'v5.0.1', mean: 54.32, std: 8.71, time: '00:03:42', nb_receiver: 12480 },
@@ -752,10 +1251,12 @@ async function init() {
 
   renderHeaderMeta(data);
   renderCards(data);
-  renderTable(data);
-  renderChart(data);
-  initMap();
-  renderMapControls(data);
+  renderHistogram(data);
+  await loadComparisons();
+  setupPairSelector();
+
+  await renderBoxplot();
+
 }
 
 init();
