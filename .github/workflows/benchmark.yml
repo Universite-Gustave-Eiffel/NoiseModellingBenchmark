@@ -46,7 +46,9 @@ jobs:
           restore-keys: nm-outputs-
 
       - name: Run benchmark
-        run: bash benchmark_run.sh
+        run: |
+          bash -x benchmark_run.sh
+
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
