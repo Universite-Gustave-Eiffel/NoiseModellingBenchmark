@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoiseModelling — Benchmark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --surface: #12161f;
+      --surface2: #1a1f2e;
+      --border: #252b3b;
+      --accent: #00e5ff;
+      --accent2: #ff6b35;
+      --accent3: #7fff6b;
+      --text: #e8eaf0;
+      --text-muted: #6b7280;
+      --font-mono: 'Space Mono', monospace;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── GRID BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      z-index: 1;
+      padding: 3rem 2rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .logo-block { display: flex; flex-direction: column; gap: .4rem; }
+
+    .logo-label {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .2em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: var(--font-mono);
+      font-size: clamp(1.4rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+    }
+
+    h1 span { color: var(--accent); }
+
+    .header-meta {
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      color: var(--text-muted);
+      text-align: right;
+      line-height: 1.8;
+    }
+
+    .header-meta b { color: var(--text); }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+      display: grid;
+      gap: 2.5rem;
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-title {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── STAT CARDS ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s, transform .2s;
+      cursor: default;
+      animation: fadeUp .5s ease both;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    .card-version {
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      letter-spacing: .05em;
+    }
+
+    .card-stats { display: grid; gap: .75rem; }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: .5rem;
+    }
+
+    .stat-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .stat-label {
+      font-size: .78rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .stat-value.accent  { color: var(--accent); }
+    .stat-value.accent2 { color: var(--accent2); }
+    .stat-value.accent3 { color: var(--accent3); }
+
+    /* ── CHART ── */
+    .chart-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      overflow: hidden;
+    }
+
+    canvas { width: 100% !important; }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .85rem;
+    }
+
+    thead tr {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: .9rem 1.25rem;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: .85rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: .82rem;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tr:hover td { background: var(--surface2); }
+
+    td.good  { color: var(--accent3); }
+    td.warn  { color: var(--accent2); }
+    td.mono  { color: var(--accent); }
+
+    /* ── MAP ── */
+    .map-controls {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .map-btn {
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      letter-spacing: .05em;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: .4rem .9rem;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .map-btn:hover, .map-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(0,229,255,.07);
+    }
+
+    #map {
+      height: 460px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* Legend */
+    .noise-legend {
+      margin-top: 1rem;
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .legend-label {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      color: var(--text-muted);
+      margin-right: .25rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      color: var(--text-muted);
+    }
+
+    .legend-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      border: 1px solid rgba(255,255,255,.15);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      padding: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: .8rem;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* stagger cards */
+    .card:nth-child(1) { animation-delay: .05s; }
+    .card:nth-child(2) { animation-delay: .12s; }
+    .card:nth-child(3) { animation-delay: .19s; }
+    .card:nth-child(4) { animation-delay: .26s; }
+
+    /* pulse on accent */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: .5; }
+    }
+
+    .live-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      background: var(--accent3);
+      border-radius: 50%;
+      margin-right: .4rem;
+      animation: pulse 2s ease infinite;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-block">
+    <span class="logo-label">Université Gustave Eiffel · UMRAE · Lab-STICC</span>
+    <h1>Noise<span>Modelling</span><br>Benchmark</h1>
+  </div>
+  <div class="header-meta" id="header-meta">
+    Loading results…
+  </div>
+</header>
+
+<main>
+
+  <!-- ── KPI CARDS ── -->
+  <section>
+    <div class="section-title">Results per version</div>
+    <div class="cards-grid" id="cards-grid">
+      <div class="empty">Loading…</div>
+    </div>
+  </section>
+
+  <!-- ── CHART ── -->
+  <section>
+    <div class="section-title">LAEQ mean &amp; std — version comparison</div>
+    <div class="chart-wrap">
+      <canvas id="chart" height="220"></canvas>
+    </div>
+  </section>
+
+  <!-- ── TABLE ── -->
+  <section>
+    <div class="section-title">Full results table</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Version</th>
+            <th>Mean LAEQ (dB)</th>
+            <th>Std dev (dB)</th>
+            <th>Computation time</th>
+            <th>Receivers</th>
+            <th>ms / receiver</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="6" style="text-align:center;color:var(--text-muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── MAP ── -->
+  <section>
+    <div class="section-title">Noise map — Clisson</div>
+    <div class="map-controls" id="map-controls"></div>
+    <div id="map"></div>
+    <div class="noise-legend">
+      <span class="legend-label">LAEQ DEN (dBA) :</span>
+      <div class="legend-item"><div class="legend-swatch" style="background:#2196f3"></div>&lt; 45</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#4caf50"></div>45–50</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#8bc34a"></div>50–55</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#ffeb3b"></div>55–60</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#ff9800"></div>60–65</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#f44336"></div>65–70</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#9c27b0"></div>&gt; 70</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>
+    <span class="live-dot"></span>
+    Generated by <a href="https://noise-planet.org/noisemodelling.html" target="_blank">NoiseModelling</a>
+    — Input data: Clisson, France (EPSG:2154)
+  </span>
+  <span id="footer-date"></span>
+</footer>
+
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<script>
+// ─────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────
+const RESULTS_URL = 'data/results.json';
+
+// Color palette per version index
+const PALETTE = ['#00e5ff','#ff6b35','#7fff6b','#f7d716','#c77dff'];
+
+// Noise iso-color map (matches NoiseModelling defaults)
+const ISO_COLORS = {
+  '< 45':  '#2196f3',
+  '45-50': '#4caf50',
+  '50-55': '#8bc34a',
+  '55-60': '#ffeb3b',
+  '60-65': '#ff9800',
+  '65-70': '#f44336',
+  '> 70':  '#9c27b0',
+};
+
+function isoColor(label) {
+  if (!label) return '#888';
+  const l = label.trim();
+  for (const [k, v] of Object.entries(ISO_COLORS)) {
+    if (l.includes(k) || k.includes(l)) return v;
+  }
+  // Fallback: try to parse numeric range
+  const num = parseFloat(l);
+  if (!isNaN(num)) {
+    if (num < 45) return '#2196f3';
+    if (num < 50) return '#4caf50';
+    if (num < 55) return '#8bc34a';
+    if (num < 60) return '#ffeb3b';
+    if (num < 65) return '#ff9800';
+    if (num < 70) return '#f44336';
+    return '#9c27b0';
+  }
+  return '#888';
+}
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function fmt(n, dec = 2) {
+  return typeof n === 'number' ? n.toFixed(dec) : '—';
+}
+
+function msPerReceiver(row) {
+  if (!row.time || !row.nb_receiver) return null;
+  const [h, m, s] = row.time.split(':').map(Number);
+  const ms = ((h * 3600 + m * 60 + s) * 1000);
+  return (ms / row.nb_receiver).toFixed(1);
+}
+
+// ─────────────────────────────────────────────
+// RENDER CARDS
+// ─────────────────────────────────────────────
+function renderCards(data) {
+  const grid = document.getElementById('cards-grid');
+  if (!data.length) { grid.innerHTML = '<div class="empty">No results found.</div>'; return; }
+
+  grid.innerHTML = data.map((row, i) => {
+    const color = PALETTE[i % PALETTE.length];
+    const msPR = msPerReceiver(row);
+    return `
+      <div class="card" style="--card-accent:${color}">
+        <div class="card-version">${row.version}</div>
+        <div class="card-stats">
+          <div class="stat-row">
+            <span class="stat-label">Mean LAEQ</span>
+            <span class="stat-value" style="color:${color}">${fmt(row.mean)} dB</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Std dev</span>
+            <span class="stat-value accent2">± ${fmt(row.std)} dB</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Compute time</span>
+            <span class="stat-value accent3">${row.time || '—'}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Receivers</span>
+            <span class="stat-value">${row.nb_receiver?.toLocaleString() ?? '—'}</span>
+          </div>
+          ${msPR ? `<div class="stat-row">
+            <span class="stat-label">ms / receiver</span>
+            <span class="stat-value" style="color:var(--text-muted)">${msPR}</span>
+          </div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ─────────────────────────────────────────────
+// RENDER TABLE
+// ─────────────────────────────────────────────
+function renderTable(data) {
+  const tbody = document.getElementById('table-body');
+  if (!data.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty">No results.</td></tr>'; return; }
+
+  // Find best mean (lowest = quietest) for highlighting
+  const means = data.map(r => r.mean).filter(Boolean);
+  const bestMean = Math.min(...means);
+
+  tbody.innerHTML = data.map(row => {
+    const msPR = msPerReceiver(row);
+    const isBest = Math.abs(row.mean - bestMean) < 0.01;
+    return `<tr>
+      <td class="mono">${row.version}</td>
+      <td class="${isBest ? 'good' : ''}">${fmt(row.mean)} dB</td>
+      <td>± ${fmt(row.std)} dB</td>
+      <td class="good">${row.time || '—'}</td>
+      <td>${row.nb_receiver?.toLocaleString() ?? '—'}</td>
+      <td>${msPR ?? '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────────────
+// RENDER CHART
+// ─────────────────────────────────────────────
+function renderChart(data) {
+  const labels = data.map(r => r.version);
+  const means  = data.map(r => r.mean);
+  const stds   = data.map(r => r.std);
+
+  const ctx = document.getElementById('chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Mean LAEQ (dB)',
+          data: means,
+          backgroundColor: data.map((_, i) => PALETTE[i % PALETTE.length] + '33'),
+          borderColor:     data.map((_, i) => PALETTE[i % PALETTE.length]),
+          borderWidth: 2,
+          borderRadius: 2,
+          yAxisID: 'y',
+        },
+        {
+          label: 'Std dev (dB)',
+          data: stds,
+          type: 'line',
+          borderColor: '#ff6b35',
+          backgroundColor: 'transparent',
+          pointBackgroundColor: '#ff6b35',
+          pointRadius: 5,
+          borderWidth: 2,
+          tension: 0.3,
+          yAxisID: 'y2',
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index' },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#6b7280',
+            font: { family: 'Space Mono', size: 11 },
+          }
+        },
+        tooltip: {
+          backgroundColor: '#12161f',
+          borderColor: '#252b3b',
+          borderWidth: 1,
+          titleColor: '#00e5ff',
+          bodyColor: '#e8eaf0',
+          titleFont: { family: 'Space Mono' },
+          bodyFont:  { family: 'Space Mono' },
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#6b7280', font: { family: 'Space Mono', size: 11 } },
+          grid:  { color: '#252b3b' },
+        },
+        y: {
+          position: 'left',
+          ticks: { color: '#00e5ff', font: { family: 'Space Mono', size: 11 } },
+          grid:  { color: '#252b3b' },
+          title: { display: true, text: 'LAEQ (dB)', color: '#00e5ff',
+                   font: { family: 'Space Mono', size: 11 } },
+        },
+        y2: {
+          position: 'right',
+          ticks: { color: '#ff6b35', font: { family: 'Space Mono', size: 11 } },
+          grid:  { drawOnChartArea: false },
+          title: { display: true, text: 'Std dev (dB)', color: '#ff6b35',
+                   font: { family: 'Space Mono', size: 11 } },
+        }
+      }
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// RENDER HEADER META
+// ─────────────────────────────────────────────
+function renderHeaderMeta(data) {
+  const el = document.getElementById('header-meta');
+  const date = new Date().toISOString().slice(0, 10);
+  el.innerHTML = `
+    <b>${data.length}</b> version${data.length > 1 ? 's' : ''} compared<br>
+    Input: <b>Clisson, France</b><br>
+    Generated: <b>${date}</b>
+  `;
+  document.getElementById('footer-date').textContent = `Generated ${date}`;
+}
+
+// ─────────────────────────────────────────────
+// MAP
+// ─────────────────────────────────────────────
+let map, currentLayer = null;
+
+function initMap() {
+  map = L.map('map', { zoomControl: true }).setView([47.086, -1.27], 13);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+}
+
+function loadGeoJSON(version) {
+  if (currentLayer) { map.removeLayer(currentLayer); currentLayer = null; }
+
+  fetch(`data/${version}/RECEIVERS_LEVEL.geojson`)
+    .then(r => {
+      if (!r.ok) throw new Error('GeoJSON not found');
+      return r.json();
+    })
+    .then(geojson => {
+      currentLayer = L.geoJSON(geojson, {
+        style: feature => {
+          const label = feature.properties?.ISOLABEL || '';
+          return {
+            fillColor: isoColor(label),
+            fillOpacity: 0.65,
+            color: 'transparent',
+            weight: 0,
+          };
+        },
+        onEachFeature: (feature, layer) => {
+          const label = feature.properties?.ISOLABEL || '?';
+          layer.bindTooltip(`${label} dBA`, {
+            className: 'leaflet-tooltip-dark',
+            sticky: true,
+          });
+        }
+      }).addTo(map);
+
+      // Fit map to geojson bounds
+      try { map.fitBounds(currentLayer.getBounds(), { padding: [30, 30] }); } catch(e) {}
+    })
+    .catch(() => {
+      // No geojson for this version yet — silently ignore
+    });
+}
+
+function renderMapControls(data) {
+  const ctrl = document.getElementById('map-controls');
+  ctrl.innerHTML = data.map((row, i) => `
+    <button class="map-btn${i === 0 ? ' active' : ''}" data-version="${row.version}">
+      ${row.version}
+    </button>
+  `).join('');
+
+  ctrl.querySelectorAll('.map-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      ctrl.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadGeoJSON(btn.dataset.version);
+    });
+  });
+
+  // Load first version by default
+  if (data.length) loadGeoJSON(data[0].version);
+}
+
+// ─────────────────────────────────────────────
+// BOOTSTRAP
+// ─────────────────────────────────────────────
+async function init() {
+  // Sort versions naturally
+  let data = [];
+  try {
+    const res = await fetch(RESULTS_URL);
+    if (!res.ok) throw new Error('results.json not found');
+    data = await res.json();
+    data.sort((a, b) => a.version.localeCompare(b.version, undefined, { numeric: true }));
+  } catch (e) {
+    // Demo mode with fake data so the page still renders nicely
+    console.warn('Could not load results.json, using demo data.', e);
+    data = [
+      { version: 'v5.0.1', mean: 54.32, std: 8.71, time: '00:03:42', nb_receiver: 12480 },
+    ];
+  }
+
+  renderHeaderMeta(data);
+  renderCards(data);
+  renderTable(data);
+  renderChart(data);
+  initMap();
+  renderMapControls(data);
+}
+
+init();
+</script>
+
+<!-- Dark Leaflet tooltip -->
+<style>
+  .leaflet-tooltip-dark {
+    background: #12161f !important;
+    border: 1px solid #252b3b !important;
+    color: #00e5ff !important;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    box-shadow: none;
+  }
+  .leaflet-tooltip-dark::before { display: none; }
+</style>
+
+</body>
+</html>
