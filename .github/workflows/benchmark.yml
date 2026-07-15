@@ -2,7 +2,9 @@ name: Benchmark & Deploy
 
 on:
   push:
-    branches: [main]
+    branches: 
+    - main
+    - benchmarkWebsiteGenerator-fixed
   workflow_dispatch:
 permissions:
   contents: read
