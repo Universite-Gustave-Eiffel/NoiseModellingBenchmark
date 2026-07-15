@@ -16,35 +16,35 @@ concurrency:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 300
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Set up Java 11
+      - name: Set up Java 25
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '11'
+          java-version: '25'
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Cache input data
+      - name: Cache NM binaries only
         uses: actions/cache@v4
         with:
-          path: input/
-          key: nm-inputs-${{ hashFiles('benshmark_run.sh') }}
-          restore-keys: nm-inputs-
+          path: input/NoiseModelling_*/
+          key: nm-binaries-${{ hashFiles('benchmark_run.sh') }}
+          restore-keys: nm-binaries-
       - name: Cache simulation outputs
         uses: actions/cache@v4
         with:
           path: output/
-          key: nm-outputs-${{ hashFiles('benshmark_run.sh', 'nm_v5.0/src/main/groovy/**') }}
+          key: nm-outputs-${{ hashFiles('benchmark_run.sh', 'nm_v5.0/src/main/groovy/**') }}
           restore-keys: nm-outputs-
 
       - name: Run benchmark
-        run: bash benshmark_run.sh
+        run: bash benchmark_run.sh
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
