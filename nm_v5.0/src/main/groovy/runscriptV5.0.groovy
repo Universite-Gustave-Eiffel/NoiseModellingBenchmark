@@ -373,9 +373,9 @@ static def exec(Connection connection, Map input) {
 
                 sql.execute("DELETE FROM LW_ROADS WHERE THE_GEOM IS NULL")
 
-                new Export_Table().exec(connection,
+                /*new Export_Table().exec(connection,
                         ["exportPath"   : "input/clisson/LW_ROADS.shp",
-                         "tableToExport": "LW_ROADS"])
+                         "tableToExport": "LW_ROADS"])*/
 
                 sql.execute("DROP TABLE IF EXISTS LW_ROADS_LW")
 
@@ -390,9 +390,9 @@ static def exec(Connection connection, Map input) {
                         sql.execute("ALTER TABLE LW_ROADS_LW RENAME COLUMN $field TO $fieldLw" as String)
                 }
 
-                new Export_Table().exec(connection,
+                /*new Export_Table().exec(connection,
                         ["exportPath"   : "input/clisson/LW_ROADS_LW.shp",
-                         "tableToExport": "LW_ROADS_LW"])
+                         "tableToExport": "LW_ROADS_LW"])*/
             }
 
             long elapsed = 0
