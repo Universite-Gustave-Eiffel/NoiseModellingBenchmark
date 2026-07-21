@@ -318,7 +318,7 @@ static def exec(Connection connection, Map input) {
 
             if (!JDBCUtilities.tableExists(connection, "LW_ROADS")) {
                 new Import_File().exec(connection,
-                        ["pathFile" : "input/clisson/clisson/LW_ROADS.shp",
+                        ["pathFile" : "input/clisson/clisson/LW_ROADS.geojson",
                          "inputSRID": "2154",
                          "tableName": "LW_ROADS"])
             }
