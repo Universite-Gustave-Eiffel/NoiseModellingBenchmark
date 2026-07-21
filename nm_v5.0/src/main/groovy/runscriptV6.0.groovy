@@ -216,8 +216,8 @@ static def exec(Connection connection, Map input) {
                  "confMaxSrcDist"    : 300,
                  "confDiffHorizontal": true,
                  "confMaxError": 0.0001,
-                 "confFavourableOccurrencesDefault":'0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25',
-                 "confRaysName":"RAYS"
+                 "confFavourableOccurrencesDefault":'0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
+                // "confRaysName":"RAYS"
         ])
 
         elapsed = System.currentTimeMillis() - startCompute
@@ -230,7 +230,7 @@ static def exec(Connection connection, Map input) {
                  "tableToExport": "RECEIVERS_LEVEL"])
 
     }
-    def rowRAYS = sql.firstRow("SELECT COUNT(IDSOURCE) nbRays FROM RAYS")
+   // def rowRAYS = sql.firstRow("SELECT COUNT(IDSOURCE) nbRays FROM RAYS")
 
     new Create_Isosurface().exec(connection,
             ["resultTable": "RECEIVERS_LEVEL",
@@ -297,7 +297,7 @@ static def exec(Connection connection, Map input) {
         else              histogram[">75"]++
     }
 
-    double timeRay = elapsedRay/rowRAYS.nbRays
+    //double timeRay = elapsedRay/rowRAYS.nbRays
     DecimalFormat f = new DecimalFormat()
     f.setMaximumFractionDigits(2)
 
@@ -306,9 +306,9 @@ static def exec(Connection connection, Map input) {
             mean: mean,
             memory: maxUsedMemory,
             time: timeString,
-            timePerReceive: f.format(time),
+           // timePerReceive: f.format(time),
             nbRays: rowRAYS.nbRays,
-            timePerRays: f.format(timeRay),
+            //timePerRays: f.format(timeRay),
             nb_receiver: cpt,
             confMaxError: 0.0001,
             histogram: histogram
