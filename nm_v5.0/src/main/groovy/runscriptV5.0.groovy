@@ -427,7 +427,6 @@ static def exec(Connection connection, Map input) {
                          "tableGroundAbs"                  : "GROUNDS",
                          "confReflOrder"                   : 1,
                          "confMaxSrcDist"                  : 300,
-                         //"confRaysName"                    : "RAYS",
                          "confDiffHorizontal"              : true,
                          "confMaxError"                    : 0.0001,
                          "confFavourableOccurrencesDefault": '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
@@ -522,8 +521,6 @@ static def exec(Connection connection, Map input) {
                     memory: maxUsedMemory,
                     time: timeString,
                     timePerReceive: f.format(time),
-                    //nbRays: rowRAYS.nbRays,
-                    //timePerRays:f.format(timeRay),
                     nb_receiver: cpt,
                     confMaxError: 0.0001,
                     histogram: histogram
