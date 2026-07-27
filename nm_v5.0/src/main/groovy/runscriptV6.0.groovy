@@ -217,7 +217,6 @@ static def exec(Connection connection, Map input) {
                  "confDiffHorizontal": true,
                  "confMaxError": 0.0001,
                  "confFavourableOccurrencesDefault":'0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
-                // "confRaysName":"RAYS"
         ])
 
         elapsed = System.currentTimeMillis() - startCompute
@@ -306,9 +305,7 @@ static def exec(Connection connection, Map input) {
             mean: mean,
             memory: maxUsedMemory,
             time: timeString,
-           // timePerReceive: f.format(time),
-            nbRays: rowRAYS.nbRays,
-            //timePerRays: f.format(timeRay),
+            timePerReceive: f.format(time),
             nb_receiver: cpt,
             confMaxError: 0.0001,
             histogram: histogram
