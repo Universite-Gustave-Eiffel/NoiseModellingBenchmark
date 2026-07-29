@@ -1,8 +1,7 @@
-output/
-input/
 .idea/
 .DS_Store
 *.iml
+output/
 target/
 build/
 
