@@ -187,8 +187,8 @@ static def exec(Connection connection, Map input) {
                          "confMaxSrcDist"                  : 300,
                          "confDiffHorizontal"              : true,
                          "confMaxError"                    : 0.1,
-                         "confFavorableOccurrencesDefault": '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25',
-                         "confFavorableOccurrencesDay"     : '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
+                         "confFavorableOccurrencesDay"     : '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25',
+                         "confRaysName":"RAYS"
                         ])
 
                 elapsed = System.currentTimeMillis() - startCompute
@@ -201,14 +201,14 @@ static def exec(Connection connection, Map input) {
                     ["exportPath"   : "$outputFolder/RECEIVERS_LEVEL.geojson",
                      "tableToExport": "LDAY_GEOM"])
 
-            /*def rowRays
+            def rowRays
             double timeRays
             if((version =="v4.0.2")  || (version=="v4.0.4") || (version=="v4.0.5")){
                 def rays = sql.firstRow("SELECT COUNT(IDSOURCE) nbRays FROM RAYS")
                 def rays_int = rays.nbRays
                 rowRays = rays_int
                 timeRays = elapsed/rowRays
-            }*/
+            }
 
 
             new Create_Isosurface().exec(connection,
@@ -282,6 +282,8 @@ static def exec(Connection connection, Map input) {
                     memory: maxUsedMemory,
                     time: timeString,
                     timePerReceive: f.format(time),
+                    nbRays: rowRays,
+                    timePerRays: f.format(timeRays),
                     nb_receiver: cpt,
                     confMaxError: 0.1,
                     histogram: histogram
@@ -424,6 +426,7 @@ static def exec(Connection connection, Map input) {
                          "tableGroundAbs"                  : "GROUNDS",
                          "confReflOrder"                   : 1,
                          "confMaxSrcDist"                  : 300,
+                         "confRaysName"                    : "RAYS",
                          "confDiffHorizontal"              : true,
                          "confMaxError"                    : 0.1,
                          "confFavourableOccurrencesDefault": '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
@@ -445,7 +448,7 @@ static def exec(Connection connection, Map input) {
 
 
 
-            //def rowRAYS = sql.firstRow("SELECT COUNT(IDSOURCE) nbRays FROM RAYS")
+            def rowRAYS = sql.firstRow("SELECT COUNT(IDSOURCE) nbRays FROM RAYS")
 
             new Create_Isosurface().exec(connection,
                     ["resultTable": "RECEIVERS_LEVEL",
@@ -465,7 +468,7 @@ static def exec(Connection connection, Map input) {
 
             def cpt = sql.firstRow("SELECT COUNT(*) FROM RECEIVERS")[0] as Integer
             double time = elapsed/cpt
-            //def elapsedRay = elapsed
+            def elapsedRay = elapsed
 
             long hours = TimeUnit.MILLISECONDS.toHours(elapsed)
             elapsed -= TimeUnit.HOURS.toMillis(hours)
@@ -508,7 +511,7 @@ static def exec(Connection connection, Map input) {
                 else if (v < 75)  histogram["70-75"]++
                 else              histogram[">75"]++
             }
-            //double timeRay = elapsedRay/rowRAYS.nbRays
+            double timeRay = elapsedRay/rowRAYS.nbRays
             DecimalFormat f = new DecimalFormat()
             f.setMaximumFractionDigits(2)
 
@@ -518,6 +521,8 @@ static def exec(Connection connection, Map input) {
                     memory: maxUsedMemory,
                     time: timeString,
                     timePerReceive: f.format(time),
+                    nbRays: rowRAYS.nbRays,
+                    timePerRays:f.format(timeRay),
                     nb_receiver: cpt,
                     confMaxError: 0.1,
                     histogram: histogram
