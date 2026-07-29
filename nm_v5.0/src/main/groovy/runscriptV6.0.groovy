@@ -215,8 +215,8 @@ static def exec(Connection connection, Map input) {
                  "confReflOrder"     : 1,
                  "confMaxSrcDist"    : 300,
                  "confDiffHorizontal": true,
-                 "confMaxError": 0.0001,
-                 "confFavourableOccurrencesDefault":'0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
+                 "confMaxError": 0.1,
+                 "confFavorableOccurrencesDefault":'0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
         ])
 
         elapsed = System.currentTimeMillis() - startCompute
@@ -249,7 +249,7 @@ static def exec(Connection connection, Map input) {
 
     def cpt = sql.firstRow("SELECT COUNT(*) FROM RECEIVERS")[0] as Integer
     double time = elapsed/cpt
-    def elapsedRay = elapsed
+    //def elapsedRay = elapsed
 
     long hours = TimeUnit.MILLISECONDS.toHours(elapsed)
     elapsed -= TimeUnit.HOURS.toMillis(hours)
@@ -307,7 +307,7 @@ static def exec(Connection connection, Map input) {
             time: timeString,
             timePerReceive: f.format(time),
             nb_receiver: cpt,
-            confMaxError: 0.0001,
+            confMaxError: 0.1,
             histogram: histogram
     ]
 
@@ -315,8 +315,6 @@ static def exec(Connection connection, Map input) {
     outFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(result))
 
     println("fini***************************************************************************")
-
-
 
     System.exit(0)
 }

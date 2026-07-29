@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #set -euo pipefail
 
-
 declare -A NM_VERSIONS
 NM_VERSIONS["v4.0.0"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v4.0.0/NoiseModelling_4.0.0_without_gui.zip"
 NM_VERSIONS["v4.0.1"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v4.0.1/NoiseModelling_4.0.1_without_gui.zip"
@@ -24,12 +23,10 @@ mkdir -p "$INPUT_DIR" "$OUTPUT_DIR" "$WEBSITE_DIR" "$DATA_DIR"
 
 download_clisson() {
     local clisson_dir="$INPUT_DIR/clisson"
-
     if [ -d "$clisson_dir/clisson" ]; then
         return 0
     fi
     cp -r "clisson/" "$clisson_dir/"
-
 }
 
 download_nm_version() {
@@ -43,19 +40,15 @@ download_nm_version() {
         return 0
     fi
 
-    curl -fL "$url" -o "$zip_name" \
-        --progress-bar \
-        || { return 1; }
-
+    curl -fL "$url" -o "$zip_name" --progress-bar || { return 1; }
 
     local tmp_dir
     tmp_dir=$(mktemp -d)
 
-    unzip -q "$zip_name" -d "$tmp_dir" \
-        || {
-            rm -rf "$tmp_dir"
-            return 1
-        }
+    unzip -q "$zip_name" -d "$tmp_dir" || {
+        rm -rf "$tmp_dir"
+        return 1
+    }
     local entries
     entries=($(find "$tmp_dir" -mindepth 1 -maxdepth 1))
 
@@ -68,8 +61,6 @@ download_nm_version() {
     fi
 
     rm -rf "$tmp_dir"
-
-
 }
 
 find_wps_binary() {
@@ -82,6 +73,7 @@ find_wps_binary() {
     chmod +x "$bin"
     echo "$bin"
 }
+
 find_wps_binary_v6() {
     local nm_dir="$1"
     local bin
@@ -102,35 +94,33 @@ run_simulation() {
     mkdir -p "$out_dir"
 
     local wps_bin
-    if [ $version = "v6.0.0" ]; then
+    if [ "$version" = "v6.0.0" ]; then
         wps_bin=$(find_wps_binary_v6 "$nm_dir") || return 1
     else
-      wps_bin=$(find_wps_binary "$nm_dir") || return 1
+        wps_bin=$(find_wps_binary "$nm_dir") || return 1
     fi
 
     local workspace="$out_dir/workspace"
     mkdir -p "$workspace"
 
-    local start_ts
-    start_ts=$(date +%s)
-    if [ $version = "v4.0.0" ] || [ $version = "v4.0.1" ]; then
+    if [ "$version" = "v4.0.0" ] || [ "$version" = "v4.0.1" ]; then
         "$wps_bin" \
             -w"$workspace" \
             -s"$GROOVY_SCRIPT" \
             NM_version="$version" \
             > "$out_dir/simulation.log" 2>&1
-    elif [ $version = "v6.0.0" ]; then
-              "$wps_bin" \
-                  -w "$workspace" \
-                  -s "$GROOVY_SCRIPT_v6" \
-                  -NM_version "$version" \
-                  > "$out_dir/simulation.log" 2>&1
+    elif [ "$version" = "v6.0.0" ]; then
+        "$wps_bin" \
+            -w "$workspace" \
+            -s "$GROOVY_SCRIPT_v6" \
+            -NM_version "$version" \
+            > "$out_dir/simulation.log" 2>&1
     else
-      "$wps_bin" \
-          -w "$workspace" \
-          -s "$GROOVY_SCRIPT" \
-          -NM_version "$version" \
-          > "$out_dir/simulation.log" 2>&1
+        "$wps_bin" \
+            -w "$workspace" \
+            -s "$GROOVY_SCRIPT" \
+            -NM_version "$version" \
+            > "$out_dir/simulation.log" 2>&1
     fi
     local exit_code=$?
 
@@ -139,7 +129,6 @@ run_simulation() {
     fi
 
     if [ ! -f "$stats_file" ]; then
-
         local groovy_out="output/${version}/stats_${version}.json"
         if [ -f "$groovy_out" ]; then
             cp "$groovy_out" "$stats_file"
@@ -171,11 +160,8 @@ print(json.dumps(data, indent=2))
 EOF
         first=false
     done
-
     echo "]" >> "$agg_file"
-
 }
-
 
 copy_geojson() {
     for version in "${!NM_VERSIONS[@]}"; do
@@ -189,28 +175,63 @@ copy_geojson() {
     done
 }
 
-main() {
+run_one_version() {
+    local version="$1"
+    if [ -z "${NM_VERSIONS[$version]+x}" ]; then
+        echo "Version inconnue: $version" >&2
+        exit 1
+    fi
+
+    download_clisson
+    download_nm_version "$version" "${NM_VERSIONS[$version]}" || {
+        echo "Echec download pour $version" >&2
+        exit 1
+    }
+
+    echo "version $version"
+    run_simulation "$version" || {
+        echo "Echec simulation pour $version" >&2
+        exit 1
+    }
+}
+
+
+run_aggregate_only() {
+    aggregate_results
+    copy_geojson
+    python3 generate_site.py
+}
+
+
+run_all_sequential() {
     download_clisson
     local failed_versions=()
     for version in "${!NM_VERSIONS[@]}"; do
-
         download_nm_version "$version" "${NM_VERSIONS[$version]}" || {
-           failed_versions+=("$version")
+            failed_versions+=("$version")
             continue
         }
-
+        echo " version $version"
         run_simulation "$version" || {
             failed_versions+=("$version")
             continue
         }
     done
+    run_aggregate_only
+}
 
-
-    aggregate_results
-    copy_geojson
-
-    python3 generate_site.py
-
+main() {
+    case "${1:-}" in
+        --version)
+            run_one_version "$2"
+            ;;
+        --aggregate-only)
+            run_aggregate_only
+            ;;
+        *)
+            run_all_sequential
+            ;;
+    esac
 }
 
 main "$@"

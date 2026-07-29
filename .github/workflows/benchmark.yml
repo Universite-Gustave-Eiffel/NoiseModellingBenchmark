@@ -1,24 +1,25 @@
 name: Benchmark & Deploy
-
 on:
   push:
-    branches: 
-    - main
-    - benchmarkWebsiteGenerator-fixed
+    branches:
+      - main
+      - benchmarkWebsiteGenerator-fixed
   workflow_dispatch:
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
   group: pages
   cancel-in-progress: true
-
 jobs:
   benchmark:
     runs-on: ubuntu-latest
     timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0]
     steps:
       - name: Free disk space
         uses: jlumbroso/free-disk-space@main
@@ -42,15 +43,10 @@ jobs:
           distribution: temurin
           java-version: '11'
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
       - name: Check disk space
         run: df -h
 
-      - name: Check BUILDINGS.geojson
+      - name: Check LW_ROADS.geojson
         run: |
           echo "File info:"
           file input/clisson/clisson/LW_ROADS.geojson
@@ -59,32 +55,63 @@ jobs:
           echo "Search version:"
           grep -n "version" input/clisson/clisson/LW_ROADS.geojson || true
 
-      - name: Cache NM binaries only
+      - name: Cache NM binary for ${{ matrix.version }}
         uses: actions/cache@v4
         with:
-          path: input/NoiseModelling_*/
-          key: nm-binaries-${{ hashFiles('benchmark_run.sh') }}
-          restore-keys: nm-binaries-
+          path: input/NoiseModelling_without_gui_${{ matrix.version }}/
+          key: nm-binary-${{ matrix.version }}
 
-      - name: Cache simulation outputs
-        uses: actions/cache@v4
-        with:
-          path: output/
-          key: nm-outputs-${{ hashFiles('benchmark_run.sh', 'nm_v5.0/src/main/groovy/**') }}
-          restore-keys: nm-outputs-
-
-      - name: Run benchmark
-        run: |
-          bash -x benchmark_run.sh
+      - name: Run benchmark for ${{ matrix.version }}
+        run: bash -x benchmark_run.sh --version ${{ matrix.version }}
 
       - name: Check disk space after run
         if: always()
         run: df -h && du -sh input/ output/ 2>/dev/null | sort -rh
 
-      - name: Show simulation logs
+      - name: Show simulation log
         if: always()
         run: |
           find output -name simulation.log -exec sh -c 'echo ==== $1 ====; tail -100 "$1"' _ {} \;
+
+      - name: Upload output for ${{ matrix.version }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: output-${{ matrix.version }}
+          path: output/${{ matrix.version }}/
+          retention-days: 1
+
+  build-website:
+    needs: benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Download all outputs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: output-*
+          path: output/
+          merge-multiple: false
+
+      - name: Fix artifact folder names
+        run: |
+          for d in output/output-*; do
+            v=$(basename "$d" | sed 's/^output-//')
+            mv "$d" "output/$v"
+          done
+          ls -la output/
+
+      - name: Generate website
+        run: bash benchmark_run.sh --aggregate-only
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -92,12 +119,11 @@ jobs:
           path: website/
 
   deploy:
-    needs: benchmark
+    needs: build-website
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

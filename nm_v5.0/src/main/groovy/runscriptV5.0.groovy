@@ -186,10 +186,9 @@ static def exec(Connection connection, Map input) {
                          "confReflOrder"                   : 1,
                          "confMaxSrcDist"                  : 300,
                          "confDiffHorizontal"              : true,
-                         "confMaxError"                    : 0.0001,
-                         "confFavourableOccurrencesDefault": '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25',
-                         "confFavorableOccurrencesDay"     : '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25',
-                         "confRaysName":"RAYS"
+                         "confMaxError"                    : 0.1,
+                         "confFavorableOccurrencesDefault": '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25',
+                         "confFavorableOccurrencesDay"     : '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
                         ])
 
                 elapsed = System.currentTimeMillis() - startCompute
@@ -202,14 +201,14 @@ static def exec(Connection connection, Map input) {
                     ["exportPath"   : "$outputFolder/RECEIVERS_LEVEL.geojson",
                      "tableToExport": "LDAY_GEOM"])
 
-            def rowRays
+            /*def rowRays
             double timeRays
             if((version =="v4.0.2")  || (version=="v4.0.4") || (version=="v4.0.5")){
                 def rays = sql.firstRow("SELECT COUNT(IDSOURCE) nbRays FROM RAYS")
                 def rays_int = rays.nbRays
                 rowRays = rays_int
                 timeRays = elapsed/rowRays
-            }
+            }*/
 
 
             new Create_Isosurface().exec(connection,
@@ -283,10 +282,8 @@ static def exec(Connection connection, Map input) {
                     memory: maxUsedMemory,
                     time: timeString,
                     timePerReceive: f.format(time),
-                    nbRays: rowRays,
-                    timePerRays: f.format(timeRays),
                     nb_receiver: cpt,
-                    confMaxError: 0.0001,
+                    confMaxError: 0.1,
                     histogram: histogram
             ]
                 def outFile = new File("$outputFolder/stats_${version}.json")
@@ -428,7 +425,7 @@ static def exec(Connection connection, Map input) {
                          "confReflOrder"                   : 1,
                          "confMaxSrcDist"                  : 300,
                          "confDiffHorizontal"              : true,
-                         "confMaxError"                    : 0.0001,
+                         "confMaxError"                    : 0.1,
                          "confFavourableOccurrencesDefault": '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
                         ])
 
@@ -468,7 +465,7 @@ static def exec(Connection connection, Map input) {
 
             def cpt = sql.firstRow("SELECT COUNT(*) FROM RECEIVERS")[0] as Integer
             double time = elapsed/cpt
-            def elapsedRay = elapsed
+            //def elapsedRay = elapsed
 
             long hours = TimeUnit.MILLISECONDS.toHours(elapsed)
             elapsed -= TimeUnit.HOURS.toMillis(hours)
@@ -522,7 +519,7 @@ static def exec(Connection connection, Map input) {
                     time: timeString,
                     timePerReceive: f.format(time),
                     nb_receiver: cpt,
-                    confMaxError: 0.0001,
+                    confMaxError: 0.1,
                     histogram: histogram
             ]
 
