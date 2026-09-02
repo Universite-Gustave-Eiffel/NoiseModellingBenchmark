@@ -154,45 +154,217 @@ static def exec(Connection connection, Map input) {
             }
 
             long elapsed = 0
+            def nbRays = 0
 
             if(redoCompute) {
-                def running = new AtomicBoolean(true)
+                long startCompute = System.currentTimeMillis()
+                if(version=="v4.0.0") {
 
-                def monitor = Thread.start {
-                    def rt = Runtime.getRuntime()
-                    def avant = rt.freeMemory()
+                    def scriptFile = new File("nm_version/src/main/groovy/v400Noise_level_from_source.groovy")
+                            .getAbsoluteFile()
 
-                    while (running.get()) {
-                        long used = rt.freeMemory()
-                        long diff = Math.abs(avant - used) / (1024 * 1024 * 1024)
+                    if (!scriptFile.exists()) {
+                        throw new FileNotFoundException("Fichier introuvable : ${scriptFile.absolutePath}")
+                    }
+
+                    def customClass = new GroovyClassLoader().parseClass(scriptFile)
+                    def customScript = customClass.newInstance()
 
 
-                        if (diff > maxUsedMemory) {
-                            maxUsedMemory = diff
+
+                    customScript.exec(connection,
+                            ["tableBuilding"                   : "BUILDINGS",
+                             "tableSources"                    : "LW_ROADS_LW",
+                             "tableReceivers"                  : "RECEIVERS",
+                             "tableDEM"                        : "DEM",
+                             "tableGroundAbs"                  : "GROUNDS",
+                             "confReflOrder"                   : 1,
+                             "confMaxSrcDist"                  : 300,
+                             "confDiffHorizontal"              : true,
+                             "confMaxError"                    : 0.1,
+                             "confFavorableOccurrencesDay"     : '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'])
+
+                    def csvFile = new File("$outputFolder/profile.csv")
+                    if (csvFile.exists()) {
+                        def lines = csvFile.readLines()
+                        if (lines.size() >= 1) {
+                            def headers = lines[0].split(',')
+                            def raysIdx = headers.findIndexOf { it.trim() == 'receiver_median_rays' }
+                            if (raysIdx >= 0) {
+                                def lastLine = lines[lines.size() - 1].split(',')
+                                if (lastLine.size() > raysIdx) {
+                                    nbRays = lastLine[raysIdx].trim().toDouble()
+                                }
+                            }
                         }
+                    }
+                }
+                if(version=="v4.0.1") {
 
-                        sleep(1000)
+                    def scriptFile = new File("nm_version/src/main/groovy/v401Noise_level_from_source.groovy")
+                            .getAbsoluteFile()
+
+                    if (!scriptFile.exists()) {
+                        throw new FileNotFoundException("Fichier introuvable : ${scriptFile.absolutePath}")
+                    }
+
+                    def customClass = new GroovyClassLoader().parseClass(scriptFile)
+                    def customScript = customClass.newInstance()
+
+
+
+                    customScript.exec(connection,
+                            ["tableBuilding"                   : "BUILDINGS",
+                             "tableSources"                    : "LW_ROADS_LW",
+                             "tableReceivers"                  : "RECEIVERS",
+                             "tableDEM"                        : "DEM",
+                             "tableGroundAbs"                  : "GROUNDS",
+                             "confReflOrder"                   : 1,
+                             "confMaxSrcDist"                  : 300,
+                             "confDiffHorizontal"              : true,
+                             "confMaxError"                    : 0.1,
+                             "confFavorableOccurrencesDay"     : '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'])
+                    def csvFile = new File("$outputFolder/profile.csv")
+                    if (csvFile.exists()) {
+                        def lines = csvFile.readLines()
+                        if (lines.size() >= 1) {
+                            def headers = lines[0].split(',')
+                            def raysIdx = headers.findIndexOf { it.trim() == 'receiver_median_rays' }
+                            if (raysIdx >= 0) {
+                                def lastLine = lines[lines.size() - 1].split(',')
+                                if (lastLine.size() > raysIdx) {
+                                    nbRays = lastLine[raysIdx].trim().toDouble()
+                                }
+                            }
+                        }
+                    }
+                }
+                if(version=="v4.0.2") {
+
+                    def scriptFile = new File("nm_version/src/main/groovy/v402Noise_level_from_source.groovy")
+                            .getAbsoluteFile()
+
+                    if (!scriptFile.exists()) {
+                        throw new FileNotFoundException("Fichier introuvable : ${scriptFile.absolutePath}")
+                    }
+
+                    def customClass = new GroovyClassLoader().parseClass(scriptFile)
+                    def customScript = customClass.newInstance()
+
+
+
+                    customScript.exec(connection,
+                            ["tableBuilding"                   : "BUILDINGS",
+                             "tableSources"                    : "LW_ROADS_LW",
+                             "tableReceivers"                  : "RECEIVERS",
+                             "tableDEM"                        : "DEM",
+                             "tableGroundAbs"                  : "GROUNDS",
+                             "confReflOrder"                   : 1,
+                             "confMaxSrcDist"                  : 300,
+                             "confDiffHorizontal"              : true,
+                             "confMaxError"                    : 0.1,
+                             "confFavorableOccurrencesDay"     : '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'])
+                    def csvFile = new File("$outputFolder/profile.csv")
+                    if (csvFile.exists()) {
+                        def lines = csvFile.readLines()
+                        if (lines.size() >= 1) {
+                            def headers = lines[0].split(',')
+                            def raysIdx = headers.findIndexOf { it.trim() == 'receiver_median_rays' }
+                            if (raysIdx >= 0) {
+                                def lastLine = lines[lines.size() - 1].split(',')
+                                if (lastLine.size() > raysIdx) {
+                                    nbRays = lastLine[raysIdx].trim().toDouble()
+                                }
+                            }
+                        }
+                    }
+                }
+                if(version=="v4.0.4") {
+
+                    def scriptFile = new File("nm_version/src/main/groovy/v404Noise_level_from_source.groovy")
+                            .getAbsoluteFile()
+
+                    if (!scriptFile.exists()) {
+                        throw new FileNotFoundException("Fichier introuvable : ${scriptFile.absolutePath}")
+                    }
+
+                    def customClass = new GroovyClassLoader().parseClass(scriptFile)
+                    def customScript = customClass.newInstance()
+
+
+
+                    customScript.exec(connection,
+                            ["tableBuilding"                   : "BUILDINGS",
+                             "tableSources"                    : "LW_ROADS_LW",
+                             "tableReceivers"                  : "RECEIVERS",
+                             "tableDEM"                        : "DEM",
+                             "tableGroundAbs"                  : "GROUNDS",
+                             "confReflOrder"                   : 1,
+                             "confMaxSrcDist"                  : 300,
+                             "confDiffHorizontal"              : true,
+                             "confMaxError"                    : 0.1,
+                             "confFavorableOccurrencesDay"     : '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'])
+
+                    def csvFile = new File("$outputFolder/profile.csv")
+                    if (csvFile.exists()) {
+                        def lines = csvFile.readLines()
+                        if (lines.size() >= 1) {
+                            def headers = lines[0].split(',')
+                            def raysIdx = headers.findIndexOf { it.trim() == 'receiver_median_rays' }
+                            if (raysIdx >= 0) {
+                                def lastLine = lines[lines.size() - 1].split(',')
+                                if (lastLine.size() > raysIdx) {
+                                    nbRays = lastLine[raysIdx].trim().toDouble()
+                                }
+                            }
+                        }
+                    }
+                }
+                if(version=="v4.0.5") {
+
+                    def scriptFile = new File("nm_version/src/main/groovy/v405Noise_level_from_source.groovy")
+                            .getAbsoluteFile()
+
+                    if (!scriptFile.exists()) {
+                        throw new FileNotFoundException("Fichier introuvable : ${scriptFile.absolutePath}")
+                    }
+
+                    def customClass = new GroovyClassLoader().parseClass(scriptFile)
+                    def customScript = customClass.newInstance()
+
+
+
+                    customScript.exec(connection,
+                            ["tableBuilding"                   : "BUILDINGS",
+                             "tableSources"                    : "LW_ROADS_LW",
+                             "tableReceivers"                  : "RECEIVERS",
+                             "tableDEM"                        : "DEM",
+                             "tableGroundAbs"                  : "GROUNDS",
+                             "confReflOrder"                   : 1,
+                             "confMaxSrcDist"                  : 300,
+                             "confDiffHorizontal"              : true,
+                             "confMaxError"                    : 0.1,
+                             "confFavorableOccurrencesDay"     : '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'])
+
+                    def csvFile = new File("$outputFolder/profile.csv")
+                    if (csvFile.exists()) {
+                        def lines = csvFile.readLines()
+                        if (lines.size() >= 1) {
+                            def headers = lines[0].split(',')
+                            def raysIdx = headers.findIndexOf { it.trim() == 'receiver_median_rays' }
+                            if (raysIdx >= 0) {
+                                def lastLine = lines[lines.size() - 1].split(',')
+                                if (lastLine.size() > raysIdx) {
+                                    nbRays = lastLine[raysIdx].trim().toDouble()
+                                }
+                            }
+                        }
                     }
                 }
 
-                long startCompute = System.currentTimeMillis()
 
-                new Noise_level_from_source().exec(connection,
-                        ["tableBuilding"                   : "BUILDINGS",
-                         "tableSources"                    : "LW_ROADS_LW",
-                         "tableReceivers"                  : "RECEIVERS",
-                         "tableDEM"                        : "DEM",
-                         "tableGroundAbs"                  : "GROUNDS",
-                         "confReflOrder"                   : 1,
-                         "confMaxSrcDist"                  : 300,
-                         "confDiffHorizontal"              : true,
-                         "confMaxError"                    : 0.1,
-                         "confFavorableOccurrencesDay"     : '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
-                        ])
 
                 elapsed = System.currentTimeMillis() - startCompute
-                running.set(false)
-                monitor.join()
             }
 
 
@@ -204,7 +376,7 @@ static def exec(Connection connection, Map input) {
 
             new Create_Isosurface().exec(connection,
                     ["resultTable": "LDAY_GEOM",
-                     "keepTriangles": true,
+                     "keepTriangles": false,
                      "smoothCoefficient" : 0])
 
             sql.execute("DROP TABLE IF EXISTS KEPLERGL")
@@ -212,7 +384,7 @@ static def exec(Connection connection, Map input) {
             sql.execute("CREATE TABLE KEPLERGL AS SELECT ST_Transform(THE_GEOM, 4326) THE_GEOM, ISOLABEL FROM CONTOURING_NOISE_MAP")
 
             new Export_Table().exec(connection,
-                    ["exportPath"   : "$outputFolder/KEPLERGL.geojson",
+                    ["exportPath"   : "$outputFolder/ISO_CONTOUR.geojson",
                      "tableToExport": "KEPLERGL"])
 
             threadDump(true, true)
@@ -221,6 +393,10 @@ static def exec(Connection connection, Map input) {
             def cpt = sql.firstRow("SELECT COUNT(*) FROM RECEIVERS")[0] as Integer
 
             def time = elapsed/cpt
+            nbRays = nbRays * cpt
+            def res = elapsed / nbRays
+            println("rays: $nbRays, timerey : $res")
+            def timerays = elapsed / nbRays
 
             long hours = TimeUnit.MILLISECONDS.toHours(elapsed)
             elapsed -= TimeUnit.HOURS.toMillis(hours)
@@ -270,11 +446,10 @@ static def exec(Connection connection, Map input) {
 
             def result = [
                     mean: mean,
-                    memory: maxUsedMemory,
                     time: timeString,
                     timePerReceive: f.format(time),
-                    nb_receiver: cpt,
-                    confMaxError: 0.1,
+                    nbRays : nbRays,
+                    timePerRays: timerays,
                     histogram: histogram
             ]
                 def outFile = new File("$outputFolder/stats_${version}.json")
@@ -378,69 +553,109 @@ static def exec(Connection connection, Map input) {
             }
 
             long elapsed = 0
+            int nbRays = 0
 
-            if(redoCompute) {
-                def running = new AtomicBoolean(true)
+            if(redoCompute) {                long startCompute = System.currentTimeMillis()
+                if(version=="v5.0.0") {
 
+                    def scriptFile = new File("nm_version/src/main/groovy/v500Noise_level_from_source.groovy")
+                            .getAbsoluteFile()
 
-                def monitor = Thread.start {
-                    def rt = Runtime.getRuntime()
-                    def avant = rt.freeMemory()
+                    if (!scriptFile.exists()) {
+                        throw new FileNotFoundException("Fichier introuvable : ${scriptFile.absolutePath}")
+                    }
 
-                    while (running.get()) {
-                        long used = rt.freeMemory()
-                        long diff = Math.abs(avant - used) / (1024 * 1024 * 1024)
+                    def customClass = new GroovyClassLoader().parseClass(scriptFile)
+                    def customScript = customClass.newInstance()
 
-                        if (diff > maxUsedMemory) {
-                            maxUsedMemory = diff
+                    customScript.exec(connection,
+                            ["tableBuilding"                   : "BUILDINGS",
+                             "tableSources"                    : "LW_ROADS",
+                             "tableReceivers"                  : "RECEIVERS",
+                             "tableDEM"                        : "DEM",
+                             "tableGroundAbs"                  : "GROUNDS",
+                             "confRaysName"                    : "RAYS",
+                             "confReflOrder"                   : 1,
+                             "confMaxSrcDist"                  : 300,
+                             "confDiffHorizontal"              : true,
+                             "confMaxError"                    : 0.1,
+                             "confFavourableOccurrencesDefault": '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'])
+
+                    def csvFile = new File("$outputFolder/profile.csv")
+                    if (csvFile.exists()) {
+                        def lines = csvFile.readLines()
+                        if (lines.size() >=1) {
+                            def headers = lines[0].split(',')
+                            def raysIdx = headers.findIndexOf { it.trim() == 'receiver_median_rays' }
+                            if (raysIdx >= 0) {
+                                def lastLine = lines[lines.size() - 1].split(',')
+                                if (lastLine.size() > raysIdx) {
+                                    nbRays = lastLine[raysIdx].trim().toDouble()
+                                }
+                            }
                         }
-
-                        sleep(1000)
                     }
                 }
+                if(version=="v5.0.1"){
+                    def scriptFile = new File("nm_version/src/main/groovy/v501Noise_level_from_source.groovy")
+                            .getAbsoluteFile()
 
-                long startCompute = System.currentTimeMillis()
+                    if (!scriptFile.exists()) {
+                        throw new FileNotFoundException("Fichier introuvable : ${scriptFile.absolutePath}")
+                    }
 
-                new Noise_level_from_source().exec(connection,
-                        ["tableBuilding"                   : "BUILDINGS",
-                         "tableSources"                    : "LW_ROADS",
-                         "tableReceivers"                  : "RECEIVERS",
-                         "tableDEM"                        : "DEM",
-                         "tableGroundAbs"                  : "GROUNDS",
-                         "confReflOrder"                   : 1,
-                         "confMaxSrcDist"                  : 300,
-                         "confDiffHorizontal"              : true,
-                         "confMaxError"                    : 0.1,
-                         "confFavourableOccurrencesDefault": '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
-                        ])
+                    def customClass = new GroovyClassLoader().parseClass(scriptFile)
+                    def customScript = customClass.newInstance()
+
+                    customScript.exec(connection,
+                            ["tableBuilding"                   : "BUILDINGS",
+                             "tableSources"                    : "LW_ROADS",
+                             "tableReceivers"                  : "RECEIVERS",
+                             "tableDEM"                        : "DEM",
+                             "tableGroundAbs"                  : "GROUNDS",
+                             "confReflOrder"                   : 1,
+                             "confMaxSrcDist"                  : 300,
+                             "confDiffHorizontal"              : true,
+                             "confMaxError"                    : 0.1,
+                             "confFavourableOccurrencesDefault": '0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'])
+
+                    def csvFile = new File("$outputFolder/profile.csv")
+                    if (csvFile.exists()) {
+                        def lines = csvFile.readLines()
+                        if (lines.size() >= 1) {
+                            def headers = lines[0].split(',')
+                            def raysIdx = headers.findIndexOf { it.trim() == 'receiver_median_rays' }
+                            if (raysIdx >= 0) {
+                                def lastLine = lines[lines.size() - 1].split(',')
+                                if (lastLine.size() > raysIdx) {
+                                    nbRays = lastLine[raysIdx].trim().toDouble()
+                                }
+                            }
+                        }
+                    }
+
+                }
 
                 elapsed = System.currentTimeMillis() - startCompute
-                running.set(false)
-                monitor.join()
 
             }
-
-
 
             new Export_Table().exec(connection,
                     ["exportPath"   : "$outputFolder/RECEIVERS_LEVEL.geojson",
                      "tableToExport": "RECEIVERS_LEVEL"])
 
 
-
-
-
             new Create_Isosurface().exec(connection,
                     ["resultTable": "RECEIVERS_LEVEL",
-                     "keepTriangles": true,
+                     "keepTriangles": false,
                      "smoothCoefficient" : 0])
 
             sql.execute("DROP TABLE IF EXISTS KEPLERGL")
 
-            sql.execute("CREATE TABLE KEPLERGL AS SELECT ST_Transform(THE_GEOM, 4326) THE_GEOM, ISOLABEL FROM CONTOURING_NOISE_MAP WHERE PERIOD='DEN'")
+            sql.execute("CREATE TABLE KEPLERGL AS SELECT ST_Transform(THE_GEOM, 4326) THE_GEOM, ISOLABEL FROM CONTOURING_NOISE_MAP WHERE PERIOD='D'")
 
             new Export_Table().exec(connection,
-                    ["exportPath"   : "$outputFolder/KEPLERGL.geojson",
+                    ["exportPath"   : "$outputFolder/ISO_CONTOUR.geojson",
                      "tableToExport": "KEPLERGL"])
 
             threadDump(true, true)
@@ -448,6 +663,13 @@ static def exec(Connection connection, Map input) {
 
             def cpt = sql.firstRow("SELECT COUNT(*) FROM RECEIVERS")[0] as Integer
             double time = elapsed/cpt
+            nbRays = nbRays * cpt
+            def timerays =  0
+            if(nbRays !=0 ){
+                timerays = elapsed / nbRays
+            }
+
+            println("rays: $nbRays, timerey : $timerays")
 
             long hours = TimeUnit.MILLISECONDS.toHours(elapsed)
             elapsed -= TimeUnit.HOURS.toMillis(hours)
@@ -496,11 +718,10 @@ static def exec(Connection connection, Map input) {
 
             def result = [
                     mean: mean,
-                    memory: maxUsedMemory,
                     time: timeString,
                     timePerReceive: f.format(time),
-                    nb_receiver: cpt,
-                    confMaxError: 0.1,
+                    nbRays : nbRays,
+                    timePerRays: timerays,
                     histogram: histogram
             ]
 

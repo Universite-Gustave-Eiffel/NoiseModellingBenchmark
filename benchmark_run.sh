@@ -11,8 +11,8 @@ NM_VERSIONS["v5.0.0"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelli
 NM_VERSIONS["v5.0.1"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v5.0.1/NoiseModelling_without_gui-5.0.1.zip"
 NM_VERSIONS["v6.0.0"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v6.0.0/NoiseModelling_6.0.0.zip"
 
-GROOVY_SCRIPT="nm_v5.0/src/main/groovy/runscriptV5.0.groovy"
-GROOVY_SCRIPT_v6="nm_v5.0/src/main/groovy/runscriptV6.0.groovy"
+GROOVY_SCRIPT="nm_version/src/main/groovy/runscriptV5.0.groovy"
+GROOVY_SCRIPT_v6="nm_version/src/main/groovy/runscriptV6.0.groovy"
 
 INPUT_DIR="input"
 OUTPUT_DIR="output"
@@ -164,14 +164,42 @@ EOF
 }
 
 copy_geojson() {
+
+    local CLISSON_DIR="$INPUT_DIR/clisson/clisson"
+
+
+    declare -A COMMON_LAYERS=(
+        ["BUILDINGS.geojson"]="BUILDINGS.geojson"
+        ["RECEIVERS.geojson"]="RECEIVERS.geojson"
+        ["DEM.geojson"]="DEM.geojson"
+        ["ROADS.geojson"]="ROADS.geojson"
+        ["GROUNDS.geojson"]="GROUNDS.geojson"
+    )
+
     for version in "${!NM_VERSIONS[@]}"; do
-        local geojson="$OUTPUT_DIR/$version/KEPLERGL.geojson"
+        mkdir -p "$DATA_DIR/$version"
         local receivgeojson="$OUTPUT_DIR/$version/RECEIVERS_LEVEL.geojson"
         if [ -f "$receivgeojson" ]; then
-            mkdir -p "$DATA_DIR/$version"
-            cp "$geojson" "$DATA_DIR/$version/KEPLERGL.geojson"
             cp "$receivgeojson" "$DATA_DIR/$version/RECEIVERS_LEVEL.geojson"
         fi
+
+        local iso_src=""
+        if [ -f "$OUTPUT_DIR/$version/ISO_CONTOUR.geojson" ]; then
+            iso_src="$OUTPUT_DIR/$version/ISO_CONTOUR.geojson"
+        fi
+
+        if [ -n "$iso_src" ]; then
+            cp "$iso_src" "$DATA_DIR/$version/ISO_CONTOUR.geojson"
+        fi
+
+        for dest_name in "${!COMMON_LAYERS[@]}"; do
+            local src_name="${COMMON_LAYERS[$dest_name]}"
+            local src="$CLISSON_DIR/$src_name"
+
+            if [ -f "$src" ]; then
+                cp "$src" "$DATA_DIR/$version/$dest_name"
+            fi
+        done
     done
 }
 

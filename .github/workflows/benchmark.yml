@@ -5,14 +5,97 @@ on:
       - main
       - benchmarkWebsiteGenerator-fixed
   workflow_dispatch:
+    inputs:
+      nm_version:
+        required: false
+        type: string
+  schedule:
+    - cron: '0 4 3 * *'
+
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 concurrency:
   group: pages
   cancel-in-progress: true
 jobs:
+
+  # Detection new version
+  check-new-version:
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.detect.outputs.new_version }}
+      has_new:     ${{ steps.detect.outputs.has_new }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Detect new NM version from pom.xml
+        id: detect
+        run: |
+          if [ -n "${{ inputs.nm_version }}" ]; then
+            echo "new_version=${{ inputs.nm_version }}" >> $GITHUB_OUTPUT
+            echo "has_new=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "has_new=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          POM=$(curl -sf \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.raw" \
+            "https://api.github.com/repos/Universite-Gustave-Eiffel/NoiseModelling/contents/pom.xml?ref=main")
+          if [ -z "$POM" ]; then
+            echo "has_new=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          LATEST=$(echo "$POM" | grep -m1 '<version>' | \
+            sed 's/.*<version>\(.*\)<\/version>.*/\1/' | tr -d '[:space:]')
+          echo "Version detectee : $LATEST"
+          if grep -q "$LATEST" .github/workflows/benchmark.yml 2>/dev/null; then
+            echo "has_new=false" >> $GITHUB_OUTPUT
+          else
+            echo "new_version=$LATEST" >> $GITHUB_OUTPUT
+            echo "has_new=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Add new version to matrix and commit
+        if: steps.detect.outputs.has_new == 'true' && steps.detect.outputs.new_version != ''
+        env:
+          NM_VERSION: ${{ steps.detect.outputs.new_version }}
+        run: |
+          python3 - "$NM_VERSION" << 'PYEOF'
+          import sys, re
+          version = sys.argv[1]
+          key = f'v{version}'
+          with open('.github/workflows/benchmark.yml') as f:
+              content = f.read()
+          pattern = r'(version:\s*\[)([^\]]+)(\])'
+          match = re.search(pattern, content)
+          if not match:
+              print("Pattern not found")
+              sys.exit(1)
+          if key in match.group(2):
+              print(f"{key} already present")
+              sys.exit(0)
+          new_str = match.group(1) + match.group(2).rstrip() + f', {key}' + match.group(3)
+          content = content[:match.start()] + new_str + content[match.end():]
+          with open('.github/workflows/benchmark.yml', 'w') as f:
+              f.write(content)
+          print(f"{key} adding ")
+          PYEOF
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/benchmark.yml
+          git commit -m "chore: add NoiseModelling v${NM_VERSION} to benchmark matrix [skip ci]" || true
+          git push
+
+  # Simulation per version
   benchmark:
     runs-on: ubuntu-latest
     timeout-minutes: 300

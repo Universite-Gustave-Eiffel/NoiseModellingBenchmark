@@ -211,7 +211,7 @@
     }
 
     table {
-      width: 100%;
+      width: 80%;
       border-collapse: collapse;
       font-size: .85rem;
     }
@@ -324,7 +324,7 @@
     }
 
     #map {
-      height: 460px;
+      height: 600px;
       border-radius: 4px;
       border: 1px solid var(--border);
     }
@@ -359,6 +359,115 @@
       height: 14px;
       border-radius: 2px;
       border: 1px solid rgba(255,255,255,.15);
+    }
+
+    /* ── MAP LAYOUT ── */
+    .map-layout {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .map-sidebar {
+      display: flex;
+      flex-direction: column;
+      min-width: 100px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-label {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .5rem;
+    }
+
+    .sidebar-btns {
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+    }
+
+    .sidebar-btns .map-btn {
+      text-align: left;
+      width: 100%;
+      padding: .4rem .7rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar-btns .map-btn.layer-btn {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      opacity: .45;
+      transition: opacity .15s, border-color .15s, color .15s;
+    }
+
+    .sidebar-btns .map-btn.layer-btn.active {
+      opacity: 1;
+    }
+
+    .layer-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .map-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ── SIDEBAR TOGGLE ── */
+    .sidebar-toggle {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .4rem .7rem;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+
+    .sidebar-toggle:hover {
+      border-color: var(--accent);
+      background: rgba(0,229,255,.07);
+    }
+
+    .toggle-arrow {
+      transition: transform .2s;
+      font-size: .8rem;
+    }
+
+    .sidebar-toggle.collapsed .toggle-arrow {
+      transform: rotate(-90deg);
+    }
+
+    .sidebar-collapsible {
+      overflow: hidden;
+      max-height: 500px;
+      transition: max-height .25s ease, opacity .2s;
+      opacity: 1;
+      margin-bottom: .25rem;
+    }
+
+    .sidebar-collapsible.collapsed {
+      max-height: 0;
+      opacity: 0;
+      margin-bottom: 0;
     }
 
     /* ── FOOTER ── */
@@ -414,7 +523,7 @@
       animation: pulse 2s ease infinite;
     }
   </style>
-<!-- built: 2026-07-28 07:17 UTC -->
+<!-- built: 2026-09-01 10:16 UTC -->
 </head>
 <body>
 
@@ -443,7 +552,10 @@
     <div class="section-title">LAEQ distribution — receivers per noise band</div>
     <div class="chart-wrap">
       <div class="map-controls" id="histo-controls"></div>
-      <canvas id="histo-chart" height="220"></canvas>
+      <div id="histo-nodata" style="display:none;padding:2rem;text-align:center;font-family:'Space Mono',monospace;font-size:.8rem;color:var(--text-muted)">
+        No histogram data — add the histogram block in your Groovy script and rerun the benchmark.
+      </div>
+      <canvas id="histo-chart" style="width:100%;height:320px;display:block"></canvas>
     </div>
   </section>
 
@@ -479,6 +591,87 @@
     </div>
   </section>
 
+  <!-- ── MAP ── -->
+  <section>
+    <div class="section-title">Noise map — Clisson</div>
+    <div class="map-layout">
+
+      <!-- Versions -->
+      <div class="map-sidebar">
+        <div class="sidebar-label">Version</div>
+        <button class="sidebar-toggle" id="toggle-versions" onclick="toggleSidebar('map-version-controls', this)">
+          <span>Versions</span><span class="toggle-arrow">▾</span>
+        </button>
+        <div id="map-version-controls" class="sidebar-btns sidebar-collapsible"></div>
+
+        <!-- Layers -->
+        <button class="sidebar-toggle" id="toggle-layers" onclick="toggleSidebar('map-layer-controls', this)" style="margin-top:.5rem">
+          <span>Layers</span><span class="toggle-arrow">▾</span>
+        </button>
+        <div id="map-layer-controls" class="sidebar-btns sidebar-collapsible">
+        </div>
+
+
+        <div id="diff-map-panel" class="sidebar-btns sidebar-collapsible">
+          <button class="map-btn layer-btn" id="btn-diff-map"
+                  style="border-color:#00e5ff;color:#00e5ff">
+            <span class="layer-dot" style="background:#00e5ff"></span>
+            LAEQ Diff
+          </button>
+        </div>
+        <div id="diff-map-info" style="font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);margin-top:.5rem;line-height:1.6;display:none">
+          Select <br> an A/B pair
+        </div>
+      </div>
+
+      <!-- Carte -->
+      <div class="map-main">
+        <div id="map"></div>
+        <div class="noise-legend">
+          <span class="legend-label">ISO_CONTOUR LAeq,D (dBA) :</span>
+          <div class="legend-item"><div class="legend-swatch" style="background:#82a7ac"></div>&lt; 35</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#a0bbbf"></div>35–40</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#b8d6d1"></div>40–45</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#cfe4cc"></div>45–50</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#e3f2bf"></div>50–55</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#f4c683"></div>55–60</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#e87d4d"></div>60–65</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#cd463f"></div>65–70</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#a11a4d"></div>70–75</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#75095d"></div>75–80</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#430a4a"></div>&gt; 80</div>
+        </div>
+
+
+        <div id="diff-legend" class="noise-legend" style="display:none;margin-top:.75rem">
+          <span class="legend-label">Δ LAEQ B−A (dB) :</span>
+          <div class="legend-item"><div class="legend-swatch" style="background:#2166ac"></div>&lt; -6 </div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#4393c3"></div> -6 -> -4 </div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#92c5de"></div> -4 -> -2 </div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#f7f7f7"></div> ≈ 0 </div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#f4a582"></div> 2 -> 4 </div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#d6604d"></div> 4 -> 6 </div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#b2182b"></div>&gt; +6</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ── SCATTER PLOT── -->
+  <section>
+    <div class="section-title">Receiver-by-receiver scatter plot</div>
+    <div class="chart-wrap">
+      <div class="map-controls" id="scatter-controls"></div>
+      <canvas id="scatter-chart" style="width:100%;min-height:420px"></canvas>
+      <div id="scatter-nodata" style="display:none;padding:2rem;text-align:center;font-family:'Space Mono',monospace;font-size:.8rem;color:var(--text-muted)">
+        No scatter data — run benchmark with at least 2 versions.
+      </div>
+    </div>
+  </section>
+
+
   <!-- ── DENSITY ── -->
   <section>
     <div class="section-title">Delta LAEQ density — distribution of differences per receiver</div>
@@ -489,6 +682,7 @@
       </div>
     </div>
   </section>
+
 
 
 </main>
@@ -514,6 +708,63 @@ const RESULTS_URL = 'data/results.json';
 
 // Color palette per version index
 const PALETTE = ['#00e5ff','#ff6b35','#7fff6b','#f7d716','#c77dff'];
+
+
+const ISO_COLORS_BY_LVL = {
+  0:  '#82a7ac',  // < 35
+  1:  '#a0bbbf',  // 35-40
+  2:  '#b8d6d1',  // 40-45
+  3:  '#cfe4cc',  // 45-50
+  4:  '#e3f2bf',  // 50-55
+  5:  '#f4c683',  // 55-60
+  6:  '#e87d4d',  // 60-65
+  7:  '#cd463f',  // 65-70
+  8:  '#a11a4d',  // 70-75
+  9:  '#75095d',  // 75-80
+  10: '#430a4a',  // > 80
+};
+
+const ISO_COLORS_BY_LABEL = {
+  '< 35':  '#82a7ac',
+  '35-40': '#a0bbbf',
+  '40-45': '#b8d6d1',
+  '45-50': '#cfe4cc',
+  '50-55': '#e3f2bf',
+  '55-60': '#f4c683',
+  '60-65': '#e87d4d',
+  '65-70': '#cd463f',
+  '70-75': '#a11a4d',
+  '75-80': '#75095d',
+  '> 80':  '#430a4a',
+};
+
+function isoColor(labelOrLvl, lvl) {
+  if (lvl !== undefined && ISO_COLORS_BY_LVL[lvl] !== undefined) {
+    return ISO_COLORS_BY_LVL[lvl];
+  }
+  if (typeof labelOrLvl === 'number' && ISO_COLORS_BY_LVL[labelOrLvl] !== undefined) {
+    return ISO_COLORS_BY_LVL[labelOrLvl];
+  }
+
+  const label = String(labelOrLvl || '').trim();
+  if (ISO_COLORS_BY_LABEL[label]) return ISO_COLORS_BY_LABEL[label];
+
+  const num = parseFloat(label);
+  if (!isNaN(num)) {
+    if (num < 35) return ISO_COLORS_BY_LVL[0];
+    else if (num < 40) return ISO_COLORS_BY_LVL[1];
+    else if (num < 45) return ISO_COLORS_BY_LVL[2];
+    else if (num < 50) return ISO_COLORS_BY_LVL[3];
+    else if (num < 55) return ISO_COLORS_BY_LVL[4];
+    else if (num < 60) return ISO_COLORS_BY_LVL[5];
+    else if (num < 65) return ISO_COLORS_BY_LVL[6];
+    else if (num < 70) return ISO_COLORS_BY_LVL[7];
+    else if (num < 75) return ISO_COLORS_BY_LVL[8];
+    else if (num < 80) return ISO_COLORS_BY_LVL[9];
+    else return ISO_COLORS_BY_LVL[10];
+  }
+  return '#82a7ac';
+}
 
 // ─────────────────────────────────────────────
 // HELPERS
@@ -548,12 +799,12 @@ function renderCards(data) {
             <span class="stat-value accent2">${row.timePerReceive  || '—'} ms</span>
           </div>
           <div class="stat-row">
-            <span class="stat-label">Conf Max Error</span>
-            <span class="stat-value">${row.confMaxError || '—'}</span>
+            <span class="stat-label">Rays number</span>
+            <span class="stat-value accent3">${row.nbRays  || '—'}</span>
           </div>
           <div class="stat-row">
-            <span class="stat-label">Max Used Memory</span>
-            <span class="stat-value accent2"> ${fmt(row.memory)} Go</span>
+            <span class="stat-label">Compute time Per Rays</span>
+            <span class="stat-value accent2">${fmt(row.timePerRays)  || '—'} ms</span>
           </div>
         </div>
       </div>
@@ -570,9 +821,270 @@ function renderHeaderMeta(data) {
   el.innerHTML = `
     <b>${data.length}</b> version${data.length > 1 ? 's' : ''} compared<br>
     Input: <b>Clisson, France</b><br>
+    Number of Receiver: <b>29411</b><br>
+    *Max Error: <b>0.1</b><br>
+    Reflexion Order: <b>1</b><br>
+    Propagation Distance: <b>300</b><br>
+    Horizontal Diffraction: <b>True</b><br>
+    Occurrences of favourable conditions: <b>25%</b><br>
+    <br>
+    *: <b>Please note that the definition of this setting has changed over the course of different versions.</b><br>
+
   `;
   document.getElementById('footer-date').textContent = `Generated ${date}`;
 }
+
+// ─────────────────────────────────────────────
+// MAP
+// ─────────────────────────────────────────────
+let map, currentLayer = null;
+
+// ─────────────────────────────────────────────
+// MAP CONFIG
+// ─────────────────────────────────────────────
+const LAYER_CONFIG = [
+  {
+    id: 'ISO_CONTOUR',
+    label: 'ISO_CONTOUR',
+    file: 'ISO_CONTOUR.geojson',
+    color: '#ff4081',
+    always: false,
+    style: feature => {
+      const p = feature.properties || {};
+      return {
+        fillColor: isoColor(p.ISOLABEL || '', p.ISOLVL),
+        fillOpacity: 0.65,
+        color: 'transparent',
+        weight: 0,
+      };
+    },
+    tooltip: f => {
+      const p = f.properties || {};
+      const lbl = p.ISOLABEL || (p.ISOLVL != null ? p.ISOLVL : '?');
+      return `${lbl} dBA`;
+    },
+  },
+  {
+    id: 'BUILDINGS',
+    label: 'Buildings',
+    file: 'BUILDINGS.geojson',
+    color: '#7fff6b',
+    always: false,
+    style: () => ({ color: '#7fff6b', weight: 1, fillColor: '#7fff6b', fillOpacity: 0.25 }),
+    tooltip: f => {
+      const p = f.properties || {};
+      return p.HEIGHT ? `Building — H: ${p.HEIGHT} m`:'';
+    },
+  },
+  {
+    id: 'ROADS',
+    label: 'Roads',
+    file: 'ROADS.geojson',
+    color: '#ffeb3b',
+    always: false,
+    style: () => ({ color: '#ffeb3b', weight: 2, fillOpacity: 0 }),
+  },
+  {
+    id: 'RECEIVERS',
+    label: 'Receivers',
+    file: 'RECEIVERS.geojson',
+    color: '#ff6b35',
+    always: false,
+    style: () => ({}),
+    pointToLayer: (f, latlng) => L.circleMarker(latlng, {
+      radius: 2.5,
+      color: '#ff6b35',
+      fillColor: '#ff6b35',
+      fillOpacity: 0.8,
+      weight: 0,
+    }),
+    tooltip: f => {
+      const p = f.properties || {};
+      return `Receiver${p.PK ? ' #' + p.PK : ''}`;
+    },
+  },
+  {
+    id: 'GROUNDS',
+    label: 'Grounds',
+    file: 'GROUNDS.geojson',
+    color: '#9c27b0',
+    always: false,
+    style: () => ({ color: '#9c27b0', weight: 2, fillOpacity: 0 }),
+    tooltip: f => {
+      const p = f.properties || {};
+      return p.G || p.g ? `G = ${p.G.toFixed(1) || p.g || ''}` : '';
+    },
+  },
+
+  //{
+  //  id: 'DEM',
+  //  label: 'DEM',
+  //  file: 'DEM.geojson',
+  //  color: '#00e5ff',
+  //  always: false,
+  //  style: () => ({ color: '#00e5ff', weight: 0.8, fillOpacity: 0, dashArray: '3 3' }),
+//  tooltip: f => {
+//    const p = f.properties || {};
+//   return p.Z != null ? `Altitude: ${(+p.Z).toFixed(1)} m` : '';
+// },
+  //},
+];
+
+let activeVersion = null;
+const activeLayers = {};
+
+function initMap() {
+  map = L.map('map', { zoomControl: true }).setView([47.086, -1.27], 13);
+  L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 20
+  }).addTo(map);
+}
+
+
+const LAMBERT93 = '+proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs';
+
+function reprojectGeojson(geojson) {
+  // Detect if reprojection is needed from the crs field
+  const crsName = geojson?.crs?.properties?.name || '';
+  const needs2154 = crsName.includes('2154');
+  // Also detect if coords look metric (x > 100000 means Lambert, not WGS84)
+  const firstCoord = geojson?.features?.[0]?.geometry?.coordinates?.[0]?.[0]?.[0];
+  const looksMetric = Array.isArray(firstCoord)
+    ? Math.abs(firstCoord[0]) > 1000
+    : firstCoord && Math.abs(firstCoord) > 1000;
+
+  if (!needs2154 && !looksMetric) return geojson; // already WGS84
+
+  // Deep-clone and reproject all coordinates
+  function reproj(coords) {
+    if (typeof coords[0] === 'number') {
+      // [x, y] or [x, y, z]
+      const [lng, lat] = proj4(LAMBERT93, 'WGS84', [coords[0], coords[1]]);
+      return coords.length > 2 ? [lng, lat, coords[2]] : [lng, lat];
+    }
+    return coords.map(reproj);
+  }
+
+  const reprojected = JSON.parse(JSON.stringify(geojson));
+  delete reprojected.crs; // remove non-standard crs field so Leaflet is happy
+  reprojected.features = reprojected.features.map(f => ({
+    ...f,
+    geometry: { ...f.geometry, coordinates: reproj(f.geometry.coordinates) }
+  }));
+  return reprojected;
+}
+
+async function loadLayer(version, layerCfg) {
+
+  if (activeLayers[layerCfg.id]) {
+    map.removeLayer(activeLayers[layerCfg.id]);
+    delete activeLayers[layerCfg.id];
+  }
+
+  try {
+    const res = await fetch(`data/${version}/${layerCfg.file}`);
+    if (!res.ok) throw new Error(`${layerCfg.file} not found`);
+    const raw  = await res.json();
+    const geojson = reprojectGeojson(raw);
+
+    const opts = {
+      style: layerCfg.style,
+      onEachFeature: (f, layer) => {
+        const tip = layerCfg.tooltip ? layerCfg.tooltip(f) : '';
+        if (tip) layer.bindTooltip(tip, { className: 'leaflet-tooltip-dark', sticky: true });
+      },
+    };
+    if (layerCfg.pointToLayer) opts.pointToLayer = layerCfg.pointToLayer;
+
+    const lyr = L.geoJSON(geojson, opts).addTo(map);
+    activeLayers[layerCfg.id] = lyr;
+
+
+    if (layerCfg.id === 'ISO_CONTOUR') {
+      try { map.fitBounds(lyr.getBounds(), { padding: [30, 30] }); } catch(e) {}
+    }
+  } catch(e) {
+    console.warn(`[map] ${layerCfg.id} not available for ${version}:`, e.message);
+  }
+}
+
+function removeLayer(layerCfg) {
+  if (activeLayers[layerCfg.id]) {
+    map.removeLayer(activeLayers[layerCfg.id]);
+    delete activeLayers[layerCfg.id];
+  }
+}
+
+async function switchVersion(version) {
+  activeVersion = version;
+
+  const layerCtrl = document.getElementById('map-layer-controls');
+  for (const cfg of LAYER_CONFIG) {
+    const btn = layerCtrl?.querySelector(`[data-layer="${cfg.id}"]`);
+    const isActive = cfg.always || btn?.classList.contains('active');
+    if (isActive) {
+      await loadLayer(version, cfg);
+    } else {
+      removeLayer(cfg);
+    }
+  }
+}
+
+function renderMapControls(data) {
+  const vCtrl = document.getElementById('map-version-controls');
+  const lCtrl = document.getElementById('map-layer-controls');
+
+  vCtrl.innerHTML = data.map((row, i) =>
+    `<button class="map-btn${i === 0 ? ' active' : ''}" data-version="${row.version}">
+      ${row.version}
+    </button>`
+  ).join('');
+
+  vCtrl.querySelectorAll('.map-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      vCtrl.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      switchVersion(btn.dataset.version);
+    });
+  });
+
+
+  lCtrl.innerHTML = LAYER_CONFIG.map(cfg => {
+    if (cfg.always) {
+
+      return `<button class="map-btn layer-btn active" data-layer="${cfg.id}" disabled
+        style="border-color:${cfg.color};color:${cfg.color};cursor:default">
+        <span class="layer-dot" style="background:${cfg.color}"></span>
+        ${cfg.label}
+      </button>`;
+    }
+    return `<button class="map-btn layer-btn" data-layer="${cfg.id}"
+      style="border-color:${cfg.color};color:${cfg.color}">
+      <span class="layer-dot" style="background:${cfg.color}"></span>
+      ${cfg.label}
+    </button>`;
+  }).join('');
+
+  lCtrl.querySelectorAll('.layer-btn:not([disabled])').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const cfg = LAYER_CONFIG.find(c => c.id === btn.dataset.layer);
+      if (!cfg || !activeVersion) return;
+
+      if (btn.classList.contains('active')) {
+        btn.classList.remove('active');
+        removeLayer(cfg);
+      } else {
+        btn.classList.add('active');
+        await loadLayer(activeVersion, cfg);
+      }
+    });
+  });
+
+  // Charger la première version par défaut
+  if (data.length) switchVersion(data[0].version);
+}
+
 // ─────────────────────────────────────────────
 // RENDER COMPARISONS
 // ─────────────────────────────────────────────
@@ -604,17 +1116,12 @@ function renderComparisonCard(c, vA, vB) {
       </div>
       <div class="card-stats">
         <div class="stat-row">
-          <span class="stat-label">Max delta / receiver</span>
-          <span class="stat-value accent2">${fmt(c.max_delta)} dB</span>
+          <span class="stat-label">Standard deviation</span>
+          <span class="stat-value accent2">${fmt(c.std_delta)} dB</span>
         </div>
         <div class="stat-row">
           <span class="stat-label">Mean |delta|</span>
           <span class="stat-value">${fmt(c.mean_delta)} dB</span>
-        </div>
-        ${c.n_only_a || c.n_only_b ? `<div class="stat-row">
-          <span class="stat-label">Only in A / B</span>
-          <span class="stat-value" style="color:var(--text-muted);font-size:.8rem">${c.n_only_a} / ${c.n_only_b}</span>
-        </div>` : ''}
       </div>
     </div>`;
 }
@@ -666,6 +1173,7 @@ function setupPairSelector() {
     const vB = selB.value;
     const c = findComparison(vA, vB);
     renderComparisonCard(c, vA, vB);
+    drawScatterForPair(vA, vB, c);
     drawDensityForPair(vA, vB, c);
   }
 
@@ -698,47 +1206,76 @@ const HISTO_COLORS = [
 
 let histoChart = null;
 
+// Palette par version (une couleur stable par index)
+const VERSION_COLORS = [
+  '#00e5ff','#ff6b35','#7fff6b','#f7d716','#c77dff',
+  '#ff4081','#00e676','#ff9100','#40c4ff','#ea80fc'
+];
+
 function renderHistogram(data) {
-  const ctrl = document.getElementById('histo-controls');
-  const ctx  = document.getElementById('histo-chart').getContext('2d');
+  const ctrl   = document.getElementById('histo-controls');
+  const canvas = document.getElementById('histo-chart');
+  const noData = document.getElementById('histo-nodata');
+  const ctx    = canvas.getContext('2d');
 
-  ctrl.innerHTML = data.map((row, i) =>
-    `<button class="map-btn${i === 0 ? ' active' : ''}" data-idx="${i}">${row.version}</button>`
-  ).join('');
+  const withHisto = data.filter(row => {
+    const h = row.histogram || {};
+    return HISTO_BINS.some(b => (h[b] || 0) > 0);
+  });
 
-  function drawHisto(idx) {
-    const row    = data[idx];
-    const histo  = row.histogram || {};
-    const counts = HISTO_BINS.map(b => histo[b] || 0);
-    const total  = counts.reduce((a, b) => a + b, 0);
-    const ypcts   = counts.map(c => total ? +c : 0);
+  if (!withHisto.length) {
+    if (noData) noData.style.display = 'block';
+    canvas.style.display = 'none';
+    return;
+  }
+  if (noData) noData.style.display = 'none';
+  canvas.style.display = 'block';
 
-    const noData = document.getElementById('histo-nodata');
-    if (total === 0) {
-      if (noData) noData.style.display = 'block';
-      return;
-    }
-    if (noData) noData.style.display = 'none';
+  const selected = new Set(withHisto.map(r => r.version));
+
+  function drawHisto() {
+    const active = withHisto.filter(r => selected.has(r.version));
+    if (!active.length) return;
 
     if (histoChart) histoChart.destroy();
 
+    canvas.style.width  = '100%';
+    canvas.style.height = '320px';
+    canvas.width  = canvas.parentElement.clientWidth  || 800;
+    canvas.height = 320;
+
+    const datasets = active.map((row, i) => {
+      const histo  = row.histogram || {};
+      const counts = HISTO_BINS.map(b => histo[b] || 0);
+      const total  = counts.reduce((a, b) => a + b, 0) || 1;
+      const colorIdx = withHisto.indexOf(row);
+      const color = VERSION_COLORS[colorIdx % VERSION_COLORS.length];
+      return {
+        label: row.version,
+        data: counts,
+        backgroundColor: color + '99',
+        borderColor: color,
+        borderWidth: 1.5,
+        borderRadius: 2,
+      };
+    });
+
     histoChart = new Chart(ctx, {
       type: 'bar',
-      data: {
-        labels: HISTO_BINS,
-        datasets: [{
-          label: 'Receivers (%)',
-          data: ypcts,
-          backgroundColor: HISTO_COLORS.map(c => c + 'bb'),
-          borderColor: HISTO_COLORS,
-          borderWidth: 1,
-          borderRadius: 2,
-        }]
-      },
+      data: { labels: HISTO_BINS, datasets },
       options: {
-        responsive: true,
+        responsive: false,
+        maintainAspectRatio: false,
+        animation: false,
         plugins: {
-          legend: { display: false },
+          legend: {
+            display: true,
+            labels: {
+              color: '#6b7280',
+              font: { family: 'Space Mono', size: 11 },
+              boxWidth: 14,
+            }
+          },
           tooltip: {
             backgroundColor: '#12161f',
             borderColor: '#252b3b',
@@ -748,10 +1285,10 @@ function renderHistogram(data) {
             titleFont: { family: 'Space Mono' },
             bodyFont:  { family: 'Space Mono' },
             callbacks: {
+              title: items => `Band: ${items[0].label}`,
               label: ctx => {
-                const pct =  total ? +((ctx.parsed.y / total) * 100) : 0;
-                const abs = counts[ctx.dataIndex];
-                return ` ${fmt(pct)}%  (${abs.toLocaleString()} receivers)`;
+                const abs = ctx.parsed.y;
+                return ` ${ctx.dataset.label}: ${abs.toLocaleString()} receivers`;
               }
             }
           }
@@ -775,15 +1312,30 @@ function renderHistogram(data) {
     });
   }
 
+  ctrl.innerHTML = withHisto.map((row, i) => {
+    const color = VERSION_COLORS[i % VERSION_COLORS.length];
+    return `<button class="map-btn active" data-version="${row.version}"
+      style="border-color:${color};color:${color}">${row.version}</button>`;
+  }).join('');
+
   ctrl.querySelectorAll('.map-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      ctrl.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      drawHisto(+btn.dataset.idx);
+      const v = btn.dataset.version;
+      if (selected.has(v)) {
+        if (selected.size === 1) return;
+        selected.delete(v);
+        btn.classList.remove('active');
+        btn.style.opacity = '0.4';
+      } else {
+        selected.add(v);
+        btn.classList.add('active');
+        btn.style.opacity = '1';
+      }
+      drawHisto();
     });
   });
 
-  if (data.length) drawHisto(0);
+  drawHisto();
 }
 
 // ─────────────────────────────────────────────
@@ -896,7 +1448,7 @@ async function renderBoxplot() {
   const yMax = Math.ceil( Math.max(...allVals) / 5) * 5 + 5;
 
   const y = d3.scaleLinear()
-    .domain([yMin, yMax+20])
+    .domain([-20, yMax+20])
     .range([H, 0]);
 
 
@@ -1010,7 +1562,7 @@ async function renderBoxplot() {
 
   [
     { color: '#00e5ff', fill: 'rgba(0,229,255,0.15)', label: 'IQR (Q1–Q3)', rect: true },
-    { color: '#ff6b35', label: 'Médiane', rect: true },
+    { color: '#ff6b35', label: 'Median', rect: true },
     { color: 'rgba(255,107,53,0.5)', label: 'Outliers', rect: false },
   ].forEach((item, i) => {
     const lx = i * 130;
@@ -1033,17 +1585,125 @@ async function renderBoxplot() {
       .text(item.label);
   });
 }
+
+// ─────────────────────────────────────────────
+// SCATTER PLOT
+// ─────────────────────────────────────────────
+let scatterChart = null;
+
+function drawScatterForPair(vA, vB, c){
+  const nodata = document.getElementById('scatter-nodata');
+  const canvas = document.getElementById('scatter-chart');
+
+  if (!c || !c.scatter || !c.scatter.length) {
+    nodata.style.display = 'block';
+    canvas.style.display = 'none';
+    if (scatterChart) { scatterChart.destroy(); scatterChart = null; }
+    return;
+  }
+  nodata.style.display = 'none';
+  canvas.style.display = 'block';
+
+
+  const flip = c.version_a !== vA;
+  const points = c.scatter.map(([x, y]) => flip ? { x: y, y: x } : { x, y });
+
+  const allVals = points.flatMap(p => [p.x, p.y]);
+  const minV = Math.floor(Math.min(...allVals) / 5) * 5;
+  const maxV = Math.ceil( Math.max(...allVals) / 5) * 5;
+  const diagLine = [{ x: minV, y: minV }, { x: maxV, y: maxV }];
+
+  if (scatterChart) scatterChart.destroy();
+
+  const ctx = canvas.getContext('2d');
+  scatterChart = new Chart(ctx, {
+    data: {
+      datasets: [
+        {
+          type: 'scatter',
+          label: `Receivers (n=${c.n_common.toLocaleString()})`,
+          data: points,
+          backgroundColor: 'rgba(255,107,53,0.25)',
+          pointRadius: 2,
+          pointHoverRadius: 4,
+          order: 2,
+        },
+        {
+          type: 'line',
+          label: 'y = x',
+          data: diagLine,
+          borderColor: 'rgba(255,255,255,0.5)',
+          borderWidth: 1.5,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          fill: false,
+          order: 1,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      animation: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: '#6b7280',
+            font: { family: 'Space Mono', size: 11 },
+            filter: item => item.datasetIndex === 0,
+          }
+        },
+        tooltip: {
+          backgroundColor: '#12161f',
+          borderColor: '#252b3b',
+          borderWidth: 1,
+          titleColor: '#00e5ff',
+          bodyColor: '#e8eaf0',
+          titleFont: { family: 'Space Mono' },
+          bodyFont:  { family: 'Space Mono' },
+          callbacks: {
+            title: () => '',
+            label: ctx => {
+              if (ctx.datasetIndex !== 0) return null;
+              const { x, y } = ctx.parsed;
+              return ` ${vA}: ${x} dB  →  ${vB}: ${y} dB  (Δ=${(y - x).toFixed(2)} dB)`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          min: minV, max: maxV,
+          ticks: { color: '#6b7280', font: { family: 'Space Mono', size: 11 },
+            callback: v => v + ' dB' },
+          grid: { color: '#252b3b' },
+          title: { display: true, text: `${vA} LAeq,D (dB)`,
+            color: '#6b7280', font: { family: 'Space Mono', size: 11 } },
+        },
+        y: {
+          type: 'linear',
+          min: minV, max: maxV,
+          ticks: { color: '#00e5ff', font: { family: 'Space Mono', size: 11 },
+            callback: v => v + ' dB' },
+          grid: { color: '#252b3b' },
+          title: { display: true, text: `${vB} LAeq,D (dB)`,
+            color: '#00e5ff', font: { family: 'Space Mono', size: 11 } },
+        }
+      }
+    }
+  });
+}
 // ─────────────────────────────────────────────
 // DENSITY PLOT (KDE sur delta LAEQ)
 // ─────────────────────────────────────────────
 let densityChart = null;
 
-// Gaussian KDE
+
 function kde(values, bandwidth, xPoints) {
   const n = values.length;
   const sigma = std(values);
   if (sigma === 0) return xPoints.map(() => 0);
-  const h = bandwidth || (1.06 * sigma * Math.pow(n, -0.2)); // règle de Silverman
+  const h = bandwidth || (1.06 * sigma * Math.pow(n, -0.2));
   return xPoints.map(x => {
     const sum = values.reduce((acc, xi) => {
       const u = (x - xi) / h;
@@ -1093,7 +1753,7 @@ function drawDensityForPair(vA, vB, c) {
   const maxY = Math.max(...ys);
   Math.min(...ys);
   if (!maxY) {
-    nodata.innerHTML = '<div class="empty">Versions identiques — Δ LAEQ = 0 pour tous les receivers.</div>';
+    nodata.innerHTML = '<div class="empty">Same versions — Δ LAEQ = 0 for all receivers.</div>';
     nodata.style.display = 'block';
     canvas.style.display = 'none';
     if (densityChart) { densityChart.destroy(); densityChart = null; }
@@ -1226,6 +1886,125 @@ function drawDensityForPair(vA, vB, c) {
 }
 
 // ─────────────────────────────────────────────
+// DIFF MAP
+// ─────────────────────────────────────────────
+let diffLayer = null;
+let diffMapActive = false;
+
+
+function diffColor(delta) {
+  if (delta < -6)  return '#2166ac';
+  else if (delta < -4)  return '#4393c3';
+  else if (delta < -2)return '#92c5de';
+  else if (delta < 2 && delta > -2)return '#f7f7f7';
+  else if (delta <  4)  return '#f4a582';
+  else if (delta <  6)  return '#d6604d';
+  else return '#b2182b';
+}
+
+async function drawDiffMap(vA, vB) {
+  if (diffLayer) { map.removeLayer(diffLayer); diffLayer = null; }
+
+  const info = document.getElementById('diff-map-info');
+  info.style.display = 'block';
+  info.textContent = 'Loading…';
+
+  const c = findComparison(vA, vB);
+  if (!c || !c.diff_map || !c.diff_map.length) {
+    info.textContent = 'Data diff_map missing';
+    return;
+  }
+
+  const flip = c.version_a !== vA;
+
+  const geojson = {
+    type: 'FeatureCollection',
+    crs: {type:"name",properties:{name:"urn:ogc:def:crs:EPSG::2154"}},
+    features: c.diff_map.map(([lon, lat, delta]) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [lon, lat] },
+      properties: { delta: flip ? -delta : delta }
+    }))
+  };
+  console.log(geojson)
+
+  const reprojected = reprojectGeojson(geojson);
+
+  diffLayer = L.geoJSON(reprojected, {
+    pointToLayer: (f, latlng) => L.circleMarker(latlng, {
+      radius: 3,
+      fillColor: diffColor(f.properties.delta),
+      color: 'transparent',
+      fillOpacity: 0.9,
+      weight: 0,
+    }),
+    onEachFeature: (f, layer) => {
+      const d = f.properties.delta;
+      const sign = d >= 0 ? '+' : '';
+      layer.bindTooltip(
+              `Δ: ${sign}${d.toFixed(2)} dB<br>${vA} → ${vB}`,
+              { className: 'leaflet-tooltip-dark', sticky: true }
+      );
+    }
+  }).addTo(map);
+
+  info.innerHTML = `n=${c.diff_map.length.toLocaleString()}<br>${vA} → ${vB}`;
+  document.getElementById('diff-legend').style.display = 'flex';
+}
+
+
+function clearDiffMap() {
+  if (diffLayer) { map.removeLayer(diffLayer); diffLayer = null; }
+  document.getElementById('diff-legend').style.display = 'none';
+  document.getElementById('diff-map-info').style.display = 'none';
+}
+
+function setupDiffMapButton() {
+  const btn = document.getElementById('btn-diff-map');
+  if (!btn) return;
+
+  btn.addEventListener('click', async () => {
+    diffMapActive = !diffMapActive;
+
+    if (diffMapActive) {
+      btn.classList.add('active');
+      const vA = document.getElementById('select-vA')?.value;
+      const vB = document.getElementById('select-vB')?.value;
+      if (!vA || !vB) {
+        document.getElementById('diff-map-info').style.display = 'block';
+        document.getElementById('diff-map-info').textContent = 'Select an A/B pair';
+        diffMapActive = false;
+        btn.classList.remove('active');
+        return;
+      }
+      await drawDiffMap(vA, vB);
+    } else {
+      btn.classList.remove('active');
+      clearDiffMap();
+    }
+  });
+
+  ['select-vA', 'select-vB'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', async () => {
+      if (!diffMapActive) return;
+      const vA = document.getElementById('select-vA')?.value;
+      const vB = document.getElementById('select-vB')?.value;
+      if (vA && vB) await drawDiffMap(vA, vB);
+    });
+  });
+}
+
+// ─────────────────────────────────────────────
+// SIDEBAR TOGGLE
+// ─────────────────────────────────────────────
+function toggleSidebar(panelId, btn) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const collapsed = panel.classList.toggle('collapsed');
+  btn.classList.toggle('collapsed', collapsed);
+}
+
+// ─────────────────────────────────────────────
 // BOOTSTRAP
 // ─────────────────────────────────────────────
 async function init() {
@@ -1245,10 +2024,13 @@ async function init() {
   renderHeaderMeta(data);
   renderCards(data);
   renderHistogram(data);
+  await renderBoxplot();
   await loadComparisons();
   setupPairSelector();
+  initMap();
+  renderMapControls(data);
+  setupDiffMapButton();
 
-  await renderBoxplot();
 
 }
 
