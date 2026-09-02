@@ -43,6 +43,10 @@ jobs:
             echo "has_new=true" >> $GITHUB_OUTPUT
             exit 0
           fi
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "has_new=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
           POM=$(curl -sf \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.raw" \
