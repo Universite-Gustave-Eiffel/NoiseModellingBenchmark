@@ -37,9 +37,10 @@ jobs:
       - name: Checkout Benchmark repo
         uses: actions/checkout@v4
         with:
-          lfs: false
+          repository: Universite-Gustave-Eiffel/NoiseModellingBenchmark
           token: ${{ secrets.GH_PAT }}
-          persist-credentials: true
+          lfs: false
+          persist-credentials: false
 
       - name: Check PAT permissions
         env:
@@ -245,11 +246,38 @@ jobs:
               f.write(content)
           print(f"{key} ajoutée dans la matrice")
           PYEOF
+      - name: Configure Git authentication
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git config --local credential.helper store
+          printf "https://x-access-token:%s@github.com\n" "$GH_PAT" > ~/.git-credentials
+      - name: Commit and push
+        env:
+          NM_VERSION: ${{ steps.detect.outputs.new_version }}
+        run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      
           git add .github/workflows/benchmark.yml
-          git commit -m "chore: add NoiseModelling v${NM_VERSION} to benchmark matrix [skip ci]" || true
-          git push
+      
+          if git diff --cached --quiet; then
+            echo "Aucune modification."
+            exit 0
+          fi
+      
+          git commit -m "chore: add NoiseModelling v${NM_VERSION} to benchmark matrix [skip ci]"
+      
+          git push origin HEAD:${{ github.ref_name }}
+
+
+
+          #git config user.name "github-actions[bot]"
+          #git config user.email "github-actions[bot]@users.noreply.github.com"
+          #git add .github/workflows/benchmark.yml
+          #git commit -m "chore: add NoiseModelling v${NM_VERSION} to benchmark matrix [skip ci]" || true
+          
+          #git push
 
   benchmark:
     needs: check-new-version
