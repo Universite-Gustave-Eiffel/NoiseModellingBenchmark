@@ -56,7 +56,6 @@ jobs:
           echo "second:*****${{ github.event_name }}"
           if [ "${{ github.event_name }}" = "push" ]; then
             echo "has_new=true" >> $GITHUB_OUTPUT
-            exit 0
           fi
 
           POM=$(curl -sS -f \
