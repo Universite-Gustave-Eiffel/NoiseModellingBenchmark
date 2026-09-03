@@ -37,27 +37,13 @@ jobs:
       - name: Checkout Benchmark repo
         uses: actions/checkout@v4
         with:
-          repository: Universite-Gustave-Eiffel/NoiseModellingBenchmark
-          token: ${{ secrets.GH_PAT }}
-          lfs: false
+          lfs: true
+          token: ${{ secrets.Gh_PAT }}
           persist-credentials: false
-
-      - name: Test push authentication
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          echo "Test accès Git avec PAT..."
-      
-          git -c http.extraheader="Authorization: Bearer ${GH_PAT}" \
-            ls-remote \
-            https://github.com/Universite-Gustave-Eiffel/NoiseModellingBenchmark.git \
-            HEAD
-    
 
       - name: Detect new NM version from pom.xml
         id: detect
         run: |
-          echo "first:*****${{ inputs.nm_version }}"
           if [ -n "${{ inputs.nm_version }}" ]; then
             echo "new_version=${{ inputs.nm_version }}" >> $GITHUB_OUTPUT
             echo "has_new=true" >> $GITHUB_OUTPUT
@@ -66,7 +52,6 @@ jobs:
           fi
 
           # Sur un push direct → pas de détection automatique
-          echo "second:*****${{ github.event_name }}"
           if [ "${{ github.event_name }}" = "push" ]; then
             echo "has_new=true" >> $GITHUB_OUTPUT
           fi
@@ -75,18 +60,13 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
             -H "Accept: application/vnd.github.raw" \
             "https://api.github.com/repos/Universite-Gustave-Eiffel/NoiseModelling/contents/pom.xml?ref=main")
-          echo "third:*****$POM" 
+          
           if [ -z "$POM" ]; then
             echo "Impossible de récupérer pom.xml"
             echo "has_new=false" >> $GITHUB_OUTPUT
             exit 0
           fi
 
-          echo "=== VERSION DU POM ==="
-
-          echo "$POM" | grep -n -m3 '<version>'
-          
-          echo "=== EXTRACTION ==="
           
           LATEST=$(echo "$POM" | grep -m1 '<version>' | \
             sed 's/.*<version>\(.*\)<\/version>.*/\1/' | tr -d '[:space:]' | \
@@ -116,13 +96,11 @@ jobs:
           CI_WORKFLOW_ID="5665989"
           
               
-
           LAST_RUN=$(curl -sS -f \
           -H "Authorization: Bearer $GH_TOKEN" \
           -H "Accept: application/vnd.github+json" \
           "https://api.github.com/repos/${REPO}/actions/workflows/${CI_WORKFLOW_ID}/runs?branch=main&status=success&per_page=1") 
           
-
 
           RUN_INFO=$(echo "$LAST_RUN" | python3 -c "
           import sys, json
@@ -242,37 +220,13 @@ jobs:
               f.write(content)
           print(f"{key} ajoutée dans la matrice")
           PYEOF
-      - name: Push benchmark update
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-          NM_VERSION: ${{ steps.detect.outputs.new_version }}
-        run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .github/workflows/benchmark.yml
-      
-          if git diff --cached --quiet; then
-            echo "Aucune modification."
-            exit 0
-          fi
-      
-          git commit \
-            -m "chore: add NoiseModelling v${NM_VERSION} to benchmark matrix [skip ci]"
-      
-          git -c http.extraheader="Authorization: Bearer ${GH_PAT}" \
-            push origin HEAD:${{ github.ref_name }}
-
-       
-
-
-
-          #git config user.name "github-actions[bot]"
-          #git config user.email "github-actions[bot]@users.noreply.github.com"
-          #git add .github/workflows/benchmark.yml
-          #git commit -m "chore: add NoiseModelling v${NM_VERSION} to benchmark matrix [skip ci]" || true
+          git commit -m "chore: add NoiseModelling v${NM_VERSION} to benchmark matrix [skip ci]" || true
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/Universite-Gustave-Eiffel/NoiseModellingBenchmark.git
           
-          #git push
+          
 
   benchmark:
     needs: check-new-version
