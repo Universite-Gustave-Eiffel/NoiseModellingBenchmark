@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
-          token: ${{ secrets.Gh_PAT }}
+          token: ${{ secrets.GH_PAT }}
           
 
       - name: Detect new NM version from pom.xml
