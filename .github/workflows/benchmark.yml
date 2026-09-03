@@ -38,7 +38,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
+          persist-credentials: true
 
 
       - name: Detect new NM version from pom.xml
