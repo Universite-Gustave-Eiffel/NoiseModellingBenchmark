@@ -243,75 +243,81 @@ jobs:
           
 
   benchmark:
-    needs: check-new-version
-    runs-on: ubuntu-latest
-    timeout-minutes: 300
-    strategy:
-      fail-fast: false
-      matrix:
-        version: >-
-          ${{
+      needs: check-new-version
+      runs-on: ubuntu-latest
+      timeout-minutes: 300
+      strategy:
+        fail-fast: false
+        matrix:
+          version: [v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0, v6.0.2]
+      steps:
+        - name: Free disk space
+          uses: jlumbroso/free-disk-space@main
+          with:
+            tool-cache: true
+            android: true
+            dotnet: true
+            haskell: true
+            large-packages: true
+            docker-images: true
+            swap-storage: true
+  
+        - name: Checkout repo
+          uses: actions/checkout@v4
+          with:
+            lfs: true
+  
+        - name: Set up Java 11
+          uses: actions/setup-java@v4
+          with:
+            distribution: temurin
+            java-version: '11'
+  
+        - name: Check disk space
+          run: df -h
+  
+        - name: Check LW_ROADS.geojson
+          run: |
+            echo "File info:"
+            file input/clisson/clisson/LW_ROADS.geojson
+            echo "First lines:"
+            head -5 input/clisson/clisson/LW_ROADS.geojson
+        - name: Cache NM binary for ${{ matrix.version }}
+          uses: actions/cache@v4
+          with:
+            path: input/NoiseModelling_without_gui_${{ matrix.version }}/
+            key: nm-binary-${{ matrix.version }}
+  
+        - name: Restore artifact-based NM binary
+          if: |
             needs.check-new-version.outputs.has_new == 'true' &&
-            fromJSON(
-              format(
-                '[{0}, "v{1}"]',
-                '[v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0]',
-                needs.check-new-version.outputs.new_version
-              )
-            ) ||
-            fromJSON('[v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0]')
-          }}
-    steps:
-      - name: Free disk space
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: true
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: true
-          swap-storage: true
+            matrix.version == format('v{0}', needs.check-new-version.outputs.new_version)
+          uses: actions/download-artifact@v4
+          with:
+            name: nm-artifact-${{ needs.check-new-version.outputs.new_version }}
+            path: input/NoiseModelling_without_gui_${{ matrix.version }}/
+          continue-on-error: true
+  
+        - name: Run benchmark for ${{ matrix.version }}
+          run: bash -x benchmark_run.sh --version ${{ matrix.version }}
+  
+        - name: Check disk space after run
+          if: always()
+          run: df -h && du -sh input/ output/ 2>/dev/null | sort -rh
+  
+        - name: Show simulation log
+          if: always()
+          run: |
+            find output -name simulation.log -exec sh -c 'echo ==== $1 ====; tail -100 "$1"' _ {} \;
+  
+        - name: Upload output for ${{ matrix.version }}
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+            name: output-${{ matrix.version }}
+            path: output/${{ matrix.version }}/
+            retention-days: 1
 
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - name: Set up Java 11
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '11'
-
-      - name: Check disk space
-        run: df -h
-
-      - name: Cache NM binary for ${{ matrix.version }}
-        uses: actions/cache@v4
-        with:
-          path: input/NoiseModelling_without_gui_${{ matrix.version }}/
-          key: nm-binary-${{ matrix.version }}
-
-      - name: Run benchmark for ${{ matrix.version }}
-        run: bash -x benchmark_run.sh --version ${{ matrix.version }}
-
-      - name: Check disk space after run
-        if: always()
-        run: df -h && du -sh input/ output/ 2>/dev/null | sort -rh
-
-      - name: Show simulation log
-        if: always()
-        run: |
-          find output -name simulation.log -exec sh -c 'echo ==== $1 ====; tail -100 "$1"' _ {} \;
-
-      - name: Upload output for ${{ matrix.version }}
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: output-${{ matrix.version }}
-          path: output/${{ matrix.version }}/
-          retention-days: 1
 
   build-website:
     needs: benchmark
