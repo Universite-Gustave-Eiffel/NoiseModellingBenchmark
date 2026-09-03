@@ -39,7 +39,7 @@ jobs:
         with:
           lfs: true
           token: ${{ secrets.Gh_PAT }}
-          persist-credentials: false
+          
 
       - name: Detect new NM version from pom.xml
         id: detect
