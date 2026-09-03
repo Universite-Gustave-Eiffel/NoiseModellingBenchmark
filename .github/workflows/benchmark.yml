@@ -316,6 +316,22 @@ jobs:
             name: output-${{ matrix.version }}
             path: output/${{ matrix.version }}/
             retention-days: 1
+        - name: Run benchmark for new version download
+          if: needs.check-new-version.outputs.has_new == 'true' && needs.check-new-version.outputs.new_version !=''
+          run: bash -x benchmark_run.sh --version ${{ needs.check-new-version.outputs.new_version }}
+
+        - name: Show simulation log for new version ${{ needs.check-new-version.outputs.new_version }}
+          if: always()
+          run: |
+            find output -name simulation.log -exec sh -c 'echo ==== $1 ====; tail -100 "$1"' _ {} \;
+            
+        - name: Upload output for ${{ needs.check-new-version.outputs.new_version }}
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+            name: output-${{ needs.check-new-version.outputs.new_version }}
+            path: output/${{ needs.check-new-version.outputs.new_version }}
+            retention-days: 1
 
 
   build-website:
