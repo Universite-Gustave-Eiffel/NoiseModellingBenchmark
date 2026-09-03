@@ -53,16 +53,17 @@ jobs:
           fi
 
           # Sur un push direct → pas de détection automatique
+          echo "second:*****${{ github.event_name }}"
           if [ "${{ github.event_name }}" = "push" ]; then
             echo "has_new=true" >> $GITHUB_OUTPUT
             exit 0
           fi
 
-          POM=$(curl -sf \
+          POM=$(curl -sS -f \
             -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
             -H "Accept: application/vnd.github.raw" \
             "https://api.github.com/repos/Universite-Gustave-Eiffel/NoiseModelling/contents/pom.xml?ref=main")
-
+          echo "third:*****$POM" 
           if [ -z "$POM" ]; then
             echo "Impossible de récupérer pom.xml"
             echo "has_new=false" >> $GITHUB_OUTPUT
