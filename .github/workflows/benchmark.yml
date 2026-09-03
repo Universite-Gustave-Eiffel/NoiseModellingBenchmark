@@ -224,7 +224,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .github/workflows/benchmark.yml
           git commit -m "chore: add NoiseModelling v${NM_VERSION} to benchmark matrix [skip ci]" || true
-          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/Universite-Gustave-Eiffel/NoiseModellingBenchmark.git
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Universite-Gustave-Eiffel/NoiseModellingBenchmark.git
           
           
 
