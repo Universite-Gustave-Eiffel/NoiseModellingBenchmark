@@ -90,7 +90,7 @@ jobs:
             echo "new_version=$LATEST" >> $GITHUB_OUTPUT
             echo "has_new=true" >> $GITHUB_OUTPUT
           fi
-          ${{ inputs.nm_version }} = "$LATEST"
+        
 
       - name: Find artifact from latest run if successful
         id: artifact
