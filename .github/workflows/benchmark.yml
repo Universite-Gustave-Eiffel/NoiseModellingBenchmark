@@ -225,13 +225,13 @@ jobs:
           print(f"{key} ajoutée dans la matrice")
           PYEOF
       
-          FILE_SHA=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          FILE_SHA=$(curl -s -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
             "https://api.github.com/repos/${{ github.repository }}/contents/.github/workflows/benchmark.yml?ref=benchmarkWebsiteGenerator-fixed" | jq -r '.sha')
       
           CONTENT_BASE64=$(base64 -w 0 .github/workflows/benchmark.yml | tr -d '\n')
       
           curl -X PUT \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/contents/.github/workflows/benchmark.yml" \
             -d "{
