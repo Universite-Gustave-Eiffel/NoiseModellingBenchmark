@@ -72,7 +72,9 @@ jobs:
           LATEST=$(echo "$POM" | grep -m1 '<version>' | \
             sed 's/.*<version>\(.*\)<\/version>.*/\1/' | tr -d '[:space:]')
 
+          echo "herrrrrrrrrrrrrrrrrrrr*************
           echo "Version dans pom.xml : $LATEST"
+          echo "afterrrrr  herrrrrrrrrrrrrrrrrrrr*************
 
           
           if grep -q "$LATEST" .github/workflows/benchmark.yml 2>/dev/null; then
