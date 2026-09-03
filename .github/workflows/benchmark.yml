@@ -76,7 +76,8 @@ jobs:
           echo "=== EXTRACTION ==="
           
           LATEST=$(echo "$POM" | grep -m1 '<version>' | \
-            sed 's/.*<version>\(.*\)<\/version>.*/\1/' | tr -d '[:space:]')
+            sed 's/.*<version>\(.*\)<\/version>.*/\1/' | tr -d '[:space:]' | \
+            sed 's/-SNAPSHOT$//')
           
           echo "LATEST=[$LATEST]"
 
