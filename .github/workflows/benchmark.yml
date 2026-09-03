@@ -90,6 +90,7 @@ jobs:
             echo "new_version=$LATEST" >> $GITHUB_OUTPUT
             echo "has_new=true" >> $GITHUB_OUTPUT
           fi
+          ${{ inputs.nm_version }} = "$LATEST"
 
       - name: Find artifact from latest run if successful
         id: artifact
@@ -214,7 +215,7 @@ jobs:
           key = f'v{version}'
           with open('.github/workflows/benchmark.yml') as f:
               content = f.read()
-          pattern = r'(version:\s*\[)([^\]]+)(\])'
+          pattern = r'(matrix:\s*\n\s*version:\s*\[)([^\]]*)(\])'
           match = re.search(pattern, content)
           if not match:
               print("Pattern matrix non trouvé")
