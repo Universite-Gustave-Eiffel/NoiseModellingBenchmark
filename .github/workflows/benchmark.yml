@@ -308,7 +308,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          version: [v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0]
+          version: [v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0, v6.0.2-SNAPSHOT]
       steps:
         - name: Free disk space
           uses: jlumbroso/free-disk-space@main
