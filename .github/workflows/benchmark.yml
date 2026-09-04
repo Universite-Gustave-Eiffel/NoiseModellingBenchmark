@@ -175,22 +175,26 @@ jobs:
             -o "input/NoiseModelling_v${NM_VERSION}_artifact.zip"
 
           ls -lh input/
-          mkdir -p input/NoiseModelling_without_gui_v${NM_VERSION}_tmp
+          mkdir -p input/NoiseModelling_without_gui_v${NM_VERSION}
           unzip -q "input/NoiseModelling_v${NM_VERSION}_artifact.zip" \
-            -d "input/NoiseModelling_without_gui_v${NM_VERSION}_tmp" || true
+            -d "input/NoiseModelling_without_gui_v${NM_VERSION}" || true
+            
+          echo "Structure extraite before tmp :"
+          ls "input/NoiseModelling_without_gui_v${NM_VERSION}/"
 
-          INNER_ZIP=$(find "input/NoiseModelling_without_gui_v${NM_VERSION}_tmp" \
+          INNER_ZIP=$(find "input/NoiseModelling_without_gui_v${NM_VERSION}" \
             -name "*.zip" | head -n 1)
+          echo " in zipp $INNER_ZIP"
 
-          if [ -n "$INNER_ZIP" ]; then
-            echo "Zip interne trouvé : $INNER_ZIP"
-            mkdir -p "input/NoiseModelling_without_gui_v${NM_VERSION}"
-            unzip -q "$INNER_ZIP" -d "input/NoiseModelling_without_gui_v${NM_VERSION}"
-          else
-            echo "Pas de zip interne — l'artifact est directement les fichiers NM"
-            mv "input/NoiseModelling_without_gui_v${NM_VERSION}_tmp" \
-               "input/NoiseModelling_without_gui_v${NM_VERSION}"
-          fi
+          #if [ -n "$INNER_ZIP" ]; then
+          #  echo "Zip interne trouvé : $INNER_ZIP"
+           # mkdir -p "input/NoiseModelling_without_gui_v${NM_VERSION}"
+           # unzip -q "$INNER_ZIP" -d "input/NoiseModelling_without_gui_v${NM_VERSION}"
+          #else
+          #  echo "Pas de zip interne — l'artifact est directement les fichiers NM"
+          #  mv "input/NoiseModelling_without_gui_v${NM_VERSION}_tmp" \
+          #     "input/NoiseModelling_without_gui_v${NM_VERSION}"
+          # fi
 
           echo "Structure extraite :"
           ls "input/NoiseModelling_without_gui_v${NM_VERSION}/"
@@ -312,7 +316,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          version: [v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0, v6.0.2-SNAPSHOT]
+          version: [v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0]
       steps:
         - name: Free disk space
           uses: jlumbroso/free-disk-space@main
