@@ -22,8 +22,8 @@
 import groovy.sql.Sql
 import org.h2gis.api.ProgressVisitor
 import org.noise_planet.noisemodelling.scripts.Acoustic_Tools.Create_Isosurface
-import org.noise_planet.noisemodelling.scripts.NoiseModelling.Noise_level_from_source
 import org.noise_planet.noisemodelling.scripts.NoiseModelling.Road_Emission_from_Traffic
+import org.noise_planet.noisemodelling.scripts.NoiseModelling.Noise_level_from_source
 import org.noise_planet.noisemodelling.scripts.Receivers.Delaunay_Grid
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -186,43 +186,49 @@ static def exec(Connection connection, Map input) {
 
     if(redoCompute) {
 
-        def running = new AtomicBoolean(true)
-
-        def monitor = Thread.start {
-            def rt = Runtime.getRuntime()
-            def avant = rt.freeMemory()
-
-            while (running.get()) {
-                long used = rt.freeMemory()
-                long diff = Math.abs(avant - used) / (1024 * 1024 * 1024)
-
-
-                if (diff > maxUsedMemory) {
-                    maxUsedMemory = diff
-                }
-
-                sleep(1000)
-            }
-        }
         long startCompute = System.currentTimeMillis()
+        if(version == "v6.0.0"){
 
-        new Noise_level_from_source().exec(connection,
-                ["tableBuilding"     : "BUILDINGS",
-                 "tableSources"      : "LW_ROADS",
-                 "tableReceivers"    : "RECEIVERS",
-                 "tableDEM"          : "DEM",
-                 "tableGroundAbs"    : "GROUNDS",
-                 "confReflOrder"     : 1,
-                 "confMaxSrcDist"    : 300,
-                 "confDiffHorizontal": true,
-                 "confMaxError": 0.1,
-                 "confFavorableOccurrencesDefault":'0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
-        ])
+                def scriptFile = new File("nm_version/src/main/groovy/v600Noise_level_from_source.groovy")
+                        .getAbsoluteFile()
+        
+                if (!scriptFile.exists()) {
+                    throw new FileNotFoundException("Fichier introuvable : ${scriptFile.absolutePath}")
+                }
+        
+                def customClass = new GroovyClassLoader().parseClass(scriptFile)
+                def customScript = customClass.newInstance()
+                customScript.exec(connection, [
+                        "tableBuilding" : "BUILDINGS",
+                         "tableSources"      : "LW_ROADS",
+                         "tableReceivers"    : "RECEIVERS",
+                         "tableDEM"          : "DEM",
+                         "tableGroundAbs"    : "GROUNDS",
+                         "confReflOrder"     : 1,
+                         "confMaxSrcDist"    : 300,
+                         "confDiffHorizontal": true,
+                         "confMaxError": 0.1,
+                         "confFavorableOccurrencesDefault":'0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
+                ])
+        }
+        else{
 
+                 new Noise_level_from_source().exec(connection,
+                        ["tableBuilding"     : "BUILDINGS",
+                         "tableSources"      : "LW_ROADS",
+                         "tableReceivers"    : "RECEIVERS",
+                         "tableDEM"          : "DEM",
+                         "tableGroundAbs"    : "GROUNDS",
+                         "confReflOrder"     : 1,
+                         "confMaxSrcDist"    : 300,
+                         "confDiffHorizontal": true,
+                         "confMaxError": 0.1,
+                         "confFavorableOccurrencesDefault":'0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
+                ])
+        }
+        
         elapsed = System.currentTimeMillis() - startCompute
 
-        running.set(false)
-        monitor.join()
 
         new Export_Table().exec(connection,
                 ["exportPath"   : "$outputFolder/RECEIVERS_LEVEL.geojson",
@@ -232,7 +238,7 @@ static def exec(Connection connection, Map input) {
 
     new Create_Isosurface().exec(connection,
             ["resultTable": "RECEIVERS_LEVEL",
-             "keepTriangles": true,
+             "keepTriangles": false,
              "smoothCoefficient" : 0])
 
     sql.execute("DROP TABLE IF EXISTS KEPLERGL")
@@ -240,7 +246,7 @@ static def exec(Connection connection, Map input) {
     sql.execute("CREATE TABLE KEPLERGL AS SELECT ST_Transform(THE_GEOM, 4326) THE_GEOM, ISOLABEL FROM CONTOURING_NOISE_MAP WHERE PERIOD='DEN'")
 
     new Export_Table().exec(connection,
-            ["exportPath"   : "$outputFolder/KEPLERGL.geojson",
+            ["exportPath"   : "$outputFolder/ISO_CONTOUR.geojson",
              "tableToExport": "KEPLERGL"])
 
     threadDump(true, true)
@@ -300,11 +306,8 @@ static def exec(Connection connection, Map input) {
 
     def result = [
             mean: mean,
-            memory: maxUsedMemory,
             time: timeString,
             timePerReceive: f.format(time),
-            nb_receiver: cpt,
-            confMaxError: 0.1,
             histogram: histogram
     ]
 

@@ -11,8 +11,8 @@ NM_VERSIONS["v5.0.0"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelli
 NM_VERSIONS["v5.0.1"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v5.0.1/NoiseModelling_without_gui-5.0.1.zip"
 NM_VERSIONS["v6.0.0"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v6.0.0/NoiseModelling_6.0.0.zip"
 
-GROOVY_SCRIPT="nm_v5.0/src/main/groovy/runscriptV5.0.groovy"
-GROOVY_SCRIPT_v6="nm_v5.0/src/main/groovy/runscriptV6.0.groovy"
+GROOVY_SCRIPT="nm_version/src/main/groovy/runscriptV5.0.groovy"
+GROOVY_SCRIPT_v6="nm_version/src/main/groovy/runscriptV6.0.groovy"
 
 INPUT_DIR="input"
 OUTPUT_DIR="output"
@@ -94,7 +94,7 @@ run_simulation() {
     mkdir -p "$out_dir"
 
     local wps_bin
-    if [ "$version" = "v6.0.0" ]; then
+    if [[ "$version" == v6* ]]; then
         wps_bin=$(find_wps_binary_v6 "$nm_dir") || return 1
     else
         wps_bin=$(find_wps_binary "$nm_dir") || return 1
@@ -109,7 +109,7 @@ run_simulation() {
             -s"$GROOVY_SCRIPT" \
             NM_version="$version" \
             > "$out_dir/simulation.log" 2>&1
-    elif [ "$version" = "v6.0.0" ]; then
+    elif [[ "$version" == v6* ]]; then
         "$wps_bin" \
             -w "$workspace" \
             -s "$GROOVY_SCRIPT_v6" \
@@ -138,10 +138,18 @@ run_simulation() {
 
 aggregate_results() {
     local agg_file="$DATA_DIR/results.json"
+
     echo "[" > "$agg_file"
     local first=true
-    for version in "${!NM_VERSIONS[@]}"; do
-        local stats="$OUTPUT_DIR/$version/stats_${version}.json"
+
+    for version_dir in "$OUTPUT_DIR"/*/; do
+        [ -d "$version_dir" ] || continue
+
+        local version
+        version="$(basename "$version_dir")"
+
+        local stats="$version_dir/stats_${version}.json"
+
         if [ ! -f "$stats" ]; then
             continue
         fi
@@ -152,45 +160,94 @@ aggregate_results() {
 
         python3 - "$version" "$stats" >> "$agg_file" <<'EOF'
 import json, sys
+
 version = sys.argv[1]
+
 with open(sys.argv[2]) as f:
     data = json.load(f)
+
 data["version"] = version
+
 print(json.dumps(data, indent=2))
 EOF
+
         first=false
     done
+
     echo "]" >> "$agg_file"
 }
 
+
 copy_geojson() {
-    for version in "${!NM_VERSIONS[@]}"; do
-        local geojson="$OUTPUT_DIR/$version/KEPLERGL.geojson"
-        local receivgeojson="$OUTPUT_DIR/$version/RECEIVERS_LEVEL.geojson"
+    local CLISSON_DIR="$INPUT_DIR/clisson/clisson"
+
+    declare -A COMMON_LAYERS=(
+        ["BUILDINGS.geojson"]="BUILDINGS.geojson"
+        ["RECEIVERS.geojson"]="RECEIVERS.geojson"
+        ["DEM.geojson"]="DEM.geojson"
+        ["ROADS.geojson"]="ROADS.geojson"
+        ["GROUNDS.geojson"]="GROUNDS.geojson"
+    )
+
+    for version_dir in "$OUTPUT_DIR"/*/; do
+        [ -d "$version_dir" ] || continue
+
+        local version
+        version="$(basename "$version_dir")"
+
+        mkdir -p "$DATA_DIR/$version"
+
+        local receivgeojson="$version_dir/RECEIVERS_LEVEL.geojson"
+
         if [ -f "$receivgeojson" ]; then
-            mkdir -p "$DATA_DIR/$version"
-            cp "$geojson" "$DATA_DIR/$version/KEPLERGL.geojson"
-            cp "$receivgeojson" "$DATA_DIR/$version/RECEIVERS_LEVEL.geojson"
+            cp "$receivgeojson" \
+               "$DATA_DIR/$version/RECEIVERS_LEVEL.geojson"
         fi
+
+        local iso_src="$version_dir/ISO_CONTOUR.geojson"
+
+        if [ -f "$iso_src" ]; then
+            cp "$iso_src" \
+               "$DATA_DIR/$version/ISO_CONTOUR.geojson"
+        fi
+
+        for dest_name in "${!COMMON_LAYERS[@]}"; do
+            local src_name="${COMMON_LAYERS[$dest_name]}"
+            local src="$CLISSON_DIR/$src_name"
+
+            if [ -f "$src" ]; then
+                cp "$src" "$DATA_DIR/$version/$dest_name"
+            fi
+        done
     done
 }
 
+
 run_one_version() {
     local version="$1"
-    if [ -z "${NM_VERSIONS[$version]+x}" ]; then
-        echo "Version inconnue: $version" >&2
+    local nm_dir="$INPUT_DIR/NoiseModelling_without_gui_${version}"
+    
+    if [ -d "$nm_dir" ]; then
+        echo " NM déjà présent : $nm_dir — skip download.:"
+        ls $nm_dir
+
+    elif [ -n "${NM_VERSIONS[$version]+x}" ]; then
+        download_nm_version "$version" "${NM_VERSIONS[$version]}" || {
+            echo "Echec download pour $version"
+            exit 1
+        }
+
+    else
+        echo "Version inconnue et aucun dossier ni URL disponible : $version"
+        echo "Dossier cherché : $nm_dir"
         exit 1
     fi
 
     download_clisson
-    download_nm_version "$version" "${NM_VERSIONS[$version]}" || {
-        echo "Echec download pour $version" >&2
-        exit 1
-    }
 
-    echo "version $version"
+    echo "Lancement simulation $version..."
     run_simulation "$version" || {
-        echo "Echec simulation pour $version" >&2
+        echo "Echec simulation pour $version"
         exit 1
     }
 }
