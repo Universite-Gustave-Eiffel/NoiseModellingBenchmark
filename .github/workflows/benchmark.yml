@@ -184,16 +184,16 @@ jobs:
 
           if [ -n "$INNER_ZIP" ]; then
             echo "Zip interne trouvé : $INNER_ZIP"
-            mkdir -p "input/NoiseModelling_without_gui_v${NM_VERSION}"
-            unzip -q "$INNER_ZIP" -d "input/NoiseModelling_without_gui_v${NM_VERSION}"
+            mkdir -p "input/_v${NM_VERSION}"
+            unzip -q "$INNER_ZIP" -d "input/_v${NM_VERSION}"
           else
             echo "Pas de zip interne — l'artifact est directement les fichiers NM"
-            mv "input/NoiseModelling_without_gui_v${NM_VERSION}_tmp" \
-               "input/NoiseModelling_without_gui_v${NM_VERSION}"
+            mv "input/_v${NM_VERSION}_tmp" \
+               "input/_v${NM_VERSION}"
           fi
 
           echo "Structure extraite :"
-          ls "input/NoiseModelling_without_gui_v${NM_VERSION}/"
+          ls "input/_v${NM_VERSION}/"
 
 
       - name: Install jq
@@ -272,7 +272,7 @@ jobs:
           
         - name: Run benchmark for new version download
           if: needs.check-new-version.outputs.has_new == 'true' && needs.check-new-version.outputs.new_version !=''
-          run: bash -x benchmark_run.sh --version ${{ needs.check-new-version.outputs.new_version }}
+          run: bash -x benchmark_run.sh --version v${{ needs.check-new-version.outputs.new_version }}
 
         - name: Show simulation log for new version ${{ needs.check-new-version.outputs.new_version }}
           if: always()
@@ -283,8 +283,8 @@ jobs:
           if: always()
           uses: actions/upload-artifact@v4
           with:
-            name: output-${{ needs.check-new-version.outputs.new_version }}
-            path: output/${{ needs.check-new-version.outputs.new_version }}
+            name: output-v${{ needs.check-new-version.outputs.new_version }}
+            path: output/v${{ needs.check-new-version.outputs.new_version }}
             retention-days: 1
             
   benchmark:
