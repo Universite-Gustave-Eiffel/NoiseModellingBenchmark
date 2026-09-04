@@ -208,7 +208,8 @@ run_one_version() {
     local nm_dir="$INPUT_DIR/NoiseModelling_without_gui_${version}"
     
     if [ -d "$nm_dir" ]; then
-        echo " NM déjà présent : $nm_dir — skip download."
+        echo " NM déjà présent : $nm_dir — skip download.:"
+        ls $nm_dir
 
     elif [ -n "${NM_VERSIONS[$version]+x}" ]; then
         download_nm_version "$version" "${NM_VERSIONS[$version]}" || {
