@@ -205,20 +205,28 @@ copy_geojson() {
 
 run_one_version() {
     local version="$1"
-    if [ -z "${NM_VERSIONS[$version]+x}" ]; then
-        echo "Version inconnue: $version" >&2
+    local nm_dir="$INPUT_DIR/NoiseModelling_without_gui_${version}"
+    
+    if [ -d "$nm_dir" ]; then
+        echo " NM déjà présent : $nm_dir — skip download."
+
+    elif [ -n "${NM_VERSIONS[$version]+x}" ]; then
+        download_nm_version "$version" "${NM_VERSIONS[$version]}" || {
+            echo "Echec download pour $version"
+            exit 1
+        }
+
+    else
+        echo "Version inconnue et aucun dossier ni URL disponible : $version"
+        echo "Dossier cherché : $nm_dir"
         exit 1
     fi
 
     download_clisson
-    download_nm_version "$version" "${NM_VERSIONS[$version]}" || {
-        echo "Echec download pour $version" >&2
-        exit 1
-    }
 
-    echo "version $version"
+    echo "Lancement simulation $version..."
     run_simulation "$version" || {
-        echo "Echec simulation pour $version" >&2
+        log_error "Echec simulation pour $version"
         exit 1
     }
 }
