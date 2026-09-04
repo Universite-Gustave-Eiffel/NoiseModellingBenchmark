@@ -138,10 +138,18 @@ run_simulation() {
 
 aggregate_results() {
     local agg_file="$DATA_DIR/results.json"
+
     echo "[" > "$agg_file"
     local first=true
-    for version in "${!NM_VERSIONS[@]}"; do
-        local stats="$OUTPUT_DIR/$version/stats_${version}.json"
+
+    for version_dir in "$OUTPUT_DIR"/*/; do
+        [ -d "$version_dir" ] || continue
+
+        local version
+        version="$(basename "$version_dir")"
+
+        local stats="$version_dir/stats_${version}.json"
+
         if [ ! -f "$stats" ]; then
             continue
         fi
@@ -152,21 +160,26 @@ aggregate_results() {
 
         python3 - "$version" "$stats" >> "$agg_file" <<'EOF'
 import json, sys
+
 version = sys.argv[1]
+
 with open(sys.argv[2]) as f:
     data = json.load(f)
+
 data["version"] = version
+
 print(json.dumps(data, indent=2))
 EOF
+
         first=false
     done
+
     echo "]" >> "$agg_file"
 }
 
+
 copy_geojson() {
-
     local CLISSON_DIR="$INPUT_DIR/clisson/clisson"
-
 
     declare -A COMMON_LAYERS=(
         ["BUILDINGS.geojson"]="BUILDINGS.geojson"
@@ -176,20 +189,26 @@ copy_geojson() {
         ["GROUNDS.geojson"]="GROUNDS.geojson"
     )
 
-    for version in "${!NM_VERSIONS[@]}"; do
+    for version_dir in "$OUTPUT_DIR"/*/; do
+        [ -d "$version_dir" ] || continue
+
+        local version
+        version="$(basename "$version_dir")"
+
         mkdir -p "$DATA_DIR/$version"
-        local receivgeojson="$OUTPUT_DIR/$version/RECEIVERS_LEVEL.geojson"
+
+        local receivgeojson="$version_dir/RECEIVERS_LEVEL.geojson"
+
         if [ -f "$receivgeojson" ]; then
-            cp "$receivgeojson" "$DATA_DIR/$version/RECEIVERS_LEVEL.geojson"
+            cp "$receivgeojson" \
+               "$DATA_DIR/$version/RECEIVERS_LEVEL.geojson"
         fi
 
-        local iso_src=""
-        if [ -f "$OUTPUT_DIR/$version/ISO_CONTOUR.geojson" ]; then
-            iso_src="$OUTPUT_DIR/$version/ISO_CONTOUR.geojson"
-        fi
+        local iso_src="$version_dir/ISO_CONTOUR.geojson"
 
-        if [ -n "$iso_src" ]; then
-            cp "$iso_src" "$DATA_DIR/$version/ISO_CONTOUR.geojson"
+        if [ -f "$iso_src" ]; then
+            cp "$iso_src" \
+               "$DATA_DIR/$version/ISO_CONTOUR.geojson"
         fi
 
         for dest_name in "${!COMMON_LAYERS[@]}"; do
@@ -202,6 +221,7 @@ copy_geojson() {
         done
     done
 }
+
 
 run_one_version() {
     local version="$1"
