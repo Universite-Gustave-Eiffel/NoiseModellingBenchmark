@@ -184,16 +184,16 @@ jobs:
 
           if [ -n "$INNER_ZIP" ]; then
             echo "Zip interne trouvé : $INNER_ZIP"
-            mkdir -p "input/_v${NM_VERSION}"
-            unzip -q "$INNER_ZIP" -d "input/_v${NM_VERSION}"
+            mkdir -p "input/NoiseModelling_without_gui_v${NM_VERSION}"
+            unzip -q "$INNER_ZIP" -d "input/NoiseModelling_without_gui_v${NM_VERSION}"
           else
             echo "Pas de zip interne — l'artifact est directement les fichiers NM"
-            mv "input/_v${NM_VERSION}_tmp" \
-               "input/_v${NM_VERSION}"
+            mv "input/NoiseModelling_without_gui_v${NM_VERSION}_tmp" \
+               "input/NoiseModelling_without_gui_v${NM_VERSION}"
           fi
 
           echo "Structure extraite :"
-          ls "input/_v${NM_VERSION}/"
+          ls "input/NoiseModelling_without_gui_v${NM_VERSION}/"
           
       - name: Upload extracted NM binary as artifact
         if: steps.detect.outputs.has_new == 'true' && steps.artifact.outputs.artifact_url != ''
