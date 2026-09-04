@@ -94,7 +94,7 @@ run_simulation() {
     mkdir -p "$out_dir"
 
     local wps_bin
-    if [ "$version" = "v6.0.0" ]; then
+    if [ "$version" = v6* ]; then
         wps_bin=$(find_wps_binary_v6 "$nm_dir") || return 1
     else
         wps_bin=$(find_wps_binary "$nm_dir") || return 1
@@ -109,7 +109,7 @@ run_simulation() {
             -s"$GROOVY_SCRIPT" \
             NM_version="$version" \
             > "$out_dir/simulation.log" 2>&1
-    elif [ "$version" = "v6.0.0" ]; then
+    elif [ "$version" = v6* ]; then
         "$wps_bin" \
             -w "$workspace" \
             -s "$GROOVY_SCRIPT_v6" \
