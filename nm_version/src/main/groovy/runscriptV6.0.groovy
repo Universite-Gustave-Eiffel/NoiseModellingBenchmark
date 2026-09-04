@@ -186,30 +186,46 @@ static def exec(Connection connection, Map input) {
     if(redoCompute) {
 
         long startCompute = System.currentTimeMillis()
+        if(version == "v6.0.0"){
 
-        def scriptFile = new File("nm_version/src/main/groovy/v600Noise_level_from_source.groovy")
-                .getAbsoluteFile()
-
-        if (!scriptFile.exists()) {
-            throw new FileNotFoundException("Fichier introuvable : ${scriptFile.absolutePath}")
+                def scriptFile = new File("nm_version/src/main/groovy/v600Noise_level_from_source.groovy")
+                        .getAbsoluteFile()
+        
+                if (!scriptFile.exists()) {
+                    throw new FileNotFoundException("Fichier introuvable : ${scriptFile.absolutePath}")
+                }
+        
+                def customClass = new GroovyClassLoader().parseClass(scriptFile)
+                def customScript = customClass.newInstance()
+                customScript.exec(connection, [
+                        "tableBuilding" : "BUILDINGS",
+                         "tableSources"      : "LW_ROADS",
+                         "tableReceivers"    : "RECEIVERS",
+                         "tableDEM"          : "DEM",
+                         "tableGroundAbs"    : "GROUNDS",
+                         "confReflOrder"     : 1,
+                         "confMaxSrcDist"    : 300,
+                         "confDiffHorizontal": true,
+                         "confMaxError": 0.1,
+                         "confFavorableOccurrencesDefault":'0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
+                ])
         }
+        else{
 
-        def customClass = new GroovyClassLoader().parseClass(scriptFile)
-        def customScript = customClass.newInstance()
-        customScript.exec(connection, [
-                "tableBuilding" : "BUILDINGS",
-                 "tableSources"      : "LW_ROADS",
-                 "tableReceivers"    : "RECEIVERS",
-                 "tableDEM"          : "DEM",
-                 "tableGroundAbs"    : "GROUNDS",
-                 "confReflOrder"     : 1,
-                 "confMaxSrcDist"    : 300,
-                 "confDiffHorizontal": true,
-                 "confMaxError": 0.1,
-                 "confFavorableOccurrencesDefault":'0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
-        ])
-
-
+                 new Noise_level_from_source().exec(connection,
+                        ["tableBuilding"     : "BUILDINGS",
+                         "tableSources"      : "LW_ROADS",
+                         "tableReceivers"    : "RECEIVERS",
+                         "tableDEM"          : "DEM",
+                         "tableGroundAbs"    : "GROUNDS",
+                         "confReflOrder"     : 1,
+                         "confMaxSrcDist"    : 300,
+                         "confDiffHorizontal": true,
+                         "confMaxError": 0.1,
+                         "confFavorableOccurrencesDefault":'0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25'
+                ])
+        }
+        
         elapsed = System.currentTimeMillis() - startCompute
 
 
