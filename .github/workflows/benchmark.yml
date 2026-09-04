@@ -194,6 +194,14 @@ jobs:
 
           echo "Structure extraite :"
           ls "input/_v${NM_VERSION}/"
+          
+      - name: Upload extracted NM binary as artifact
+        if: steps.detect.outputs.has_new == 'true' && steps.artifact.outputs.artifact_url != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: nm-binary-${{ steps.detect.outputs.new_version }}
+          path: input/NoiseModelling_without_gui_v${{ steps.detect.outputs.new_version }}/
+          retention-days: 1
 
 
       - name: Install jq
@@ -269,6 +277,16 @@ jobs:
   
         - name: Check disk space
           run: df -h
+
+        - name: Restore new NM binary from artifact
+          if: |
+            needs.check-new-version.outputs.has_new == 'true' &&
+            needs.check-new-version.outputs.new_version !=''
+          uses: actions/download-artifact@v4
+          with:
+            name: nm-binary-${{ needs.check-new-version.outputs.new_version }}
+            path: input/NoiseModelling_without_gui_v${{ needs.check-new-version.outputs.new_version }}/
+          continue-on-error: true
           
         - name: Run benchmark for new version download
           if: needs.check-new-version.outputs.has_new == 'true' && needs.check-new-version.outputs.new_version !=''
@@ -294,7 +312,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          version: [v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0, v6.0.2-SNAPSHOT]
+          version: [v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0]
       steps:
         - name: Free disk space
           uses: jlumbroso/free-disk-space@main
