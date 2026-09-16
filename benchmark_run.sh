@@ -225,7 +225,7 @@ copy_geojson() {
 
 run_one_version() {
     echo " dans input on a:"
-    ls -l "$INPUT_DIR"
+    ls -la $INPUT_DIR
     local version="$1"
     local nm_dir="$INPUT_DIR/NoiseModelling_without_gui_${version}"
     
