@@ -305,9 +305,9 @@ jobs:
             needs.check-new-version.outputs.has_new == 'true' &&
             needs.check-new-version.outputs.new_version !=''
           run: |
-            V= ${{ needs.check-new-version.outputs.new_version }}
-            DIR="input/NoiseModelling_without_gui_v${V}"
-            ZIP="input/NoiseModelling_without_gui_v${V}.zip"
+            ZIP="input/NoiseModelling_without_gui_v${{ needs.check-new-version.outputs.new_version }}.zip"
+            DIR="input/NoiseModelling_without_gui_v${{ needs.check-new-version.outputs.new_version }}"
+            echo "$ZIP"
             if [ ! -d "$DIR" ] || [ -z "$(ls -A "$DIR" 2>/dev/null)" ]; then
               mkdir -p "$DIR"
               unzip -q "$ZIP" -d "$DIR"
@@ -347,7 +347,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          version: [v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0, v6.0.2-SNAPSHOT]
+          version: [v4.0.0, v4.0.1, v4.0.2, v4.0.4, v4.0.5, v5.0.0, v5.0.1, v6.0.0]
       steps:
         - name: Free disk space
           uses: jlumbroso/free-disk-space@main
