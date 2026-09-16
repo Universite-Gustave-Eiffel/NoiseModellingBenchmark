@@ -8,7 +8,6 @@ on:
   workflow_dispatch:
     inputs:
       nm_version:
-        description: 'Forcer une version NM (ex: 5.0.2). Vide = auto-detection depuis pom.xml.'
         required: false
         type: string
   schedule:
@@ -78,6 +77,7 @@ jobs:
           if grep -q "$LATEST" .github/workflows/benchmark.yml 2>/dev/null; then
             echo "v${LATEST} déjà dans le benchmark."
             echo "has_new=false" >> $GITHUB_OUTPUT
+            exit 0
           else
             echo "Nouvelle version : v${LATEST}"
             echo "new_version=$LATEST" >> $GITHUB_OUTPUT
@@ -199,6 +199,27 @@ jobs:
           echo "Structure extraite :"
           ls "input/NoiseModelling_without_gui_v${NM_VERSION}/"
           
+      - name: Commit NM binary to input/
+        if: steps.detect.outputs.has_new == 'true' && steps.artifact.outputs.artifact_url != ''
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          NM_VERSION="${{ steps.detect.outputs.new_version }}"
+          ZIP="input/binaries/NoiseModelling_without_gui_v${NM_VERSION}.zip"
+
+          mkdir -p input/binaries
+          INNER=$(find "input/NoiseModelling_without_gui_v${NM_VERSION}" -name "*.zip" | head -n 1)
+          if [ -n "$INNER" ]; then cp "$INNER" "$ZIP"; else
+            cp "input/NoiseModelling_v${NM_VERSION}_artifact.zip" "$ZIP"; fi
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          grep -q 'input/binaries' .gitattributes 2>/dev/null || \
+            echo 'input/binaries/*.zip filter=lfs diff=lfs merge=lfs -text' >> .gitattributes
+          git add .gitattributes "$ZIP"
+          git commit -m "chore: add NM v${NM_VERSION} binary [skip ci]" || exit 0
+          git push origin HEAD:main
+          
       - name: Upload extracted NM binary as artifact
         if: steps.detect.outputs.has_new == 'true' && steps.artifact.outputs.artifact_url != ''
         uses: actions/upload-artifact@v4
@@ -209,6 +230,7 @@ jobs:
 
 
       - name: Install jq
+        if: steps.detect.outputs.has_new == 'true' && steps.artifact.outputs.artifact_url != ''
         run: sudo apt-get install -y jq
 
       - name: Update benchmark.yml via GitHub API
@@ -256,6 +278,7 @@ jobs:
       needs: check-new-version
       runs-on: ubuntu-latest
       timeout-minutes: 300
+      
       steps:
   
         - name: Checkout repo
@@ -272,6 +295,7 @@ jobs:
           run: java -version
 
         - name: Check disk space
+          if: needs.check-new-version.outputs.has_new == 'true' && needs.check-new-version.outputs.new_version !=''
           run: df -h
 
         - name: Restore new NM binary from artifact
@@ -289,12 +313,12 @@ jobs:
           run: bash -x benchmark_run.sh --version v${{ needs.check-new-version.outputs.new_version }}
 
         - name: Show simulation log for new version ${{ needs.check-new-version.outputs.new_version }}
-          if: always()
+          if: needs.check-new-version.outputs.has_new == 'true' && needs.check-new-version.outputs.new_version !=''
           run: |
             find output -name simulation.log -exec sh -c 'echo ==== $1 ====; tail -100 "$1"' _ {} \;
             
         - name: Upload output for ${{ needs.check-new-version.outputs.new_version }}
-          if: always()
+          if: needs.check-new-version.outputs.has_new == 'true' && needs.check-new-version.outputs.new_version !=''
           uses: actions/upload-artifact@v4
           with:
             name: output-v${{ needs.check-new-version.outputs.new_version }}
