@@ -8,21 +8,7 @@ from itertools import combinations
 ROOT     = Path(__file__).parent
 OUTPUT   = ROOT / "output"
 DATA_DIR = ROOT / "website" / "data"
-SCATTER_MAX_POINTS = 29323
-
-def geom_key(geometry: dict) -> str | None:
-
-    if geometry is None:
-        return None
-    gtype = geometry.get("type", "")
-    coords = geometry.get("coordinates")
-    if coords is None:
-        return None
-
-    if gtype == "Point":
-        x, y = coords[0], coords[1]
-
-    return f"{x, y}"
+SCATTER_MAX_POINTS = 29411
 
 
 def load_receivers(version: str) -> dict[str, float]:
@@ -41,11 +27,24 @@ def load_receivers(version: str) -> dict[str, float]:
             props    = feature.get("properties", {})
             geometry = feature.get("geometry")
             laeq = props.get("LAEQ") or props.get("laeq")
-            key  = geom_key(geometry)
+            key  = props.get("IDRECEIVER")
             if key is None or laeq is None:
                 skipped += 1
                 continue
-            receivers[key] = float(laeq)
+
+            coords = None
+            if geometry:
+                gtype = geometry.get("type", "")
+                c = geometry.get("coordinates")
+                if c is not None:
+                    if gtype == "Point":
+                        coords = [round(c[0], 6), round(c[1], 6)]
+                    elif gtype in ("MultiPoint", "LineString") and c:
+                        coords = [round(c[0][0], 6), round(c[0][1], 6)]
+
+
+            receivers[key] = {"laeq": float(laeq), "coords": coords}
+
 
         else:
             props    = feature.get("properties", {})
@@ -54,11 +53,22 @@ def load_receivers(version: str) -> dict[str, float]:
             if period != "D":
                 continue
             laeq = props.get("LAEQ") or props.get("laeq")
-            key  = geom_key(geometry)
+            key  = props.get("IDRECEIVER")
             if key is None or laeq is None:
                 skipped += 1
                 continue
-            receivers[key] = float(laeq)
+            coords = None
+            if geometry:
+                gtype = geometry.get("type", "")
+                c = geometry.get("coordinates")
+                if c is not None:
+                    if gtype == "Point":
+                        coords = [round(c[0], 6), round(c[1], 6)]
+                    elif gtype in ("MultiPoint", "LineString") and c:
+                        coords = [round(c[0][0], 6), round(c[0][1], 6)]
+
+
+            receivers[key] = {"laeq": float(laeq), "coords": coords}
 
     return receivers
 
@@ -71,18 +81,31 @@ def compare(v_a: str, data_a: dict, v_b: str, data_b: dict) -> dict:
     if n == 0:
         return None
 
-    deltas = [abs(data_a[k] - data_b[k]) for k in common_keys]
+    deltas    = [abs(data_a[k]["laeq"] - data_b[k]["laeq"]) for k in common_keys]
     max_delta   = max(deltas)
     mean_delta  = sum(deltas) / n
+    std_delta  = math.sqrt(sum((d - mean_delta) ** 2 for d in deltas) / n)
 
     sample_keys = random.sample(common_keys, min(SCATTER_MAX_POINTS, n))
 
-    scatter = [
-        [round(data_a[k], 2), round(data_b[k], 2)]
-        for k in sample_keys
-    ]
+    scatter = []
+    for k in sample_keys:
+        if data_a[k]["laeq"] <= -89.00:
+            data_a[k]["laeq"] = 0.00
+        if data_b[k]["laeq"] <= -89.00:
+            data_b[k]["laeq"] = 0.00
+        scatter.append([round(data_a[k]["laeq"],2), round(data_b[k]["laeq"],2)])
+    deltas_signed = [round(data_b[k]["laeq"] - data_a[k]["laeq"], 2) for k in common_keys]
 
-    deltas_signed = [round(data_b[k] - data_a[k], 2) for k in common_keys]
+    diff_map = []
+    for k in sample_keys:
+        coords = data_a[k].get("coords")
+        if coords is None:
+            coords = data_b[k].get("coords")
+        if coords:
+            delta_val = round(data_b[k]["laeq"] - data_a[k]["laeq"], 2)
+            diff_map.append([coords[0], coords[1], delta_val])
+
 
     result = {
         "version_a"   : v_a,
@@ -94,6 +117,8 @@ def compare(v_a: str, data_a: dict, v_b: str, data_b: dict) -> dict:
         "mean_delta"  : round(mean_delta, 4),
         "scatter"     : scatter,
         "deltas_signed": deltas_signed,
+        "std_delta"    : round(std_delta, 4),
+        "diff_map"     : diff_map,
     }
     return result
 
