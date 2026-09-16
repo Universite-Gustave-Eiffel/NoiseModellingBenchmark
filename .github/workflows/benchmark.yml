@@ -300,6 +300,19 @@ jobs:
           if: needs.check-new-version.outputs.has_new == 'true' && needs.check-new-version.outputs.new_version !=''
           run: df -h
 
+        - name: Extract NM binary 
+          if: |
+            needs.check-new-version.outputs.has_new == 'true' &&
+            needs.check-new-version.outputs.new_version !=''
+          run: |
+            V= ${{ needs.check-new-version.outputs.new_version }}
+            DIR="input/NoiseModelling_without_gui_${V}"
+            ZIP="input/NoiseModelling_without_gui_${V}.zip"
+            if [ ! -d "$DIR" ] || [ -z "$(ls -A "$DIR" 2>/dev/null)" ]; then
+              mkdir -p "$DIR"
+              unzip -q "$ZIP" -d "$DIR"
+            fi
+
         - name: Restore new NM binary from artifact
           if: |
             needs.check-new-version.outputs.has_new == 'true' &&
