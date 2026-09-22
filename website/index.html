@@ -49,6 +49,52 @@
       z-index: 0;
     }
 
+    /* ── DATASET TABS ── */
+    .dataset-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+      position: relative;
+      z-index: 1;
+      background: var(--bg);
+      padding: 0 2rem;
+    }
+
+    .dataset-tab {
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .75rem 1.5rem;
+      border: none;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color .15s, border-color .15s;
+      margin-bottom: -1px;
+    }
+
+    .dataset-tab:hover { color: var(--text); }
+
+    .dataset-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .dataset-badge {
+      display: inline-block;
+      font-size: .55rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: .1rem .35rem;
+      margin-left: .4rem;
+      color: var(--text-muted);
+      vertical-align: middle;
+    }
+
     /* ── HEADER ── */
     header {
       position: relative;
@@ -536,6 +582,15 @@
   </div>
 </header>
 
+<div class="dataset-tabs">
+  <button class="dataset-tab active" data-dataset="clisson" onclick="switchDataset('clisson')">
+    Clisson <span class="dataset-badge">reference</span>
+  </button>
+  <button class="dataset-tab" data-dataset="montagne" onclick="switchDataset('montagne')">
+    Montagne <span class="dataset-badge">measure</span>
+  </button>
+</div>
+
 <main>
 
   <!-- ── KPI CARDS ── -->
@@ -593,7 +648,7 @@
 
   <!-- ── MAP ── -->
   <section>
-    <div class="section-title">Noise map — Clisson</div>
+    <div class="section-title">Noise map </div>
     <div class="map-layout">
 
       <!-- Versions -->
@@ -704,7 +759,17 @@
 // ─────────────────────────────────────────────
 // CONFIG
 // ─────────────────────────────────────────────
-const RESULTS_URL = 'data/results.json';
+let ACTIVE_DATASET = 'clisson';  // 'clisson' ou 'nantes'
+
+// Centre et zoom par dataset
+const DATASET_VIEW = {
+  clisson:  { center: [47.086, -1.27],  zoom: 13 },
+  montagne: { center: [47.189, -1.684], zoom: 12 },
+};
+
+function dataUrl(path) {
+  return `data/${ACTIVE_DATASET}/${path}`;
+}
 
 // Color palette per version index
 const PALETTE = ['#00e5ff','#ff6b35','#7fff6b','#f7d716','#c77dff'];
@@ -818,19 +883,35 @@ function renderCards(data) {
 function renderHeaderMeta(data) {
   const el = document.getElementById('header-meta');
   const date = new Date().toISOString().slice(0, 10);
-  el.innerHTML = `
-    <b>${data.length}</b> version${data.length > 1 ? 's' : ''} compared<br>
-    Input: <b>Clisson, France</b><br>
-    Number of Receiver: <b>29411</b><br>
-    *Max Error: <b>0.1</b><br>
-    Reflexion Order: <b>1</b><br>
-    Propagation Distance: <b>300</b><br>
-    Horizontal Diffraction: <b>True</b><br>
-    Occurrences of favourable conditions: <b>25%</b><br>
-    <br>
-    *: <b>Please note that the definition of this setting has changed over the course of different versions.</b><br>
+  if(ACTIVE_DATASET === 'clisson') {
+    el.innerHTML = `
+      <b>${data.length}</b> version${data.length > 1 ? 's' : ''} compared<br>
+      Input: <b>Clisson, France</b><br>
+      Number of Receiver: <b>29411</b><br>
+      *Max Error: <b>0.1</b><br>
+      Reflexion Order: <b>1</b><br>
+      Propagation Distance: <b>300</b><br>
+      Horizontal Diffraction: <b>True</b><br>
+      Occurrences of favourable conditions: <b>25%</b><br>
+      <br>
+      *: <b>Please note that the definition of this setting has changed over the course of different versions.</b><br>
 
-  `;
+    `;
+  }else {
+    el.innerHTML = `
+      <b>${data.length}</b> version${data.length > 1 ? 's' : ''} compared<br>
+      Input: <b>Clisson, France</b><br>
+      Number of Receiver: <b>10</b><br>
+      *Max Error: <b>0.1</b><br>
+      Reflexion Order: <b>1</b><br>
+      Propagation Distance: <b>1000</b><br>
+      Horizontal Diffraction: <b>True</b><br>
+      Occurrences of favourable conditions: <b>25%</b><br>
+      <br>
+      *: <b>Please note that the definition of this setting has changed over the course of different versions.</b><br>
+
+    `;
+  }
   document.getElementById('footer-date').textContent = `Generated ${date}`;
 }
 
@@ -839,102 +920,13 @@ function renderHeaderMeta(data) {
 // ─────────────────────────────────────────────
 let map, currentLayer = null;
 
-// ─────────────────────────────────────────────
-// MAP CONFIG
-// ─────────────────────────────────────────────
-const LAYER_CONFIG = [
-  {
-    id: 'ISO_CONTOUR',
-    label: 'ISO_CONTOUR',
-    file: 'ISO_CONTOUR.geojson',
-    color: '#ff4081',
-    always: false,
-    style: feature => {
-      const p = feature.properties || {};
-      return {
-        fillColor: isoColor(p.ISOLABEL || '', p.ISOLVL),
-        fillOpacity: 0.65,
-        color: 'transparent',
-        weight: 0,
-      };
-    },
-    tooltip: f => {
-      const p = f.properties || {};
-      const lbl = p.ISOLABEL || (p.ISOLVL != null ? p.ISOLVL : '?');
-      return `${lbl} dBA`;
-    },
-  },
-  {
-    id: 'BUILDINGS',
-    label: 'Buildings',
-    file: 'BUILDINGS.geojson',
-    color: '#7fff6b',
-    always: false,
-    style: () => ({ color: '#7fff6b', weight: 1, fillColor: '#7fff6b', fillOpacity: 0.25 }),
-    tooltip: f => {
-      const p = f.properties || {};
-      return p.HEIGHT ? `Building — H: ${p.HEIGHT} m`:'';
-    },
-  },
-  {
-    id: 'ROADS',
-    label: 'Roads',
-    file: 'ROADS.geojson',
-    color: '#ffeb3b',
-    always: false,
-    style: () => ({ color: '#ffeb3b', weight: 2, fillOpacity: 0 }),
-  },
-  {
-    id: 'RECEIVERS',
-    label: 'Receivers',
-    file: 'RECEIVERS.geojson',
-    color: '#ff6b35',
-    always: false,
-    style: () => ({}),
-    pointToLayer: (f, latlng) => L.circleMarker(latlng, {
-      radius: 2.5,
-      color: '#ff6b35',
-      fillColor: '#ff6b35',
-      fillOpacity: 0.8,
-      weight: 0,
-    }),
-    tooltip: f => {
-      const p = f.properties || {};
-      return `Receiver${p.PK ? ' #' + p.PK : ''}`;
-    },
-  },
-  {
-    id: 'GROUNDS',
-    label: 'Grounds',
-    file: 'GROUNDS.geojson',
-    color: '#9c27b0',
-    always: false,
-    style: () => ({ color: '#9c27b0', weight: 2, fillOpacity: 0 }),
-    tooltip: f => {
-      const p = f.properties || {};
-      return p.G || p.g ? `G = ${p.G.toFixed(1) || p.g || ''}` : '';
-    },
-  },
-
-  //{
-  //  id: 'DEM',
-  //  label: 'DEM',
-  //  file: 'DEM.geojson',
-  //  color: '#00e5ff',
-  //  always: false,
-  //  style: () => ({ color: '#00e5ff', weight: 0.8, fillOpacity: 0, dashArray: '3 3' }),
-//  tooltip: f => {
-//    const p = f.properties || {};
-//   return p.Z != null ? `Altitude: ${(+p.Z).toFixed(1)} m` : '';
-// },
-  //},
-];
 
 let activeVersion = null;
 const activeLayers = {};
 
 function initMap() {
-  map = L.map('map', { zoomControl: true }).setView([47.086, -1.27], 13);
+  //La Montagne: L.map('map', { zoomControl: true }).setView([47.189, -1.684], 13)
+  map = L.map('map', { zoomControl: true }).setView([47.086, -1.27], 13); //clisonnn
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=cb1_2ski_1_676978ffa428a6a1dd5d0e17', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
     subdomains: 'abcd',
@@ -984,7 +976,7 @@ async function loadLayer(version, layerCfg) {
   }
 
   try {
-    const res = await fetch(`data/${version}/${layerCfg.file}`);
+    const res = await fetch(dataUrl(`${version}/${layerCfg.file}`));
     if (!res.ok) throw new Error(`${layerCfg.file} not found`);
     const raw  = await res.json();
     const geojson = reprojectGeojson(raw);
@@ -1018,6 +1010,102 @@ function removeLayer(layerCfg) {
 }
 
 async function switchVersion(version) {
+  const LAYER_CONFIG = [
+    {
+      id: 'BUILDINGS',
+      label: 'Buildings',
+      file: 'BUILDINGS.geojson',
+      color: '#7fff6b',
+      always: false,
+      style: () => ({ color: '#7fff6b', weight: 1, fillColor: '#7fff6b', fillOpacity: 0.25 }),
+      tooltip: f => {
+        const p = f.properties || {};
+        return p.HEIGHT ? `Building — H: ${p.HEIGHT} m`:'';
+      },
+    },
+    ...(ACTIVE_DATASET === "clisson"
+            ? [{
+              id: 'ROADS',
+              label: 'Roads',
+              file: 'ROADS.geojson',
+              color: '#ffeb3b',
+              always: false,
+              style: () => ({ color: '#ffeb3b', weight: 2, fillOpacity: 0 }),
+            }]
+            : []),
+
+    ...(ACTIVE_DATASET === "clisson"
+            ? [{
+              id: 'ISO_CONTOUR',
+              label: 'ISO_CONTOUR',
+              file: 'ISO_CONTOUR.geojson',
+              color: '#ff4081',
+              always: false,
+              style: feature => {
+                const p = feature.properties || {};
+                return {
+                  fillColor: isoColor(p.ISOLABEL || '', p.ISOLVL),
+                  fillOpacity: 0.65,
+                  color: 'transparent',
+                  weight: 0,
+                };
+              },
+              tooltip: f => {
+                const p = f.properties || {};
+                const lbl = p.ISOLABEL || (p.ISOLVL != null ? p.ISOLVL : '?');
+                return `${lbl} dBA`;
+              },
+            }]
+            : []),
+
+    ...(ACTIVE_DATASET === "montagne"
+            ? [{
+              id: 'SOURCE',
+              label: 'Source',
+              file: 'LW_ROADS.geojson',
+              color: '#00e5ff',
+              always: false,
+              style: () => ({}),
+              pointToLayer: (f, latlng) => L.circleMarker(latlng, {
+                radius: 4,
+                color: '#00e5ff',
+                fillColor: '#00e5ff',
+                fillOpacity: 0.8,
+                weight: 0,
+              }),
+            }]
+            : []),
+    {
+      id: 'RECEIVERS',
+      label: 'Receivers',
+      file: 'RECEIVERS.geojson',
+      color: '#ff6b35',
+      always: false,
+      style: () => ({}),
+      pointToLayer: (f, latlng) => L.circleMarker(latlng, {
+        radius: 2.5,
+        color: '#ff6b35',
+        fillColor: '#ff6b35',
+        fillOpacity: 0.8,
+        weight: 0,
+      }),
+      tooltip: f => {
+        const p = f.properties || {};
+        return `Receiver${p.PK ? ' #' + p.PK : ''}`;
+      },
+    },
+    {
+      id: 'GROUNDS',
+      label: 'Grounds',
+      file: 'GROUNDS.geojson',
+      color: '#9c27b0',
+      always: false,
+      style: () => ({ color: '#9c27b0', weight: 2, fillOpacity: 0 }),
+      tooltip: f => {
+        const p = f.properties || {};
+        return p.G || p.g ? `G = ${p.G.toFixed(1) || p.g || ''}` : '';
+      },
+    },]
   activeVersion = version;
 
   const layerCtrl = document.getElementById('map-layer-controls');
@@ -1033,57 +1121,189 @@ async function switchVersion(version) {
 }
 
 function renderMapControls(data) {
-  const vCtrl = document.getElementById('map-version-controls');
+  const LAYER_CONFIG = [
+    {
+      id: 'BUILDINGS',
+      label: 'Buildings',
+      file: 'BUILDINGS.geojson',
+      color: '#7fff6b',
+      always: false,
+      style: () => ({ color: '#7fff6b', weight: 1, fillColor: '#7fff6b', fillOpacity: 0.25 }),
+      tooltip: f => {
+        const p = f.properties || {};
+        return p.HEIGHT ? `Building — H: ${p.HEIGHT} m`:'';
+      },
+    },
+    ...(ACTIVE_DATASET === "clisson"
+            ? [{
+              id: 'ROADS',
+              label: 'Roads',
+              file: 'ROADS.geojson',
+              color: '#ffeb3b',
+              always: false,
+              style: () => ({ color: '#ffeb3b', weight: 2, fillOpacity: 0 }),
+            }]
+            : []),
+
+    ...(ACTIVE_DATASET === "clisson"
+            ? [{
+              id: 'ISO_CONTOUR',
+              label: 'ISO_CONTOUR',
+              file: 'ISO_CONTOUR.geojson',
+              color: '#ff4081',
+              always: false,
+              style: feature => {
+                const p = feature.properties || {};
+                return {
+                  fillColor: isoColor(p.ISOLABEL || '', p.ISOLVL),
+                  fillOpacity: 0.65,
+                  color: 'transparent',
+                  weight: 0,
+                };
+              },
+              tooltip: f => {
+                const p = f.properties || {};
+                const lbl = p.ISOLABEL || (p.ISOLVL != null ? p.ISOLVL : '?');
+                return `${lbl} dBA`;
+              },
+            }]
+            : []),
+
+    ...(ACTIVE_DATASET === "montagne"
+            ? [{
+              id: 'SOURCE',
+              label: 'Source',
+              file: 'LW_ROADS.geojson',
+              color: '#00e5ff',
+              always: false,
+              style: () => ({}),
+              pointToLayer: (f, latlng) => L.circleMarker(latlng, {
+                radius: 4,
+                color: '#00e5ff',
+                fillColor: '#00e5ff',
+                fillOpacity: 0.8,
+                weight: 0,
+              }),
+            }]
+            : []),
+    {
+      id: 'RECEIVERS',
+      label: 'Receivers',
+      file: 'RECEIVERS.geojson',
+      color: '#ff6b35',
+      always: false,
+      style: () => ({}),
+      pointToLayer: (f, latlng) => L.circleMarker(latlng, {
+        radius: 2.5,
+        color: '#ff6b35',
+        fillColor: '#ff6b35',
+        fillOpacity: 0.8,
+        weight: 0,
+      }),
+      tooltip: f => {
+        const p = f.properties || {};
+        return `Receiver${p.PK ? ' #' + p.PK : ''}`;
+      },
+    },
+    {
+      id: 'GROUNDS',
+      label: 'Grounds',
+      file: 'GROUNDS.geojson',
+      color: '#9c27b0',
+      always: false,
+      style: () => ({ color: '#9c27b0', weight: 2, fillOpacity: 0 }),
+      tooltip: f => {
+        const p = f.properties || {};
+        return p.G || p.g ? `G = ${p.G.toFixed(1) || p.g || ''}` : '';
+      },
+    },]
+
   const lCtrl = document.getElementById('map-layer-controls');
 
-  vCtrl.innerHTML = data.map((row, i) =>
-    `<button class="map-btn${i === 0 ? ' active' : ''}" data-version="${row.version}">
+  if(ACTIVE_DATASET === "clisson") {
+    const vCtrl = document.getElementById('map-version-controls');
+    vCtrl.innerHTML = data.map((row, i) =>
+            `<button class="map-btn${i === 0 ? ' active' : ''}" data-version="${row.version}">
       ${row.version}
     </button>`
-  ).join('');
+    ).join('');
 
-  vCtrl.querySelectorAll('.map-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      vCtrl.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      switchVersion(btn.dataset.version);
+    vCtrl.querySelectorAll('.map-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        vCtrl.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        switchVersion(btn.dataset.version);
+      });
     });
-  });
+    lCtrl.innerHTML = LAYER_CONFIG.map(cfg => {
+      if (cfg.always) {
 
-
-  lCtrl.innerHTML = LAYER_CONFIG.map(cfg => {
-    if (cfg.always) {
-
-      return `<button class="map-btn layer-btn active" data-layer="${cfg.id}" disabled
-        style="border-color:${cfg.color};color:${cfg.color};cursor:default">
+        return `<button class="map-btn layer-btn active" data-layer="${cfg.id}" disabled
+          style="border-color:${cfg.color};color:${cfg.color};cursor:default">
+          <span class="layer-dot" style="background:${cfg.color}"></span>
+          ${cfg.label}
+        </button>`;
+      }
+      return `<button class="map-btn layer-btn" data-layer="${cfg.id}"
+        style="border-color:${cfg.color};color:${cfg.color}">
         <span class="layer-dot" style="background:${cfg.color}"></span>
         ${cfg.label}
       </button>`;
-    }
-    return `<button class="map-btn layer-btn" data-layer="${cfg.id}"
-      style="border-color:${cfg.color};color:${cfg.color}">
-      <span class="layer-dot" style="background:${cfg.color}"></span>
-      ${cfg.label}
-    </button>`;
-  }).join('');
+    }).join('');
 
-  lCtrl.querySelectorAll('.layer-btn:not([disabled])').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const cfg = LAYER_CONFIG.find(c => c.id === btn.dataset.layer);
-      if (!cfg || !activeVersion) return;
+    lCtrl.querySelectorAll('.layer-btn:not([disabled])').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const cfg = LAYER_CONFIG.find(c => c.id === btn.dataset.layer);
+        if (!cfg || !activeVersion) return;
 
-      if (btn.classList.contains('active')) {
-        btn.classList.remove('active');
-        removeLayer(cfg);
-      } else {
-        btn.classList.add('active');
-        await loadLayer(activeVersion, cfg);
-      }
+        if (btn.classList.contains('active')) {
+          btn.classList.remove('active');
+          removeLayer(cfg);
+        } else {
+          btn.classList.add('active');
+          await loadLayer(activeVersion, cfg);
+        }
+      });
     });
-  });
 
-  // Charger la première version par défaut
-  if (data.length) switchVersion(data[0].version);
+    // Charger la première version par défaut
+    if (data.length) switchVersion(data[0].version);
+  }
+  if (ACTIVE_DATASET === "montagne"){
+    lCtrl.innerHTML = LAYER_CONFIG.map(cfg => {
+      if (cfg.always) {
+
+        return `<button class="map-btn layer-btn active" data-layer="${cfg.id}" disabled
+          style="border-color:${cfg.color};color:${cfg.color};cursor:default">
+          <span class="layer-dot" style="background:${cfg.color}"></span>
+          ${cfg.label}
+        </button>`;
+      }
+      return `<button class="map-btn layer-btn" data-layer="${cfg.id}"
+        style="border-color:${cfg.color};color:${cfg.color}">
+        <span class="layer-dot" style="background:${cfg.color}"></span>
+        ${cfg.label}
+      </button>`;
+    }).join('');
+
+    lCtrl.querySelectorAll('.layer-btn:not([disabled])').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const cfg = LAYER_CONFIG.find(c => c.id === btn.dataset.layer);
+        if (!cfg || !activeVersion) return;
+
+        if (btn.classList.contains('active')) {
+          btn.classList.remove('active');
+          removeLayer(cfg);
+        } else {
+          btn.classList.add('active');
+          await loadLayer(activeVersion, cfg);
+        }
+      });
+    });
+
+    // Charger la première version par défaut
+    //if (data.length) switchVersion(data[0].version);
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -1129,7 +1349,7 @@ function renderComparisonCard(c, vA, vB) {
 
 async function loadComparisons() {
   try {
-    const res = await fetch('data/comparisons.json');
+    const res = await fetch(dataUrl('comparisons.json'));
     if (!res.ok) throw new Error();
     pairComparisons = await res.json();
   } catch(e) {
@@ -1139,61 +1359,124 @@ async function loadComparisons() {
 }
 
 function setupPairSelector() {
-  const selA = document.getElementById('select-vA');
-  const selB = document.getElementById('select-vB');
+  if(ACTIVE_DATASET === "clisson"){
+    const selA = document.getElementById('select-vA');
+    const selB = document.getElementById('select-vB');
 
-  const versionSet = new Set();
-  pairComparisons.forEach(c => { versionSet.add(c.version_a); versionSet.add(c.version_b); });
-  const versions = [...versionSet].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    const versionSet = new Set();
+    pairComparisons.forEach(c => { versionSet.add(c.version_a); versionSet.add(c.version_b); });
+    const versions = [...versionSet].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
-  if (!versions.length) {
-    document.getElementById('comparisons-wrap').innerHTML =
-            '<div class="empty">No comparison data yet — run benchmark with at least 2 versions.</div>';
-    return;
+    if (!versions.length) {
+      document.getElementById('comparisons-wrap').innerHTML =
+              '<div class="empty">No comparison data yet — run benchmark with at least 2 versions.</div>';
+      return;
+    }
+
+    function fillSelect(sel, exclude) {
+      sel.innerHTML = versions
+        .filter(v => v !== exclude)
+        .map(v => `<option value="${v}">${v}</option>`)
+        .join('');
+    }
+
+    fillSelect(selA, null);
+    fillSelect(selB, null);
+
+
+    selA.value = versions[Math.max(0, versions.length - 2)];
+    selB.value = versions[versions.length - 1];
+    if (selA.value === selB.value && versions.length > 1) {
+      selA.value = versions[0];
+    }
+
+    function refresh() {
+      const vA = selA.value;
+      const vB = selB.value;
+      const c = findComparison(vA, vB);
+      renderComparisonCard(c, vA, vB);
+      drawScatterForPair(vA, vB, c);
+      drawDensityForPair(vA, vB, c);
+    }
+
+    selA.addEventListener('change', () => {
+      if (selA.value === selB.value) {
+        const alt = versions.find(v => v !== selA.value);
+        if (alt) selB.value = alt;
+      }
+      refresh();
+    });
+    selB.addEventListener('change', () => {
+      if (selB.value === selA.value) {
+        const alt = versions.find(v => v !== selB.value);
+        if (alt) selA.value = alt;
+      }
+      refresh();
+    });
+
+    refresh();
   }
+  if (ACTIVE_DATASET==="montagne"){
+    const selA = document.getElementById('select-vA');
+    const selB = document.getElementById('select-vB');
 
-  function fillSelect(sel, exclude) {
-    sel.innerHTML = versions
-      .filter(v => v !== exclude)
-      .map(v => `<option value="${v}">${v}</option>`)
-      .join('');
-  }
+    const versionSet = new Set();
+    pairComparisons.forEach(c => { versionSet.add(c.version_a); versionSet.add(c.version_b); });
+    const versions = [...versionSet].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
-  fillSelect(selA, null);
-  fillSelect(selB, null);
+    if (!versions.length) {
+      document.getElementById('comparisons-wrap').innerHTML =
+              '<div class="empty">No comparison data yet — run benchmark with at least 2 versions.</div>';
+      return;
+    }
+
+    function fillSelect(sel, exclude) {
+      sel.innerHTML = versions
+              .filter(v => v !== exclude)
+              .map(v => `<option value="${v}">${v}</option>`)
+              .join('');
+    }
+
+    selA.innerHTML = versions
+            .filter(v => v === "measure")
+            .map(v => `<option value="${v}">${v}</option>`)
+            .join('');
+
+    fillSelect(selB, "measure");
 
 
-  selA.value = versions[Math.max(0, versions.length - 2)];
-  selB.value = versions[versions.length - 1];
-  if (selA.value === selB.value && versions.length > 1) {
     selA.value = versions[0];
-  }
-
-  function refresh() {
-    const vA = selA.value;
-    const vB = selB.value;
-    const c = findComparison(vA, vB);
-    renderComparisonCard(c, vA, vB);
-    drawScatterForPair(vA, vB, c);
-    drawDensityForPair(vA, vB, c);
-  }
-
-  selA.addEventListener('change', () => {
-    if (selA.value === selB.value) {
-      const alt = versions.find(v => v !== selA.value);
-      if (alt) selB.value = alt;
+    selB.value = versions[versions.length - 1];
+    if (selA.value === selB.value && versions.length > 1) {
+      selA.value = versions[0];
     }
-    refresh();
-  });
-  selB.addEventListener('change', () => {
-    if (selB.value === selA.value) {
-      const alt = versions.find(v => v !== selB.value);
-      if (alt) selA.value = alt;
-    }
-    refresh();
-  });
 
-  refresh();
+    function refresh() {
+      const vA = selA.value;
+      const vB = selB.value;
+      const c = findComparison(vA, vB);
+      renderComparisonCard(c, vA, vB);
+      drawScatterForPair(vA, vB, c);
+      drawDensityForPair(vA, vB, c);
+    }
+
+    selA.addEventListener('change', () => {
+      if (selA.value === selB.value) {
+        const alt = versions.find(v => v !== selA.value);
+        if (alt) selB.value = alt;
+      }
+      refresh();
+    });
+    selB.addEventListener('change', () => {
+      if (selB.value === selA.value) {
+        const alt = versions.find(v => v !== selB.value);
+        if (alt) selA.value = alt;
+      }
+      refresh();
+    });
+
+    refresh();
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -1371,14 +1654,17 @@ function computeBoxStats(values) {
 async function renderBoxplot() {
   const wrapper = document.getElementById('boxplot-chart').parentElement;
   const nodata  = document.getElementById('boxplot-nodata');
+  let comparisons = []
+  const r = await fetch(dataUrl('comparisons.json'))
+  if (r.ok) comparisons = await r.json();
 
-
-  let comparisons = (typeof pairComparisons !== 'undefined' && pairComparisons.length)
+  /*let comparisons = (typeof pairComparisons !== 'undefined' && pairComparisons.length)
     ? pairComparisons : [];
+  console.log('length',!comparisons.length)
   if (!comparisons.length) {
-    try { const r = await fetch('data/comparisons.json'); if (r.ok) comparisons = await r.json(); } catch(e) {}
-  }
-
+    try { const r = await fetch(dataUrl('comparisons.json')); if (r.ok) comparisons = await r.json(); } catch(e) {}
+  }*/
+  console.log('after',comparisons);
   const valuesByVersion = {};
   comparisons.forEach(c => {
     if (!c.scatter || !c.scatter.length) return;
@@ -1388,7 +1674,7 @@ async function renderBoxplot() {
 
   if (!Object.keys(valuesByVersion).length) {
     try {
-      const r = await fetch('data/results.json');
+      const r = await fetch(dataUrl('results.json'));
       if (r.ok) {
         const results = await r.json();
         const BIN_MIDS = {'<35':32,'35-40':37.5,'40-45':42.5,'45-50':47.5,
@@ -1449,7 +1735,7 @@ async function renderBoxplot() {
   const yMax = Math.ceil( Math.max(...allVals) / 5) * 5 + 5;
 
   const y = d3.scaleLinear()
-    .domain([-20, yMax+20])
+    .domain([yMin, yMax+20])
     .range([H, 0]);
 
 
@@ -1624,8 +1910,8 @@ function drawScatterForPair(vA, vB, c){
           type: 'scatter',
           label: `Receivers (n=${c.n_common.toLocaleString()})`,
           data: points,
-          backgroundColor: 'rgba(255,107,53,0.25)',
-          pointRadius: 2,
+          backgroundColor: '#ff6b35',
+          pointRadius: 4,
           pointHoverRadius: 4,
           order: 2,
         },
@@ -1927,7 +2213,7 @@ async function drawDiffMap(vA, vB) {
       properties: { delta: flip ? -delta : delta }
     }))
   };
-  console.log(geojson)
+
 
   const reprojected = reprojectGeojson(geojson);
 
@@ -2006,33 +2292,70 @@ function toggleSidebar(panelId, btn) {
 }
 
 // ─────────────────────────────────────────────
-// BOOTSTRAP
+// DATASET SWITCH
 // ─────────────────────────────────────────────
-async function init() {
+async function switchDataset(dataset) {
+  if (dataset === ACTIVE_DATASET) return;
+  ACTIVE_DATASET = dataset;
+
+
+  document.querySelectorAll('.dataset-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.dataset === dataset);
+  });
+
+
+  Object.values(activeLayers).forEach(lyr => { try { map.removeLayer(lyr); } catch(e) {} });
+  Object.keys(activeLayers).forEach(k => delete activeLayers[k]);
+  if (diffLayer) { map.removeLayer(diffLayer); diffLayer = null; }
+  if (boxplotChart) { boxplotChart.destroy(); boxplotChart = null; }
+
+
+  const view = DATASET_VIEW[dataset] || DATASET_VIEW.clisson;
+  map.setView(view.center, view.zoom);
+  await loadAndRender();
+}
+
+async function loadAndRender() {
   let data = [];
   try {
-    const res = await fetch(RESULTS_URL);
+    const res = await fetch(dataUrl('results.json'));
+    //console.log(res)
     if (!res.ok) throw new Error('results.json not found');
     data = await res.json();
     data.sort((a, b) => a.version.localeCompare(b.version, undefined, { numeric: true }));
-  } catch (e) {
-    console.warn('Could not load results.json, using demo data.', e);
-    data = [
-      { version: 'v5.0.1', mean: 54.32, std: 8.71, time: '00:03:42', nb_receiver: 12480 },
-    ];
+  } catch(e) {
+    console.warn('Could not load results.json for', ACTIVE_DATASET, e);
+    data = [];
   }
 
   renderHeaderMeta(data);
   renderCards(data);
   renderHistogram(data);
-  await renderBoxplot();
+  renderBoxplot();
   await loadComparisons();
   setupPairSelector();
-  initMap();
   renderMapControls(data);
+
+  ['map-version-controls', 'map-layer-controls', 'diff-map-panel'].forEach(id => {
+    const panel = document.getElementById(id);
+    const btn   = panel?.previousElementSibling;
+    if (panel && panel.classList.contains('collapsed')) {
+      panel.classList.remove('collapsed');
+      btn?.classList.remove('collapsed');
+    }
+  });
+
+
+}
+
+// ─────────────────────────────────────────────
+// BOOTSTRAP
+// ─────────────────────────────────────────────
+async function init() {
+  // Sort versions naturally
+  initMap();
   setupDiffMapButton();
-
-
+  await loadAndRender();
 }
 
 init();

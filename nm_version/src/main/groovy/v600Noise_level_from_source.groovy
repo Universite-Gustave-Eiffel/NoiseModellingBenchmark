@@ -522,7 +522,7 @@ def exec(Connection connection, Map input, ProgressVisitor progress) {
 
     if(recordProfile) {
         LocalDateTime now = LocalDateTime.now()
-        pointNoiseMap.noiseMapDatabaseParameters.CSVProfilerOutputPath = new File("output/v6.0.0/profile.csv")
+        pointNoiseMap.noiseMapDatabaseParameters.CSVProfilerOutputPath = new File("output/profile.csv")
         pointNoiseMap.noiseMapDatabaseParameters.CSVProfilerWriteInterval = 120 // delay write csv line in seconds
     }
 

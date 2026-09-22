@@ -599,7 +599,7 @@ def exec(Connection connection, input) {
     RootProgressVisitor progressLogger = new RootProgressVisitor(1, true, 1)
 
     logger.info("Start calculation... ")
-    ProfilerThread profilerThread = new ProfilerThread(new File("output/v4.0.1/profile.csv"));
+    ProfilerThread profilerThread = new ProfilerThread(new File("output/profile.csv"));
     profilerThread.addMetric(ldenProcessing);
     profilerThread.addMetric(new ProgressMetric(progressLogger));
     profilerThread.addMetric(new JVMMemoryMetric());

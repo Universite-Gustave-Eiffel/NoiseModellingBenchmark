@@ -6,8 +6,8 @@ from pathlib import Path
 from itertools import combinations
 
 ROOT     = Path(__file__).parent
-OUTPUT   = ROOT / "output"
-DATA_DIR = ROOT / "website" / "data"
+OUTPUT   = ROOT / "output/clisson"
+DATA_DIR = ROOT / "website" / "data/clisson"
 SCATTER_MAX_POINTS = 29411
 
 

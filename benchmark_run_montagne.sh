@@ -11,22 +11,22 @@ NM_VERSIONS["v5.0.0"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelli
 NM_VERSIONS["v5.0.1"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v5.0.1/NoiseModelling_without_gui-5.0.1.zip"
 NM_VERSIONS["v6.0.0"]="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v6.0.0/NoiseModelling_6.0.0.zip"
 
-GROOVY_SCRIPT="nm_version/src/main/groovy/runscriptV5.0.groovy"
-GROOVY_SCRIPT_v6="nm_version/src/main/groovy/runscriptV6.0.groovy"
+GROOVY_SCRIPT="nm_version/src/main/groovy/montagne/montagneV5.groovy"
+GROOVY_SCRIPT_v6="nm_version/src/main/groovy/montagne/montagneV6.groovy"
 
 INPUT_DIR="input"
-OUTPUT_DIR="output"
+OUTPUT_DIR="output/montagne"
 WEBSITE_DIR="website"
-DATA_DIR="$WEBSITE_DIR/data"
+DATA_DIR="$WEBSITE_DIR/data/montagne"
 
 mkdir -p "$INPUT_DIR" "$OUTPUT_DIR" "$WEBSITE_DIR" "$DATA_DIR"
 
-download_clisson() {
-    local clisson_dir="$INPUT_DIR/clisson"
-    if [ -d "$clisson_dir/clisson" ]; then
+download_montagne() {
+    local clisson_dir=$INPUT_DIR
+    if [ -d "$clisson_dir/montagne" ]; then
         return 0
     fi
-    cp -r "clisson/" "$clisson_dir/"
+    cp -r "montagne/" "$clisson_dir/"
 }
 
 download_nm_version() {
@@ -107,6 +107,7 @@ run_simulation() {
         "$wps_bin" \
             -w"$workspace" \
             -s"$GROOVY_SCRIPT" \
+            -d"test4" \
             NM_version="$version" \
             > "$out_dir/simulation.log" 2>&1
     elif [[ "$version" == v6* ]]; then
@@ -119,6 +120,7 @@ run_simulation() {
         "$wps_bin" \
             -w "$workspace" \
             -s "$GROOVY_SCRIPT" \
+            -d "test5" \
             -NM_version "$version" \
             > "$out_dir/simulation.log" 2>&1
     fi
@@ -179,13 +181,13 @@ EOF
 
 
 copy_geojson() {
-    local CLISSON_DIR="$INPUT_DIR/clisson/clisson"
+    local CLISSON_DIR="$INPUT_DIR/montagne"
 
     declare -A COMMON_LAYERS=(
         ["BUILDINGS.geojson"]="BUILDINGS.geojson"
         ["RECEIVERS.geojson"]="RECEIVERS.geojson"
         ["DEM.geojson"]="DEM.geojson"
-        ["ROADS.geojson"]="ROADS.geojson"
+        ["LW_ROADS.geojson"]="LW_ROADS.geojson"
         ["GROUNDS.geojson"]="GROUNDS.geojson"
     )
 
@@ -226,7 +228,7 @@ copy_geojson() {
 run_one_version() {
     local version="$1"
     local nm_dir="$INPUT_DIR/NoiseModelling_without_gui_${version}"
-    
+
     if [ -d "$nm_dir" ]; then
         echo " NM déjà présent : $nm_dir — skip download.:"
         ls $nm_dir
@@ -243,7 +245,7 @@ run_one_version() {
         exit 1
     fi
 
-    download_clisson
+    download_montagne
 
     echo "Lancement simulation $version..."
     run_simulation "$version" || {
@@ -261,7 +263,7 @@ run_aggregate_only() {
 
 
 run_all_sequential() {
-    download_clisson
+    download_montagne
     local failed_versions=()
     for version in "${!NM_VERSIONS[@]}"; do
         download_nm_version "$version" "${NM_VERSIONS[$version]}" || {

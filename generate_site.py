@@ -26,7 +26,8 @@ def main():
         sys.exit(1)
 
     patch_build_date(TEMPLATE)
-    subprocess.run([sys.executable, str(ROOT / "compare_versions.py")], check=False)
+    subprocess.run([sys.executable, str(ROOT / "compare_versions_clisson.py")], check=False)
+    subprocess.run([sys.executable, str(ROOT / "compare_versions_montagne.py")], check=False)
 
 if __name__ == "__main__":
     main()

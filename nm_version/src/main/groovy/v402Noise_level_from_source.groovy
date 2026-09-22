@@ -690,7 +690,7 @@ def exec(Connection connection, input) {
 
     logger.info("Start calculation... ")
     LocalDateTime now = LocalDateTime.now();
-    ProfilerThread profilerThread = new ProfilerThread(new File("output/v4.0.2/profile.csv"));
+    ProfilerThread profilerThread = new ProfilerThread(new File("output/profile.csv"));
     profilerThread.addMetric(ldenProcessing);
     profilerThread.addMetric(new ProgressMetric(progressLogger));
     profilerThread.addMetric(new JVMMemoryMetric());
