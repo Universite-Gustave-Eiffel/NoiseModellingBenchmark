@@ -208,45 +208,30 @@ jobs:
           BRANCH="${{ github.ref_name }}"
           TARGET_DIR="input/NoiseModelling_without_gui_v${NM_VERSION}"
           ZIP="input/NoiseModelling_v${NM_VERSION}_artifact.zip"
-        
+      
           echo "ZIP source: $ZIP"
           echo "Target: $TARGET_DIR"
-        
-          mkdir -p "$TARGET_DIR"
-        
+      
           if [ ! -f "$ZIP" ]; then
             echo "ERROR: ZIP introuvable: $ZIP"
             exit 1
           fi
-        
-          ROOT_DIR="NoiseModelling_without_gui_v${NM_VERSION}"
-        
-          
-          if unzip -Z1 "$ZIP" | grep -q "^${ROOT_DIR}/"; then
-            echo "Dossier racine détecté dans le ZIP : $ROOT_DIR"
-        
-            TMP_DIR=$(mktemp -d)
-        
-            unzip -q "$ZIP" -d "$TMP_DIR"
-        
-            
-            cp -a "$TMP_DIR/$ROOT_DIR/." "$TARGET_DIR/"
-        
-            rm -rf "$TMP_DIR"
-          else
-            echo "Pas de dossier racine, extraction directe"
-        
-            unzip -q "$ZIP" -d "$TARGET_DIR"
-          fi
-        
-         
+      
+          rm -rf "$TARGET_DIR"
+          mkdir -p "$TARGET_DIR"
+      
+          unzip -q -o "$ZIP" -d "$TARGET_DIR"
+      
           rm -f "$ZIP"
-        
+      
+          echo "Contenu extrait :"
+          find "$TARGET_DIR" -maxdepth 2 -type f | head -50
+      
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-        
+      
           git add input/
-        
+      
           git commit -m "chore: add NM v${NM_VERSION} binary [skip ci]" || exit 0
           git push origin HEAD:${BRANCH}
 
