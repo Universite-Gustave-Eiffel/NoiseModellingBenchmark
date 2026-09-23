@@ -72,7 +72,7 @@ static def exec(Connection connection, Map input) {
     if(input.containsKey('NM_version')){
         version=input["NM_version"] as String
     }
-    def outputFolder = new File("output/$version")
+    def outputFolder = new File("output/clisson/$version")
     if (!outputFolder.exists()) {
         outputFolder.mkdir()
     }
@@ -160,7 +160,7 @@ static def exec(Connection connection, Map input) {
                 long startCompute = System.currentTimeMillis()
                 if(version=="v4.0.0") {
 
-                    def scriptFile = new File("nm_version/src/main/groovy/v400Noise_level_from_source.groovy")
+                    def scriptFile = new File("nm_version/src/main/groovy/clisson/v400Noise_level_from_source.groovy")
                             .getAbsoluteFile()
 
                     if (!scriptFile.exists()) {
@@ -201,7 +201,7 @@ static def exec(Connection connection, Map input) {
                 }
                 if(version=="v4.0.1") {
 
-                    def scriptFile = new File("nm_version/src/main/groovy/v401Noise_level_from_source.groovy")
+                    def scriptFile = new File("nm_version/src/main/groovy/clisson/v401Noise_level_from_source.groovy")
                             .getAbsoluteFile()
 
                     if (!scriptFile.exists()) {
@@ -241,7 +241,7 @@ static def exec(Connection connection, Map input) {
                 }
                 if(version=="v4.0.2") {
 
-                    def scriptFile = new File("nm_version/src/main/groovy/v402Noise_level_from_source.groovy")
+                    def scriptFile = new File("nm_version/src/main/groovy/clisson/v402Noise_level_from_source.groovy")
                             .getAbsoluteFile()
 
                     if (!scriptFile.exists()) {
@@ -281,7 +281,7 @@ static def exec(Connection connection, Map input) {
                 }
                 if(version=="v4.0.4") {
 
-                    def scriptFile = new File("nm_version/src/main/groovy/v404Noise_level_from_source.groovy")
+                    def scriptFile = new File("nm_version/src/main/groovy/clisson/v404Noise_level_from_source.groovy")
                             .getAbsoluteFile()
 
                     if (!scriptFile.exists()) {
@@ -322,7 +322,7 @@ static def exec(Connection connection, Map input) {
                 }
                 if(version=="v4.0.5") {
 
-                    def scriptFile = new File("nm_version/src/main/groovy/v405Noise_level_from_source.groovy")
+                    def scriptFile = new File("nm_version/src/main/groovy/clisson/v405Noise_level_from_source.groovy")
                             .getAbsoluteFile()
 
                     if (!scriptFile.exists()) {
@@ -394,9 +394,11 @@ static def exec(Connection connection, Map input) {
 
             def time = elapsed/cpt
             nbRays = nbRays * cpt
-            def res = elapsed / nbRays
-            println("rays: $nbRays, timerey : $res")
-            def timerays = elapsed / nbRays
+            def timerays =0
+            if(nbRays != 0){
+                timerays = elapsed / nbRays
+            }
+
 
             long hours = TimeUnit.MILLISECONDS.toHours(elapsed)
             elapsed -= TimeUnit.HOURS.toMillis(hours)
@@ -558,7 +560,7 @@ static def exec(Connection connection, Map input) {
             if(redoCompute) {                long startCompute = System.currentTimeMillis()
                 if(version=="v5.0.0") {
 
-                    def scriptFile = new File("nm_version/src/main/groovy/v500Noise_level_from_source.groovy")
+                    def scriptFile = new File("nm_version/src/main/groovy/clisson/v500Noise_level_from_source.groovy")
                             .getAbsoluteFile()
 
                     if (!scriptFile.exists()) {
@@ -596,7 +598,7 @@ static def exec(Connection connection, Map input) {
                     }
                 }
                 if(version=="v5.0.1"){
-                    def scriptFile = new File("nm_version/src/main/groovy/v501Noise_level_from_source.groovy")
+                    def scriptFile = new File("nm_version/src/main/groovy/clisson/v501Noise_level_from_source.groovy")
                             .getAbsoluteFile()
 
                     if (!scriptFile.exists()) {

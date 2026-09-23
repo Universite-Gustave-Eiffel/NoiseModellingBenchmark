@@ -205,21 +205,50 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           NM_VERSION="${{ steps.detect.outputs.new_version }}"
-          ZIP="input/NoiseModelling_without_gui_v${NM_VERSION}.zip"
           BRANCH="${{ github.ref_name }}"
+          TARGET_DIR="input/NoiseModelling_without_gui_v${NM_VERSION}"
 
-          mkdir -p input
-          INNER=$(find "input/NoiseModelling_without_gui_v${NM_VERSION}" -name "*.zip" | head -n 1)
-          if [ -n "$INNER" ]; then cp "$INNER" "$ZIP"; else
-            cp "input/NoiseModelling_v${NM_VERSION}_artifact.zip" "$ZIP"; fi
+          mkdir -p "$TARGET_DIR"
 
-          git config user.name  "github-actions[bot]"
+          INNER=$(find "$TARGET_DIR" -name "*.zip" | head -n 1)
+
+          if [ -n "$INNER" ]; then
+            ZIP="$INNER"
+          else
+            ZIP="input/NoiseModelling_v${NM_VERSION}_artifact.zip"
+          fi
+
+          echo "ZIP source: $ZIP"
+          echo "Target: $TARGET_DIR"
+
+          ROOT_DIR="NoiseModelling_without_gui_v${NM_VERSION}/"
+
+          if unzip -l "$ZIP" | grep -q "$ROOT_DIR"; then
+            echo "détecté dans le ZIP"
+
+            TMP_DIR=$(mktemp -d)
+            unzip -o "$ZIP" -d "$TMP_DIR"
+
+            cp -a "$TMP_DIR/$ROOT_DIR"/* "$TARGET_DIR"/
+
+            rm -rf "$TMP_DIR"
+          else
+            echo "pas de dossier racine "
+
+            unzip -o "$ZIP" -d "$TARGET_DIR"
+          fi
+
+          
+          find "input/" -name "NoiseModelling_without_gui_v${NM_VERSION}.zip" -delete
+
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          grep -q 'input' .gitattributes 2>/dev/null || \
-            echo 'input/*.zip filter=lfs diff=lfs merge=lfs -text' >> .gitattributes
-          git add .gitattributes "$ZIP"
+
+          git add input/
+
           git commit -m "chore: add NM v${NM_VERSION} binary [skip ci]" || exit 0
           git push origin HEAD:${BRANCH}
+      
 
       - name: Upload extracted NM binary as artifact
         if: steps.detect.outputs.has_new == 'true' && steps.artifact.outputs.artifact_url != ''
@@ -299,21 +328,6 @@ jobs:
       - name: Check disk space
         if: needs.check-new-version.outputs.has_new == 'true' && needs.check-new-version.outputs.new_version !=''
         run: df -h
-
-      - name: Extract NM binary
-        if: |
-          needs.check-new-version.outputs.has_new == 'true' &&
-          needs.check-new-version.outputs.new_version !=''
-        run: |
-          ZIP="input/NoiseModelling_without_gui_v${{ needs.check-new-version.outputs.new_version }}.zip"
-          DIR="input/NoiseModelling_without_gui_v${{ needs.check-new-version.outputs.new_version }}"
-          echo "$ZIP"
-          if [ ! -d "$DIR" ] || [ -z "$(ls -A "$DIR" 2>/dev/null)" ]; then
-            mkdir -p "$DIR"
-            unzip -q "$ZIP" -d "$DIR"
-          fi
-          ls "$DIR"
-
       - name: Restore new NM binary from artifact
         if: |
           needs.check-new-version.outputs.has_new == 'true' &&

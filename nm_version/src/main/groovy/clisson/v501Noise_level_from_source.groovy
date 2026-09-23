@@ -21,6 +21,7 @@
 import geoserver.GeoServer
 import geoserver.catalog.Store
 import groovy.sql.Sql
+import groovy.transform.CompileStatic
 import org.geotools.jdbc.JDBCDataStore
 import org.h2gis.utilities.GeometryTableUtilities
 import org.h2gis.utilities.JDBCUtilities
@@ -28,13 +29,10 @@ import org.h2gis.utilities.TableLocation
 import org.h2gis.utilities.dbtypes.DBTypes
 import org.h2gis.utilities.dbtypes.DBUtils
 import org.h2gis.utilities.wrapper.ConnectionWrapper
-import org.noise_planet.noisemodelling.emission.*
+import org.noise_planet.noisemodelling.jdbc.NoiseMapByReceiverMaker
+import org.noise_planet.noisemodelling.jdbc.NoiseMapDatabaseParameters
 import org.noise_planet.noisemodelling.jdbc.input.DefaultTableLoader
-import org.noise_planet.noisemodelling.pathfinder.*
 import org.noise_planet.noisemodelling.pathfinder.utils.profiler.RootProgressVisitor
-
-import org.noise_planet.noisemodelling.propagation.*
-import org.noise_planet.noisemodelling.jdbc.*
 import org.noise_planet.noisemodelling.propagation.AttenuationParameters
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -76,9 +74,9 @@ inputs = [
                         'The table must contain (* mandatory): </br> <ul>' +
                         '<li> <b> PK *</b> : an identifier. It shall be a primary key (INTEGER, PRIMARY KEY) </li> ' +
                         '<li> <b> THE_GEOM *</b> : the 3D geometry of the sources (POINT, MULTIPOINT, LINESTRING, MULTILINESTRING). According to CNOSSOS-EU, you need to set a height of 0.05 m for a road traffic emission </li> ' +
-                        '<li> <b> LWD63, LWD125, LWD250, LWD500, LWD1000, LWD2000, LWD4000, LWD8000 </b> : 8 columns giving the day emission sound level for each octave band (FLOAT) </li> ' +
-                        '<li> <b> LWE </b> : 8 columns giving the evening emission sound level for each octave band (FLOAT) </li> ' +
-                        '<li> <b> LWN </b> : 8 columns giving the night emission sound level for each octave band (FLOAT) </li> ' +
+                        '<li> <b> HZD63, HZD125, HZD250, HZD500, HZD1000, HZD2000, HZD4000, HZD8000 </b> : 8 columns giving the day emission sound level for each octave band (FLOAT) </li> ' +
+                        '<li> <b> HZE </b> : 8 columns giving the evening emission sound level for each octave band (FLOAT) </li> ' +
+                        '<li> <b> HZN </b> : 8 columns giving the night emission sound level for each octave band (FLOAT) </li> ' +
                         '<li> <b> YAW </b> : Source horizontal orientation in degrees. For points 0&#176; North, 90&#176; East. For lines 0&#176; line direction, 90&#176; right of the line direction.  (FLOAT) </li> ' +
                         '<li> <b> PITCH </b> : Source vertical orientation in degrees. 0&#176; front, 90&#176; top, -90&#176; bottom. (FLOAT) </li> ' +
                         '<li> <b> ROLL </b> : Source roll in degrees (FLOAT) </li> ' +
@@ -93,7 +91,7 @@ inputs = [
                         'The table must contain: </br> <ul>' +
                         '<li><b> IDSOURCE </b>* : an identifier. It shall be linked to the primary key of tableRoads (INTEGER)</li>' +
                         '<li><b> PERIOD </b>* : Time period, you will find this column on the output (VARCHAR)</li>' +
-                        '<li> <b> LW63, LW125, LW250, LW500, LW1000, LW2000, LW4000, LW8000 </b> : Emission noise level in dB can be third-octave 50Hz to 10000Hz (FLOAT) </li> ',
+                        '<li> <b> HZ63, HZ125, HZ250, HZ500, HZ1000, HZ2000, HZ4000, HZ8000 </b> : Emission noise level in dB can be third-octave 50Hz to 10000Hz (FLOAT) </li> ',
                 min        : 0, max: 1, type: String.class
         ],
         tableReceivers          : [
@@ -133,7 +131,7 @@ inputs = [
                         '<li> <b> DIR_ID </b>: identifier of the directivity sphere (INTEGER) </li> ' +
                         '<li> <b> THETA </b>: [-90;90] Vertical angle in degree. 0&#176; front 90&#176; top -90&#176; bottom (FLOAT) </li> ' +
                         '<li> <b> PHI </b>: [0;360] Horizontal angle in degree. 0&#176; front 90&#176; right (FLOAT) </li> ' +
-                        '<li> <b> LW63, LW125, LW250, LW500, LW1000, LW2000, LW4000, LW8000 </b>: attenuation levels in dB for each octave or third octave (FLOAT) </li> </ul> ' ,
+                        '<li> <b> HZ63, HZ125, HZ250, HZ500, HZ1000, HZ2000, HZ4000, HZ8000 </b>: attenuation levels in dB for each octave or third octave (FLOAT) </li> </ul> ' ,
                 min        : 0, max: 1, type: String.class
         ],
         tablePeriodAtmosphericSettings          : [
@@ -230,7 +228,7 @@ inputs = [
                 min        : 0, max: 1,
                 type       : Double.class
         ],
-        confFavorableOccurrencesDefault: [
+        confFavourableOccurrencesDefault: [
                 name       : 'Probability of occurrences',
                 title      : 'Probability of occurrences',
                 description: 'Comma-delimited string containing the default probability of occurrences of favourable propagation conditions. </br> </br>' +
@@ -301,10 +299,9 @@ def run(input) {
 }
 
 // main function of the script
+@CompileStatic
 def exec(Connection connection, Map input) {
     long startCompute = System.currentTimeMillis()
-
-    int maximumRaysToExport = 5000
 
     DBTypes dbType = DBUtils.getDBType(connection.unwrap(Connection.class))
 
@@ -314,6 +311,7 @@ def exec(Connection connection, Map input) {
     // Create a sql connection to interact with the database in SQL
     Sql sql = new Sql(connection)
 
+    sql.execute("DROP TABLE RECEIVERS_LEVEL IF EXISTS;")
     // Create a logger to display messages in the geoserver logs and in the command prompt.
     Logger logger = LoggerFactory.getLogger("org.noise_planet.noisemodelling")
 
@@ -502,9 +500,9 @@ def exec(Connection connection, Map input) {
     if (input['confRaysName'] && !((input['confRaysName'] as String).isEmpty())) {
         parameters.setRaysTable(input['confRaysName'] as String)
         parameters.setExportRaysMethod(NoiseMapDatabaseParameters.ExportRaysMethods.TO_RAYS_TABLE)
-        parameters.setRaysTable(input['confRaysName'] as String)
+        parameters.exportAttenuationMatrix = true
+        parameters.exportCnossosPathWithAttenuation = true
         parameters.keepAbsorption = true
-        parameters.setMaximumRaysOutputCount(maximumRaysToExport)
     }
 
     pointNoiseMap.setComputeHorizontalDiffraction(compute_vertical_diffraction)
@@ -517,9 +515,9 @@ def exec(Connection connection, Map input) {
     DefaultTableLoader defaultTableLoader = (DefaultTableLoader)pointNoiseMap.tableLoader
     AttenuationParameters environmentalData = defaultTableLoader.defaultParameters
 
-    if (input.containsKey('confFavorableOccurrencesDefault')) {
-        StringTokenizer tk = new StringTokenizer(input['confFavorableOccurrencesDefault'] as String, ',')
-        double[] favOccurrences = new double[environmentalData.DEFAULT_WIND_ROSE.length]
+    if (input.containsKey('confFavourableOccurrencesDefault')) {
+        StringTokenizer tk = new StringTokenizer(input['confFavourableOccurrencesDefault'] as String, ',')
+        double[] favOccurrences = new double[AttenuationParameters.DEFAULT_WIND_ROSE.length]
         for (int i = 0; i < favOccurrences.length; i++) {
             favOccurrences[i] = Math.max(0, Math.min(1, Double.valueOf(tk.nextToken().trim())))
         }
@@ -554,8 +552,8 @@ def exec(Connection connection, Map input) {
 
     if(recordProfile) {
         LocalDateTime now = LocalDateTime.now()
-        pointNoiseMap.noiseMapDatabaseParameters.CSVProfilerOutputPath = new File("profile.csv")
-        pointNoiseMap.noiseMapDatabaseParameters.CSVProfilerWriteInterval = 20 // delay write csv line in seconds
+        pointNoiseMap.noiseMapDatabaseParameters.CSVProfilerOutputPath = new File("output/clisson/v5.0.1/profile.csv")
+        pointNoiseMap.noiseMapDatabaseParameters.CSVProfilerWriteInterval = 120 // delay write csv line in seconds
     }
 
     // Do not propagate for low emission or far away sources

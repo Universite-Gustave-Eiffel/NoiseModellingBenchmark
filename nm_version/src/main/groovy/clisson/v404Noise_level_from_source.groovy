@@ -259,14 +259,14 @@ inputs = [
         ],
         confRaysName            : [
                 name       : '',
-                title      : 'Export  r',
-                description: 'Save each propagation ray into the specified table (ex:RAYS) ' +
+                title      : 'Export scene',
+                description: 'Save each mnt, buildings and propagation rays into the specified table (ex:RAYS) ' +
                         'or file URL (ex: file:///Z:/dir/map.kml)' +
                         'You can set a table name here in order to save all the rays computed by NoiseModelling' +
                         '. The number of rays has been limited in this script in order to avoid memory exception' +
                         '</br> <b> Default value : empty (do not keep rays) </b>',
                 min        : 0, max: 1, type: String.class
-        ],
+        ]
 ]
 
 outputs = [
@@ -690,7 +690,7 @@ def exec(Connection connection, input) {
 
     logger.info("Start calculation... ")
     LocalDateTime now = LocalDateTime.now();
-    ProfilerThread profilerThread = new ProfilerThread(new File("output/profile.csv"));
+    ProfilerThread profilerThread = new ProfilerThread(new File("output/clisson/v4.0.4/profile.csv"));
     profilerThread.addMetric(ldenProcessing);
     profilerThread.addMetric(new ProgressMetric(progressLogger));
     profilerThread.addMetric(new JVMMemoryMetric());

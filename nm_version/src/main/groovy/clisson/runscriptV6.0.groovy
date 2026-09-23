@@ -72,7 +72,7 @@ static def exec(Connection connection, Map input) {
     if(input.containsKey('NM_version')){
         version=input["NM_version"] as String
     }
-    def outputFolder = new File("output/$version")
+    def outputFolder = new File("output/clisson/$version")
     if (!outputFolder.exists()) {
         outputFolder.mkdir()
     }
@@ -189,7 +189,7 @@ static def exec(Connection connection, Map input) {
         long startCompute = System.currentTimeMillis()
         if(version == "v6.0.0"){
 
-                def scriptFile = new File("nm_version/src/main/groovy/v600Noise_level_from_source.groovy")
+                def scriptFile = new File("nm_version/src/main/groovy/clisson/v600Noise_level_from_source.groovy")
                         .getAbsoluteFile()
         
                 if (!scriptFile.exists()) {
