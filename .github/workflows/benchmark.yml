@@ -207,48 +207,48 @@ jobs:
           NM_VERSION="${{ steps.detect.outputs.new_version }}"
           BRANCH="${{ github.ref_name }}"
           TARGET_DIR="input/NoiseModelling_without_gui_v${NM_VERSION}"
-
-          mkdir -p "$TARGET_DIR"
-
-          INNER=$(find "$TARGET_DIR" -name "*.zip" | head -n 1)
-
-          if [ -n "$INNER" ]; then
-            ZIP="$INNER"
-          else
-            ZIP="input/NoiseModelling_v${NM_VERSION}_artifact.zip"
-          fi
-
+          ZIP="input/NoiseModelling_v${NM_VERSION}_artifact.zip"
+        
           echo "ZIP source: $ZIP"
           echo "Target: $TARGET_DIR"
-
-          ROOT_DIR="NoiseModelling_without_gui_v${NM_VERSION}/"
-
-          if unzip -l "$ZIP" | grep -q "$ROOT_DIR"; then
-            echo "détecté dans le ZIP"
-
+        
+          mkdir -p "$TARGET_DIR"
+        
+          if [ ! -f "$ZIP" ]; then
+            echo "ERROR: ZIP introuvable: $ZIP"
+            exit 1
+          fi
+        
+          ROOT_DIR="NoiseModelling_without_gui_v${NM_VERSION}"
+        
+          
+          if unzip -Z1 "$ZIP" | grep -q "^${ROOT_DIR}/"; then
+            echo "Dossier racine détecté dans le ZIP : $ROOT_DIR"
+        
             TMP_DIR=$(mktemp -d)
-            unzip -o "$ZIP" -d "$TMP_DIR"
-
-            cp -a "$TMP_DIR/$ROOT_DIR"/* "$TARGET_DIR"/
-
+        
+            unzip -q "$ZIP" -d "$TMP_DIR"
+        
+            
+            cp -a "$TMP_DIR/$ROOT_DIR/." "$TARGET_DIR/"
+        
             rm -rf "$TMP_DIR"
           else
-            echo "pas de dossier racine "
-
-            unzip -o "$ZIP" -d "$TARGET_DIR"
+            echo "Pas de dossier racine, extraction directe"
+        
+            unzip -q "$ZIP" -d "$TARGET_DIR"
           fi
-
-          
-          find "input/" -name "NoiseModelling_without_gui_v${NM_VERSION}.zip" -delete
-
+        
+         
+          rm -f "$ZIP"
+        
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
+        
           git add input/
-
+        
           git commit -m "chore: add NM v${NM_VERSION} binary [skip ci]" || exit 0
           git push origin HEAD:${BRANCH}
-      
 
       - name: Upload extracted NM binary as artifact
         if: steps.detect.outputs.has_new == 'true' && steps.artifact.outputs.artifact_url != ''
