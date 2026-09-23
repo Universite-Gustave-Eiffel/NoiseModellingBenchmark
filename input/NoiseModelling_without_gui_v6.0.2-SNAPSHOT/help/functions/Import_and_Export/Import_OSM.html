@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Import OSM &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Import OSM Pedestrian" href="Import_OSM_Pedestrian.html" />
+    <link rel="prev" title="Import Folder" href="Import_Folder.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../Functions.html">List of functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#acoustic-tools">Acoustic Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#data-assimilation">Data Assimilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#database-manager">Database Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#deprecated">Deprecated</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#dynamic">Dynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#experimental">Experimental</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#experimental-matsim">Experimental Matsim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#geometric-tools">Geometric Tools</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../Functions.html#import-and-export">Import and Export</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Export_Table.html">Export Table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Import_Asc_File.html">Import Asc File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Import_Asc_Folder.html">Import Asc Folder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Import_File.html">Import File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Import_Folder.html">Import Folder</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Import OSM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#arguments">Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Import_OSM_Pedestrian.html">Import OSM Pedestrian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Import_Symuvia.html">Import Symuvia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Linked_Table.html">Linked Table</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#noisemodelling">NoiseModelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#receivers">Receivers</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../Functions.html">List of functions</a> &raquo;</li>
+      <li>Import OSM</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/functions/Import_and_Export/Import_OSM.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="import-osm">
+<h1>Import OSM<a class="headerlink" href="#import-osm" title="Permalink to this heading"></a></h1>
+<p>Import BUILDINGS, GROUND and ROADS tables from OSM</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>➡️ Convert .osm, .osm.gz or .osm.pbf file into NoiseModelling input tables. We recommend using OSMBBBike : <a class="reference external" href="https://extract.bbbike.org/">https://extract.bbbike.org/</a>
+The following output tables will be created:
+-  BUILDINGS : a table containing the buildings
+-  GROUND : a table containing ground acoustic absorption, based on OSM landcover surfaces
+-  ROADS : a table containing the roads. As OSM does not include data on road traffic flows, default values are assigned according to the -Good Practice Guide for Strategic Noise Mapping and the Production of Associated Data on Noise Exposure - Version 2</p>
+<p>💡 The user can choose to avoid creating some of these tables by checking the dedicated boxes</p>
+<figure class="align-center">
+<img alt="Import OSM file" src="../../_images/import_osm_file.png" />
+</figure>
+</section>
+<section id="arguments">
+<h2>Arguments<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
+<section id="mandatory-inputs">
+<h3>Mandatory inputs<a class="headerlink" href="#mandatory-inputs" title="Permalink to this heading"></a></h3>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">pathFile</span></code> — <em>Path of the OSM file</em></dt><dd><p>📂 Path of the OSM file, including its extension (.osm, .osm.gz or .osm.pbf).
+For example: c:/home/area.osm.pbf</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+</dl>
+</section>
+<section id="optional-inputs">
+<h3>Optional inputs<a class="headerlink" href="#optional-inputs" title="Permalink to this heading"></a></h3>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">eliminateNoTrafficRoads</span></code> — <em>Eliminate no traffic roads</em></dt><dd><p>If checked, only roads with these “TYPE” values will remain:
+- bus_guideway: Dedicated lanes or tracks for buses
+- busway: Bus-only lanes
+- living_street: Residential streets with pedestrian priority
+- motorway: High-speed, restricted-access highways
+- motorway_link: Connector ramps for motorways
+- primary: Major roads linking large cities
+- primary_link: Connector ramps for primary roads
+- raceway: Racing tracks
+- residential: Roads in residential areas
+- road: Generic roads
+- secondary: Roads connecting smaller towns
+- secondary_link: Connector ramps for secondary roads
+- service: Service lanes (access to parking lots, etc.)
+- tertiary: Roads connecting villages and hamlets
+- tertiary_link: Connector ramps for tertiary roads
+- trunk: Important roads that are not motorways
+- trunk_link: Connector ramps for trunk roads
+- unclassified: Minor roads not fitting higher classifications
+- rest_area: Areas for rest along roads
+- traffic_calming: Traffic calming features (speed bumps, etc.)
+- traffic_island: Traffic islands</p>
+<p>If not checked, all roads are processed as before.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ignoreBuilding</span></code> — <em>Do not import Buildings</em></dt><dd><p>✅ If the box is checked → the table BUILDINGS will NOT be created.</p>
+<p>🟩 If the box is NOT checked → the table BUILDINGS will be created and will contain:
+-  PK  : An identifier. It shall be a primary key (INTEGER, PRIMARY KEY)
+-  THE_GEOM  : The 2D geometry of the building (POLYGON or MULTIPOLYGON).
+-  HEIGHT  : The height of the building (FLOAT). If this information is not available then it is deduced from the number of floors (if available) with the addition of a small random variation from one building to another. Finally, if no information is available, a height of 5m is set by default.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ignoreGround</span></code> — <em>Do not import Surface acoustic absorption</em></dt><dd><p>✅ If the box is checked → the table GROUND will NOT be created.</p>
+<p>🟩 If the box is NOT checked → the table GROUND will be created and will contain:
+-  PK  : An identifier. It shall be a primary key (INTEGER, PRIMARY KEY)
+-  ID_WAY  : OSM identifier (INTEGER)
+-  THE_GEOM  : The 2D geometry of the sources (POLYGON or MULTIPOLYGON)
+-  PRIORITY  : Since NoiseModelling does not allowed overlapping geometries, if this is the case, this column is used to prioritize the geometry that will win over the other one when cutting. The order is given according to the type of land use
+-  G  : The acoustic absorption of a ground (FLOAT) (between 0 : very hard and 1 : very soft)</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ignoreRoads</span></code> — <em>Do not import Roads</em></dt><dd><p>✅ If the box is checked → the table ROADS will NOT be created.</p>
+<p>🟩 If the box is NOT checked → the table ROADS will be created and will contain:
+-  PK  : An identifier. It shall be a primary key (INTEGER, PRIMARY KEY)
+-  ID_WAY  : OSM identifier (INTEGER)
+-  THE_GEOM  : The 2D geometry of the sources (LINESTRING or MULTILINESTRING)
+-  LV_D  : Hourly average light and heavy vehicle count (6-18h) (DOUBLE)
+-  LV_E  : Hourly average light and heavy vehicle count (18-22h) (DOUBLE)
+-  LV_N  : Hourly average light and heavy vehicle count (22-6h) (DOUBLE)
+-  HGV_D  : Hourly average heavy vehicle count (6-18h) (DOUBLE)
+-  HGV_E  : Hourly average heavy vehicle count (18-22h) (DOUBLE)
+-  HGV_N  : Hourly average heavy vehicle count (22-6h) (DOUBLE)
+-  LV_SPD_D  : Hourly average light vehicle speed (6-18h) (DOUBLE)
+-  LV_SPD_E  : Hourly average light vehicle speed (18-22h) (DOUBLE)
+-  LV_SPD_N  : Hourly average light vehicle speed (22-6h) (DOUBLE)
+-  HGV_SPD_D  : Hourly average heavy vehicle speed (6-18h) (DOUBLE)
+-  HGV_SPD_E  : Hourly average heavy vehicle speed (18-22h) (DOUBLE)
+-  HGV_SPD_N  : Hourly average heavy vehicle speed (22-6h) (DOUBLE)
+-  PVMT  : CNOSSOS road pavement identifier (ex: NL05) (VARCHAR)</p>
+<p>💡 These information are deduced from the roads importance in OSM..</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">removeTunnels</span></code> — <em>Remove tunnels from OSM data</em></dt><dd><p>✅ If checked, remove roads from OSM data that contain OSM tag tunnel=yes.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">targetSRID</span></code> — <em>Target projection identifier</em></dt><dd><p>🌍 Target projection identifier (also called SRID) of your table.
+It should be an EPSG code, an integer with 4 or 5 digits (ex: 3857 is Web Mercator projection).</p>
+<p>🚨 The target SRID must be in metric coordinates.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Integer</span></code></p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">result</span></code> — <em>Result output string</em></dt><dd><p>This type of result does not allow the blocks to be linked together.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Import_Folder.html" class="btn btn-neutral float-left" title="Import Folder" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Import_OSM_Pedestrian.html" class="btn btn-neutral float-right" title="Import OSM Pedestrian" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

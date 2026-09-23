@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Road Emission From AADF &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Road Emission From TMJA" href="Road_Emission_From_TMJA.html" />
+    <link rel="prev" title="Noise Map Difference" href="Noise_Map_Difference.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../Functions.html">List of functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#acoustic-tools">Acoustic Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#data-assimilation">Data Assimilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#database-manager">Database Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#deprecated">Deprecated</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#dynamic">Dynamic</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../Functions.html#experimental">Experimental</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Noise_Map_Difference.html">Noise Map Difference</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Road Emission From AADF</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#arguments">Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Road_Emission_From_TMJA.html">Road Emission From TMJA</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#experimental-matsim">Experimental Matsim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#geometric-tools">Geometric Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#import-and-export">Import and Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#noisemodelling">NoiseModelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#receivers">Receivers</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../Functions.html">List of functions</a> &raquo;</li>
+      <li>Road Emission From AADF</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/functions/Experimental/Road_Emission_From_AADF.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="road-emission-from-aadf">
+<h1>Road Emission From AADF<a class="headerlink" href="#road-emission-from-aadf" title="Permalink to this heading"></a></h1>
+<p>Compute Road Emission</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>➡️ Compute Road Emission Noise Map from Estimated Annual average daily flows (AADF) estimates.
+This block allows to calculate a road traffic noise emission map from the AADF estimates given in the ROADS.shp file of the tutorial. The average traffic is first converted to hourly traffic before the calculation of Lday, Levening and Lnight using distribution in Berengier et al., 2019 : “DEUFRABASE: A Simple Tool for the Evaluation of the Noise Impact of Pavements in Typical Road Geometries”.</p>
+</section>
+<section id="arguments">
+<h2>Arguments<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
+<section id="mandatory-inputs">
+<h3>Mandatory inputs<a class="headerlink" href="#mandatory-inputs" title="Permalink to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">sourcesTableName</span></code> — <em>Sources table name</em></p>
+<blockquote>
+<div><p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</div></blockquote>
+</section>
+<section id="optional-inputs">
+<h3>Optional inputs<a class="headerlink" href="#optional-inputs" title="Permalink to this heading"></a></h3>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">databaseName</span></code> — <em>Name of the database</em></dt><dd><p>Name of the database (default : first found db)</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">result</span></code> — <em>Result</em></p>
+<blockquote>
+<div><p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Noise_Map_Difference.html" class="btn btn-neutral float-left" title="Noise Map Difference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Road_Emission_From_TMJA.html" class="btn btn-neutral float-right" title="Road Emission From TMJA" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

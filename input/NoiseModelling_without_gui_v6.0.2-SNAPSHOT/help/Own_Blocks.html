@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create your own block &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Access NoiseModelling database" href="NoiseModelling_db.html" />
+    <link rel="prev" title="Builder" href="Builder.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Functions.html">List of functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Create your own block</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#presentation">Presentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#general-structure">General Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import-used-libraries">1. Import used libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#script-meta-data">2. Script meta data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#set-main-method-to-execute">4. Set main method to execute</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Create your own block</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Own_Blocks.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="create-your-own-block">
+<h1>Create your own block<a class="headerlink" href="#create-your-own-block" title="Permalink to this heading"></a></h1>
+<section id="presentation">
+<h2>Presentation<a class="headerlink" href="#presentation" title="Permalink to this heading"></a></h2>
+<p>The OGC Web Processing Service (<a class="reference external" href="https://www.ogc.org/standards/wps">WPS</a>) Standard provides rules for standardizing inputs and outputs (requests and responses) for invoking geospatial processing services as a web service.</p>
+<p>Scripts for NoiseModelling are written in Groovy language. They are located in the <code class="docutils literal notranslate"><span class="pre">NoiseModelling/scripts/</span></code> directory.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don’t be shy, if you think your script can be useful to the community, you can redistribute it using github or by sending it directly to us.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The best way to make your own Block is to be inspired by those that are already made. See how the tutorial is built or contact us for many more examples.</p>
+</div>
+</section>
+<section id="general-structure">
+<h2>General Structure<a class="headerlink" href="#general-structure" title="Permalink to this heading"></a></h2>
+<section id="import-used-libraries">
+<h3>1. Import used libraries<a class="headerlink" href="#import-used-libraries" title="Permalink to this heading"></a></h3>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">groovy.sql.Sql</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.sql.Connection</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.h2gis.api.ProgressVisitor</span>
+</pre></div>
+</div>
+</section>
+<section id="script-meta-data">
+<h3>2. Script meta data<a class="headerlink" href="#script-meta-data" title="Permalink to this heading"></a></h3>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;My script title&#39;</span>
+<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;My script description, I support &lt;b&gt;html&lt;/b&gt; !&#39;</span>
+<span class="n">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="nl">my_optional_parameter:</span><span class="w"> </span><span class="o">[</span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;option1&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">title:</span><span class="w"> </span><span class="s1">&#39;option1&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">description</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Description, you can use html here. This parameter is optional because you have provided a default value&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">type:</span><span class="w"> </span><span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span><span class="w"> </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;MY_RESULT_TABLE&#39;</span><span class="o">],</span>
+<span class="w">    </span><span class="nl">my_integer_parameter:</span><span class="w"> </span><span class="o">[</span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;my_integer_parameter&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">title:</span><span class="w"> </span><span class="s1">&#39;my_integer_parameter&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">description</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Restrict to an int, you can use html here&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">type:</span><span class="w"> </span><span class="n">Integer</span><span class="o">.</span><span class="na">class</span><span class="o">],</span>
+<span class="w">    </span><span class="nl">my_double_parameter:</span><span class="w"> </span><span class="o">[</span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;my_double_parameter&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">title:</span><span class="w"> </span><span class="s1">&#39;my_double_parameter&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">description</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Restrict to an floating point value, you can use html here&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">type:</span><span class="w"> </span><span class="n">Double</span><span class="o">.</span><span class="na">class</span><span class="o">],</span>
+<span class="w">    </span><span class="nl">my_boolean_parameter:</span><span class="w"> </span><span class="o">[</span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;my_boolean_parameter&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">title:</span><span class="w"> </span><span class="s1">&#39;my_boolean_parameter&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">description</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;A checkbox parameter&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">type:</span><span class="w"> </span><span class="n">Boolean</span><span class="o">.</span><span class="na">class</span><span class="o">],</span>
+<span class="w">    </span><span class="nl">my_choice_parameter:</span><span class="w"> </span><span class="o">[</span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;my_choice_parameter&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">title:</span><span class="w"> </span><span class="s1">&#39;my_choice_parameter&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">description</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;A list box with limited choices&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">type:</span><span class="w"> </span><span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span><span class="w"> </span><span class="n">allowedValues</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;Choice 1&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;Choice 2&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;Choice 3&quot;</span><span class="o">],</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Choice 2&quot;</span><span class="o">],</span>
+<span class="o">]</span>
+
+<span class="c1">// Optional (default 60 seconds)</span>
+<span class="c1">// For synchronous execution, it will wait this time (in seconds) before returning a message, but it will still run the execution in the background</span>
+<span class="n">executionTimeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">120</span>
+
+
+<span class="n">outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="nl">result:</span><span class="w"> </span><span class="o">[</span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;result&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">title:</span><span class="w"> </span><span class="s1">&#39;result&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">description</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Result output, generally the result output table name. You can use this output as an input for another processing&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">type:</span><span class="w"> </span><span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">]</span>
+<span class="o">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You may want to add an optional parameter but without a default value (the input will not be in the input map) to do so instead of defining a default value <code class="docutils literal notranslate"><span class="pre">default:</span> <span class="pre">'MY_RESULT_TABLE'</span></code> use the entry <code class="docutils literal notranslate"><span class="pre">min</span> <span class="pre">:</span> <span class="pre">0</span></code></p>
+</div>
+</section>
+<section id="set-main-method-to-execute">
+<h3>4. Set main method to execute<a class="headerlink" href="#set-main-method-to-execute" title="Permalink to this heading"></a></h3>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Main method</span>
+<span class="cm"> * @param connection SQL Connection</span>
+<span class="cm"> * @param input Map of inputs, should provide the same keys as described in the input metadata</span>
+<span class="cm"> * @param progress Can be used to display the progression of the computation, and to check if the user canceled the execution</span>
+<span class="cm"> * @return A map as described in the result metadata</span>
+<span class="cm"> * @throws SQLException if something went wrong</span>
+<span class="cm"> */</span>
+<span class="kt">def</span><span class="w"> </span><span class="nf">exec</span><span class="o">(</span><span class="n">Connection</span><span class="w"> </span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="n">Map</span><span class="w"> </span><span class="n">inputs</span><span class="o">,</span><span class="w"> </span><span class="n">ProgressVisitor</span><span class="w"> </span><span class="n">progress</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">Sql</span><span class="w"> </span><span class="n">sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Sql</span><span class="o">(</span><span class="n">connection</span><span class="o">)</span>
+<span class="w">    </span><span class="c1">// Get the parameter value. For optional parameters, do not forget to provide a default value in the metadata.</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">myTableName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inputs</span><span class="o">.</span><span class="na">my_optional_parameter</span>
+<span class="w">    </span><span class="n">sql</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="s2">&quot;CREATE TABLE IF NOT EXISTS $myTableName(PK SERIAL PRIMARY KEY, DATA INTEGER)&quot;</span><span class="o">.</span><span class="na">toString</span><span class="o">())</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">[</span><span class="n">result</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;$myTableName&#39;</span><span class="o">]</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Make your method available</p></li>
+</ol>
+<p>You have to save the script into the folder <code class="docutils literal notranslate"><span class="pre">NoiseModelling/scripts/</span></code>. You have to refresh the web page Builder in order to see your new script.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Builder.html" class="btn btn-neutral float-left" title="Builder" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="NoiseModelling_db.html" class="btn btn-neutral float-right" title="Access NoiseModelling database" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

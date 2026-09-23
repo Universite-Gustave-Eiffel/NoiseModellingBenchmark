@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use NoiseModelling with a PostGIS database &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Get Started" href="Get_Started_Dev.html" />
+    <link rel="prev" title="Access NoiseModelling database" href="NoiseModelling_db.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Functions.html">List of functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Use NoiseModelling with a PostGIS database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-scriptrunner-with-postgis">Using ScriptRunner with PostGIS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#command-line-example">Command Line Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameters-description">Parameters Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#additional-script-parameters">Additional Script Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-pgpass-for-credentials">Using .pgpass for Credentials</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Use NoiseModelling with a PostGIS database</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/NoiseModellingOnPostGIS.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="use-noisemodelling-with-a-postgis-database">
+<h1>Use NoiseModelling with a PostGIS database<a class="headerlink" href="#use-noisemodelling-with-a-postgis-database" title="Permalink to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p>NoiseModelling is designed to use <a class="reference external" href="https://h2gis.org/">H2GIS</a> as the default database.</p>
+<p>H2GIS does not need to be configured or installed on the system and is therefore perfectly suitable as a default database.</p>
+<p>However, you may want to connect NoiseModelling to a <a class="reference external" href="https://www.postgresql.org/">PostgreSQL</a>/<a class="reference external" href="https://postgis.net/">PostGIS</a> database (this option may be interesting especially if you want to use <a class="reference external" href="https://qgis.org">QGIS</a> while using NoiseModelling).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Using PostGIS may result in slower performance than H2GIS due to network overhead, as data is transferred over a connection rather than written directly to local storage.</p>
+</div>
+<p>NoiseModelling core functions has been written with the idea of maintaining the H2GIS/PostGIS compatibility.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>NoiseModelling Groovy scripts may use incompatible syntax with PostGIS. We are currently working on checking the compatibility with the PostGIS database.</p>
+</div>
+<p>This tutorial will not cover the steps for installing and configuring a PostGIS database.</p>
+</section>
+<section id="using-scriptrunner-with-postgis">
+<h2>Using ScriptRunner with PostGIS<a class="headerlink" href="#using-scriptrunner-with-postgis" title="Permalink to this heading"></a></h2>
+<p>You can run Groovy scripts using a PostGIS connection instead of the default H2GIS embedded database by using the <cite>ScriptRunner</cite> program.</p>
+<p>This is particularly useful for large-scale simulations where a dedicated database server is preferred.</p>
+<section id="command-line-example">
+<h3>Command Line Example<a class="headerlink" href="#command-line-example" title="Permalink to this heading"></a></h3>
+<p>To import a Shapefile into a PostGIS database, you can use the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./bin/ScriptRunner<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/path/to/working/dir<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-s<span class="w"> </span>src/main/groovy/org/noise_planet/noisemodelling/scripts/Import_and_Export/Import_File.groovy<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span>noisemodelling_db<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-u<span class="w"> </span>noisemodelling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>noisemodelling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--host<span class="w"> </span>localhost<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--port<span class="w"> </span><span class="m">5432</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--pathFile<span class="w"> </span>/path/to/your/buildings.shp<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--tableName<span class="w"> </span>BUILDINGS
+</pre></div>
+</div>
+</section>
+<section id="parameters-description">
+<h3>Parameters Description<a class="headerlink" href="#parameters-description" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>-w, –working-dir</strong>: Path where the application logs and temporary files will be stored.</p></li>
+<li><p><strong>-s, –script</strong>: Path to the Groovy script you want to execute.</p></li>
+<li><p><strong>-d, –database-name</strong>: Name of the PostGIS database.</p></li>
+<li><p><strong>-u, –username</strong>: Database username.</p></li>
+<li><p><strong>-p, –password</strong>: Database password. If not provided and a host is specified, it will try to fetch it from the <cite>.pgpass</cite> file.</p></li>
+<li><p><strong>–host</strong>: PostGIS database host name. Specifying this parameter tells NoiseModelling to connect to PostGIS instead of using H2GIS.</p></li>
+<li><p><strong>–port</strong>: PostGIS database port (default: 5432).</p></li>
+</ul>
+</section>
+<section id="additional-script-parameters">
+<h3>Additional Script Parameters<a class="headerlink" href="#additional-script-parameters" title="Permalink to this heading"></a></h3>
+<p>Any parameter specific to the Groovy script (defined in its <cite>inputs</cite> map) can be passed as a double-dash argument. In the example above:</p>
+<ul class="simple">
+<li><p><strong>–pathFile</strong>: The path to the file to import (required by <cite>Import_File.groovy</cite>).</p></li>
+<li><p><strong>–tableName</strong>: The name of the table to create in the database.</p></li>
+</ul>
+</section>
+<section id="using-pgpass-for-credentials">
+<h3>Using .pgpass for Credentials<a class="headerlink" href="#using-pgpass-for-credentials" title="Permalink to this heading"></a></h3>
+<p>If you don’t want to provide the password in the command line, you can use a <cite>.pgpass</cite> file as specified in the <a class="reference external" href="https://www.postgresql.org/docs/current/libpq-pgpass.html">PostgreSQL documentation</a>.</p>
+<p>The file should contain lines in the following format:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>hostname:port:database:username:password
+</pre></div>
+</div>
+<p>NoiseModelling will automatically fetch the password if the host is specified and the password parameter is omitted.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="NoiseModelling_db.html" class="btn btn-neutral float-left" title="Access NoiseModelling database" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Get_Started_Dev.html" class="btn btn-neutral float-right" title="Get Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

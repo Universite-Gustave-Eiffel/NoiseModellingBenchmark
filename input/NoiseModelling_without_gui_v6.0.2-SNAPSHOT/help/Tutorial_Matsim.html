@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MATSim - GUI &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Dynamic Maps - GUI" href="Tutorial_Dynamic.html" />
+    <link rel="prev" title="Noise Map from OSM - GUI" href="Tutorial_Noise_Map_From_OSM.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MATSim - GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-data">The data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-1-import-buildings">Step 1: Import Buildings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-2-import-matsim-traffic-data">Step 2: Import MATSim Traffic Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-3-import-matsim-activities">Step 3: Import MATSim Activities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-4-assign-a-receiver-to-each-activity">Step 4: Assign a Receiver to each Activity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-5-calculate-noise-receiver-levels">Step 5: Calculate Noise Receiver Levels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualization">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#export-the-data">Export the data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#view-it-in-qgis">View it in QGIS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#going-further">Going Further</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Functions.html">List of functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>MATSim - GUI</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Tutorial_Matsim.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="matsim-gui">
+<h1>MATSim - GUI<a class="headerlink" href="#matsim-gui" title="Permalink to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p>MATSim (<a class="reference external" href="https://matsim.org/">https://matsim.org/</a>) is an open-source framework for implementing large-scale agent-based transport simulations.
+In this tutorial we will learn how to import the output of a successful MATSim simulation into NoiseModelling.
+The idea is to use the traffic data from MATSim for NoiseModelling road noise emission.
+Then we will leverage the fact that MATSim is a multi-agent simulator. We will import MATSim agent’s positions to calculate their noise exposition throughout the simulated day.</p>
+<p>For this tutorial, we’ll look into a simulation of a small part of the <a class="reference external" href="https://www.openstreetmap.org/way/45178361">center of Nantes</a>, the 6th most populated city in France.</p>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>You need to have a working installation of the latest NoiseModelling version</p></li>
+<li><p>A basic knowledge of what the MATSim traffic simulator does and how it works is preferable</p></li>
+<li><p>(optional) A working installation of DBeaver (<a class="reference external" href="https://dbeaver.io/">https://dbeaver.io/</a>) can be useful to visualize the NoiseModelling database tables</p></li>
+<li><p>(optional) A working installation of Simunto Via (<a class="reference external" href="https://www.simunto.com/via/">https://www.simunto.com/via/</a>) can be useful for visualizing the MATSim scenario</p></li>
+<li><p>(optional) A working installation of QGis (<a class="reference external" href="https://www.qgis.org/">https://www.qgis.org/</a>) can be useful to visualize resulting GIS data</p></li>
+</ul>
+</section>
+<section id="the-data">
+<h2>The data<a class="headerlink" href="#the-data" title="Permalink to this heading"></a></h2>
+<p>You can download and unzip the data in any folder from here: <a class="reference external" href="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v5.X-Matsim-Test-Scenario/scenario_matsim.zip">https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v5.X-Matsim-Test-Scenario/scenario_matsim.zip</a></p>
+<p>The data folder should contain the following files:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nantes_mini.osm.pbf</span></code>: the Openstreetmap data of the area. We’ll use it to import buildings into NoiseModelling.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">detailed_network.csv</span></code>: A file containing the ‘true’ geometries of the road segments (called “links” in MATSim)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_allVehicles.xml.gz</span></code>: A file containing the various vehicles used by the agents in the simulation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_events.xml.gz</span></code>: A file containing the list of MATSim events from the simulation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_facilities.xml.gz</span></code>: A file containing the list of facilities, the agent’s activity locations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_network.xml.gz</span></code>: A file containing the MATSim road network, a list of nodes and links.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_plans.xml.gz</span></code>: A file containing the list of agents and their final planned schedule.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_experienced_plans.xml.gz</span></code>: A file containing the list of agents and their final experienced schedule which may differ from the initial planned one.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_persons.csv.gz</span></code>: A file containing the simple list of agents and some of there socioeconomic characteristics</p></li>
+</ul>
+</section>
+<section id="step-1-import-buildings">
+<h2>Step 1: Import Buildings<a class="headerlink" href="#step-1-import-buildings" title="Permalink to this heading"></a></h2>
+<p>The first thing we’re going to do is to import buildings.
+We use the <code class="docutils literal notranslate"><span class="pre">Import_OSM</span></code> block to do that. There are several options. Put the <code class="docutils literal notranslate"><span class="pre">nantes_mini.osm.pbf</span></code> path in the ‘pathFile’ input and set the ‘SRID’ input to <a class="reference external" href="https://epsg.io/2154">2154</a> <em>(which is the EPSG code for the french regulatory system)</em>.
+Since we’re only interested in buildings, you can also check the <code class="docutils literal notranslate"><span class="pre">Do</span> <span class="pre">not</span> <span class="pre">import</span> <span class="pre">roads</span></code> option as well as the <code class="docutils literal notranslate"><span class="pre">`Do</span> <span class="pre">not</span> <span class="pre">import</span> <span class="pre">Surface</span> <span class="pre">acoustic</span> <span class="pre">absorption</span></code> option.</p>
+<figure class="align-center">
+<img alt="_images/osm_pbf_wps.png" src="_images/osm_pbf_wps.png" />
+</figure>
+<p>You should end up with a <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code> table containing the city center buildings. If you want to visualize the buildings in NoiseModelling, you can use the <code class="docutils literal notranslate"><span class="pre">Table</span> <span class="pre">visualization</span> <span class="pre">Map</span></code> block (in the <em>Database Manager</em> section) with <code class="docutils literal notranslate"><span class="pre">Name</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">table</span></code> set to <em>BUILDINGS</em> and <code class="docutils literal notranslate"><span class="pre">Projection</span> <span class="pre">identifier</span></code> set to <em>2154</em>.</p>
+<figure class="align-center">
+<img alt="_images/buildings_table.png" src="_images/buildings_table.png" />
+</figure>
+</section>
+<section id="step-2-import-matsim-traffic-data">
+<h2>Step 2: Import MATSim Traffic Data<a class="headerlink" href="#step-2-import-matsim-traffic-data" title="Permalink to this heading"></a></h2>
+<p>Now we can import the traffic data from the MATSim simulation.
+To do that, we use the <code class="docutils literal notranslate"><span class="pre">Traffic_From_Events</span></code> block.</p>
+<p>The mandatory inputs are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">folder</span></code>: the path of the MATSim folder, here it is where you put the content of the <code class="docutils literal notranslate"><span class="pre">scenario_matsim.zip</span></code> file</p></li>
+</ul>
+<p>An important option is <code class="docutils literal notranslate"><span class="pre">The</span> <span class="pre">size</span> <span class="pre">of</span> <span class="pre">time</span> <span class="pre">bins</span> <span class="pre">in</span> <span class="pre">seconds</span></code> which represents the time period you want to aggregate the traffic data over. Here let’s use 900 to get data every 15 minutes.</p>
+<p>One optional, but very important input, is the <code class="docutils literal notranslate"><span class="pre">Network</span> <span class="pre">CSV</span></code> file path option. The idea is that when the MATSim scenario was run, the link geometries were simplified to save computation time.
+This simplification of roads geometry is a bad thing for NoiseModelling since we take buildings into account (simplified links can pass through buildings) and since source-receiver distance has a big impact on noise levels.
+That’s why the <code class="docutils literal notranslate"><span class="pre">detailed_network.csv</span></code> file is given with the other data files. It contains the “real” geometry of links before MATSim simplification process (FYI, This is obtained by setting the ‘outputDetailedLinkGeometryFile’ option to a file name in the <code class="docutils literal notranslate"><span class="pre">pt2matsim</span></code> config file).</p>
+<p>An other important parameter is the <code class="docutils literal notranslate"><span class="pre">populationFactor</span></code>. This corresponds to the downscaling factor that was used to generate the list of agents. Typically, this list of agents is generated based on the available census and survey data for an administrative area.
+Here, for our use case, the Matsim scenario and it’s agents were generated by using only 0,1% of the area total population (that is a population factor of 0.001).</p>
+<p>You can explore the other options by reading their descriptions. Here we are going to set them as follows:</p>
+<ul class="simple">
+<li><p>Network CSV file: <code class="docutils literal notranslate"><span class="pre">/path/to/your/scenario_matsim/detailed_network.csv</span></code></p></li>
+<li><p>Export additional traffic data ?: <code class="docutils literal notranslate"><span class="pre">true</span></code></p></li>
+<li><p>Path of the Matsim output folder: <code class="docutils literal notranslate"><span class="pre">/path/to/your/scenario_matsim</span></code></p></li>
+<li><p>populationFactor: <code class="docutils literal notranslate"><span class="pre">0.001</span></code></p></li>
+<li><p>The size of time bins in seconds: <code class="docutils literal notranslate"><span class="pre">900</span></code></p></li>
+<li><p>outTableName: “” (not set, use default)</p></li>
+<li><p>Skip unused links ?: <code class="docutils literal notranslate"><span class="pre">true</span></code></p></li>
+<li><p>Projection identifier: <code class="docutils literal notranslate"><span class="pre">2154</span></code></p></li>
+</ul>
+<figure class="align-center">
+<img alt="_images/traffic_events_wps.png" src="_images/traffic_events_wps.png" />
+</figure>
+<p>You should end up with a <code class="docutils literal notranslate"><span class="pre">MATSIM_ROADS</span></code> table containing the links ids and their geometry and a <code class="docutils literal notranslate"><span class="pre">MATSIM_ROADS_LW</span></code> table containing the noise power level of each link per 15 min time slice.</p>
+<figure class="align-center">
+<img alt="_images/roads_table.png" src="_images/roads_table.png" />
+</figure>
+</section>
+<section id="step-3-import-matsim-activities">
+<h2>Step 3: Import MATSim Activities<a class="headerlink" href="#step-3-import-matsim-activities" title="Permalink to this heading"></a></h2>
+<p>The next step consists in importing the activities locations from the MATSim simulation.In MATSim, activities are also called facilities.</p>
+<p>Let’s use the <code class="docutils literal notranslate"><span class="pre">Import_Activities</span></code> bloc. The inputs descriptions are quite straightforward:</p>
+<ul class="simple">
+<li><p>Name of created table: <code class="docutils literal notranslate"><span class="pre">ACTIVITIES</span></code></p></li>
+<li><p>Projection identifier: <code class="docutils literal notranslate"><span class="pre">2154</span></code></p></li>
+<li><p>Path of MatSim facilities file: <code class="docutils literal notranslate"><span class="pre">/path/to/your/scenario_mastim/output_facilities.xml.gz</span></code></p></li>
+</ul>
+<figure class="align-center">
+<img alt="_images/import_activities_wps.png" src="_images/import_activities_wps.png" />
+</figure>
+<p>You should end up with a <code class="docutils literal notranslate"><span class="pre">ACTIVITIES</span></code> table containing the activities location, and few other properties.</p>
+<figure class="align-center">
+<img alt="_images/activities_table.png" src="_images/activities_table.png" />
+</figure>
+</section>
+<section id="step-4-assign-a-receiver-to-each-activity">
+<h2>Step 4: Assign a Receiver to each Activity<a class="headerlink" href="#step-4-assign-a-receiver-to-each-activity" title="Permalink to this heading"></a></h2>
+<p>Now, if you look closely, activities are placed in unorthodox locations, sometimes in the river, sometimes in buildings, etc.
+This is irrelevant for a MATSim simulation but here we want to calculate noise levels, so we need properly placed receivers.</p>
+<p>So we want to assign a properly placed receiver for every activity we imported. We do that in 2 steps:</p>
+<ol class="arabic simple">
+<li><p>we calculate all the “valid” receiver positions using the <code class="docutils literal notranslate"><span class="pre">Building_Grid</span></code> bloc</p></li>
+<li><p>we choose, for each activity the right receiver.</p></li>
+</ol>
+<p>There are 2 ways to execute step 4.2. We can simply choose the closest receiver for every activity, using the <code class="docutils literal notranslate"><span class="pre">Receivers_From_Activity_Closest</span></code> bloc.
+Or we can randomly choose a receiver on the closest building of each activity using the <code class="docutils literal notranslate"><span class="pre">Receivers_From_Activity_Random</span></code> bloc.</p>
+<p>Here we are going to use the latter way, the random one.</p>
+<p>Let’s calculate all the receivers around our buildings using the <code class="docutils literal notranslate"><span class="pre">Building_Grid</span></code> bloc with the following inputs:</p>
+<ul class="simple">
+<li><p>Buildings table table: <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code></p></li>
+<li><p>Distance between receivers: <code class="docutils literal notranslate"><span class="pre">5.0</span></code></p></li>
+<li><p>Height: <code class="docutils literal notranslate"><span class="pre">4.0</span></code></p></li>
+</ul>
+<p>That will place receivers around all the buildings, at 4 meter high and 5 meters apart.</p>
+<p>Now, we must use the <code class="docutils literal notranslate"><span class="pre">Receivers_From_Activity_Random</span></code> bloc. The inputs are simple, you just have to specify the names of the previously created tables</p>
+<ul class="simple">
+<li><p>Name of created table: <code class="docutils literal notranslate"><span class="pre">ACTIVITY_RECEIVERS</span></code></p></li>
+<li><p>Name of the table containing the activities: <code class="docutils literal notranslate"><span class="pre">ACTIVITIES</span></code></p></li>
+<li><p>Name of the table containing the buildings: <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code></p></li>
+<li><p>Name of the table containing the receivers: <code class="docutils literal notranslate"><span class="pre">RECEIVERS</span></code></p></li>
+</ul>
+<figure class="align-center">
+<img alt="_images/receiver_activities_wps.png" src="_images/receiver_activities_wps.png" />
+</figure>
+<p>You should end up with a <code class="docutils literal notranslate"><span class="pre">ACTIVITY_RECEIVERS</span></code> table containing the new location (<code class="docutils literal notranslate"><span class="pre">THE_GEOM</span></code>, in blue below) as well as the original matsim position (<code class="docutils literal notranslate"><span class="pre">ORIGIN_GEOM</span></code>, in red below).
+You can inspect the results to see where each activity is placed now.</p>
+<figure class="align-center">
+<img alt="_images/activity_receivers_table.png" src="_images/activity_receivers_table.png" />
+</figure>
+</section>
+<section id="step-5-calculate-noise-receiver-levels">
+<h2>Step 5: Calculate Noise Receiver Levels<a class="headerlink" href="#step-5-calculate-noise-receiver-levels" title="Permalink to this heading"></a></h2>
+<p>In this step, we want to calculate a noise level for every receiver, every 15 minutes (96 maps in total).</p>
+<p>We’ll use the <code class="docutils literal notranslate"><span class="pre">Noise_level_from_source</span></code> bloc. When the using the <code class="docutils literal notranslate"><span class="pre">Sources</span> <span class="pre">emission</span> <span class="pre">table</span> <span class="pre">name</span></code>, the bloc will automatically take into account the time bins defined in the emission table.
+For more details about the different parameters, browse the NoiseModelling general documentation.</p>
+<p>Let’s use the previously generated table to launch our propagation calculation.</p>
+<p>The parameters we will use are the following:</p>
+<ul class="simple">
+<li><p>Buildings table name: <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code></p></li>
+<li><p>Receivers table name: <code class="docutils literal notranslate"><span class="pre">ACTIVITY_RECEIVERS</span></code></p></li>
+<li><p>Sources geometry table name: <code class="docutils literal notranslate"><span class="pre">MATSIM_ROADS</span></code></p></li>
+<li><p>Sources emission table name: <code class="docutils literal notranslate"><span class="pre">MATSIM_ROADS_LW</span></code></p></li>
+<li><p>Maximum source-receiver distance: <code class="docutils literal notranslate"><span class="pre">250</span></code></p></li>
+<li><p>Maximum source reflexion distance: <code class="docutils literal notranslate"><span class="pre">50</span></code></p></li>
+<li><p>Order of reflexion: <code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p>Diffraction on vertical edges: <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p>Diffraction on horizontal edges: <code class="docutils literal notranslate"><span class="pre">true</span></code></p></li>
+</ul>
+<figure class="align-center">
+<img alt="_images/noise_from_source_wps.png" src="_images/noise_from_source_wps.png" />
+</figure>
+<p>We should end up with a table called <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code> that contains a list of noise levels for every receiver, at every 15-minute interval.</p>
+<p>We have our noise maps !</p>
+</section>
+<section id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this heading"></a></h2>
+<section id="export-the-data">
+<h3>Export the data<a class="headerlink" href="#export-the-data" title="Permalink to this heading"></a></h3>
+<p>Here we’ll look at a nice way to look at the results with QGIS.</p>
+<p>First we need to export the <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code> table data into a Shapefile.
+We’ll simply use the <code class="docutils literal notranslate"><span class="pre">Export_Table</span> <span class="pre">WPS</span></code> bloc with the following parameters:</p>
+<ul class="simple">
+<li><p>Name of the table: <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code></p></li>
+<li><p>Path of the file you want to export: <code class="docutils literal notranslate"><span class="pre">/path/to/wherever/results.shp</span></code></p></li>
+</ul>
+<figure class="align-center">
+<img alt="_images/results_export_wps.png" src="_images/results_export_wps.png" />
+</figure>
+</section>
+<section id="view-it-in-qgis">
+<h3>View it in QGIS<a class="headerlink" href="#view-it-in-qgis" title="Permalink to this heading"></a></h3>
+<p>Let’s go into QGIS. We are going to import 2 layers: an osm background and our results.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For those who are new to GIS and want to get started with QGIS, we advise you to follow <a class="reference external" href="https://docs.qgis.org/3.22/en/docs/training_manual/basic_map/index.html">this tutorial</a> as a start.</p>
+</div>
+<ul class="simple">
+<li><p>In <code class="docutils literal notranslate"><span class="pre">Layer</span></code> <span class="raw-html">&rarr;</span> <code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">Layer</span></code> <span class="raw-html">&rarr;</span> <code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">vector</span> <span class="pre">layer</span></code>, you can enter the path of your <code class="docutils literal notranslate"><span class="pre">results.shp</span></code> file. Then click on <code class="docutils literal notranslate"><span class="pre">Add</span></code>.</p></li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">Layer</span></code> <span class="raw-html">&rarr;</span> <code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">Layer</span></code> <span class="raw-html">&rarr;</span> <code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">XYZ</span> <span class="pre">Layer</span></code>, you can add the OpenStreetMap background.</p></li>
+</ul>
+<p>You should see a lot of points all of the same color.</p>
+<p>We now need to choose a time-slice we want to visualize, let’s pick the timeBin of 10h (36000 seconds).
+If you right click on the receivers layer and click on <code class="docutils literal notranslate"><span class="pre">Filter...</span></code> you should see the filter dialog.</p>
+<p>To filter results for the 10h00_10h15 time period you can enter the following filter query :</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">PERIOD</span> <span class="pre">=</span> <span class="pre">36000</span></code></p>
+</div></blockquote>
+<p>The last step is to color the dots based on the LEQA field.
+The following configuration can be used:</p>
+<figure class="align-center">
+<img alt="_images/symbology_results_qgis.png" src="_images/symbology_results_qgis.png" />
+</figure>
+<p>And the final result, between 10h00 and 10h15:</p>
+<figure class="align-center">
+<img alt="_images/results_10h_qgis.png" src="_images/results_10h_qgis.png" />
+</figure>
+</section>
+<section id="going-further">
+<h3>Going Further<a class="headerlink" href="#going-further" title="Permalink to this heading"></a></h3>
+<p>Now maybe we just want to compute actual noise maps instead of just the noise levels at some specific points.
+In this case we’d want to use a different receiver grid using the <code class="docutils literal notranslate"><span class="pre">Delaunay_Grid</span></code> bloc.</p>
+<p>Then we can use the same <code class="docutils literal notranslate"><span class="pre">Noise_level_from_source</span></code> blocs to calculate the noise levels at every receiver at every timestep.</p>
+<p>You can then run a <code class="docutils literal notranslate"><span class="pre">Create_Isosurface</span></code> bloc to create a noise map, it will also automatically detect the PERIOD and produce one noise map per time bin.</p>
+<p>Here is an example of a noise map for the 10h to 10h15 time period:</p>
+<figure class="align-center">
+<img alt="_images/map_10h_qgis.png" src="_images/map_10h_qgis.png" />
+</figure>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Tutorial_Noise_Map_From_OSM.html" class="btn btn-neutral float-left" title="Noise Map from OSM - GUI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Tutorial_Dynamic.html" class="btn btn-neutral float-right" title="Dynamic Maps - GUI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

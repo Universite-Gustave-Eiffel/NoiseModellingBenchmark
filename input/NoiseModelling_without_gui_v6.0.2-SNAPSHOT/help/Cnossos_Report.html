@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conformity to ISO 17534-1:2015 &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Noise Map Color Scheme" href="Noise_Map_Color_Scheme.html" />
+    <link rel="prev" title="Get Started" href="Get_Started_Dev.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Functions.html">List of functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Conformity to ISO 17534-1:2015</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#clarifications-on-the-iso-standard">Clarifications on the ISO Standard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conformity-table">Conformity table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc01">TC01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc02">TC02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc03">TC03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc04">TC04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc05">TC05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc06">TC06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc07">TC07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc08">TC08</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc09">TC09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc10">TC10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc11">TC11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc12">TC12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc13">TC13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc14">TC14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc15">TC15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc16">TC16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc17">TC17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc18">TC18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc19">TC19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc20">TC20</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc21">TC21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc22">TC22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc23">TC23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc24">TC24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc25">TC25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc26">TC26</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc27">TC27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tc28">TC28</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Conformity to ISO 17534-1:2015</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Cnossos_Report.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="conformity-to-iso-17534-1-2015">
+<h1>Conformity to ISO 17534-1:2015<a class="headerlink" href="#conformity-to-iso-17534-1-2015" title="Permalink to this heading"></a></h1>
+<section id="clarifications-on-the-iso-standard">
+<h2>Clarifications on the ISO Standard<a class="headerlink" href="#clarifications-on-the-iso-standard" title="Permalink to this heading"></a></h2>
+<p>It is important to note that the ISO standard provides recommendations
+rather than regulatory obligations. While it serves as a reference framework,
+its application is not mandatory from a legal standpoint.</p>
+</section>
+<section id="conformity-table">
+<h2>Conformity table<a class="headerlink" href="#conformity-table" title="Permalink to this heading"></a></h2>
+<div class="line-block">
+<div class="line">Conform</div>
+</div>
+<ul class="simple">
+<li><p>Do not the deviate more than ±0,1 dB</p></li>
+<li><p>Percentage of conformity : 100% (28/28)</p></li>
+</ul>
+<div class="line-block">
+<div class="line">NLD Conform</div>
+</div>
+<ul class="simple">
+<li><p>Do not the deviate more than ±0,1 dB neglecting lateral diffraction</p></li>
+<li><p>Percentage of conformity : 100% (28/28)</p></li>
+</ul>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 19%" />
+<col style="width: 19%" />
+<col style="width: 24%" />
+<col style="width: 29%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Test Case</p></td>
+<td><p>Conform ?</p></td>
+<td><p>NLD Conform ?</p></td>
+<td><p>Largest Deviation</p></td>
+<td><p>Details</p></td>
+</tr>
+<tr class="row-even"><td><p>TC01</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.00 dB &#64; 2000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc01">TC01</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC02</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.07 dB &#64; 1000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc02">TC02</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC03</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.05 dB &#64; 500 Hz</p></td>
+<td><p><a class="reference internal" href="#tc03">TC03</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC04</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.07 dB &#64; 1000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc04">TC04</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC05</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.00 dB &#64; 1000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc05">TC05</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC06</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.06 dB &#64; 500 Hz</p></td>
+<td><p><a class="reference internal" href="#tc06">TC06</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC07</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.02 dB &#64; 1000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc07">TC07</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC08</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.02 dB &#64; 1000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc08">TC08</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC09</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.01 dB &#64; 250 Hz</p></td>
+<td><p><a class="reference internal" href="#tc09">TC09</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC10</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.02 dB &#64; 250 Hz</p></td>
+<td><p><a class="reference internal" href="#tc10">TC10</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC11</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.01 dB &#64; 125 Hz</p></td>
+<td><p><a class="reference internal" href="#tc11">TC11</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC12</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.04 dB &#64; 500 Hz</p></td>
+<td><p><a class="reference internal" href="#tc12">TC12</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC13</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.01 dB &#64; 500 Hz</p></td>
+<td><p><a class="reference internal" href="#tc13">TC13</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC14</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.04 dB &#64; 8000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc14">TC14</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC15</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.03 dB &#64; 125 Hz</p></td>
+<td><p><a class="reference internal" href="#tc15">TC15</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC16</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.00 dB &#64; 2000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc16">TC16</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC17</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.05 dB &#64; 500 Hz</p></td>
+<td><p><a class="reference internal" href="#tc17">TC17</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC18</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.02 dB &#64; 500 Hz</p></td>
+<td><p><a class="reference internal" href="#tc18">TC18</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC19</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.02 dB &#64; 63 Hz</p></td>
+<td><p><a class="reference internal" href="#tc19">TC19</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC20</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.00 dB &#64; 8000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc20">TC20</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC21</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.02 dB &#64; 8000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc21">TC21</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC22</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.00 dB &#64; 125 Hz</p></td>
+<td><p><a class="reference internal" href="#tc22">TC22</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC23</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.02 dB &#64; 63 Hz</p></td>
+<td><p><a class="reference internal" href="#tc23">TC23</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC24</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.01 dB &#64; 250 Hz</p></td>
+<td><p><a class="reference internal" href="#tc24">TC24</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC25</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.01 dB &#64; 2000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc25">TC25</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC26</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.02 dB &#64; 4000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc26">TC26</a></p></td>
+</tr>
+<tr class="row-even"><td><p>TC27</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.02 dB &#64; 1000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc27">TC27</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>TC28</p></td>
+<td><p>☑</p></td>
+<td><p>☑</p></td>
+<td><p>0.01 dB &#64; 4000 Hz</p></td>
+<td><p><a class="reference internal" href="#tc28">TC28</a></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc01">
+<h2>TC01<a class="headerlink" href="#tc01" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>500</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc02">
+<h2>TC02<a class="headerlink" href="#tc02" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.05 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.07 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc03">
+<h2>TC03<a class="headerlink" href="#tc03" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.08 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.05 dB</p></td>
+<td><p>500</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc04">
+<h2>TC04<a class="headerlink" href="#tc04" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.06 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.07 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc05">
+<h2>TC05<a class="headerlink" href="#tc05" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc06">
+<h2>TC06<a class="headerlink" href="#tc06" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.04 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.07 dB</p></td>
+<td><p>500</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc07">
+<h2>TC07<a class="headerlink" href="#tc07" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.06 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>250</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc08">
+<h2>TC08<a class="headerlink" href="#tc08" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.06 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.08 dB</p></td>
+<td><p>2000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.06 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.03 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.04 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc09">
+<h2>TC09<a class="headerlink" href="#tc09" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>63</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.03 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>125</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>250</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc10">
+<h2>TC10<a class="headerlink" href="#tc10" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>500</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>125</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>125</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>125</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>125</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc11">
+<h2>TC11<a class="headerlink" href="#tc11" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.03 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.03 dB</p></td>
+<td><p>500</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.03 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.03 dB</p></td>
+<td><p>500</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc12">
+<h2>TC12<a class="headerlink" href="#tc12" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>250</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.06 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.06 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.04 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.04 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc13">
+<h2>TC13<a class="headerlink" href="#tc13" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>8000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>125</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>125</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>125</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>125</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc14">
+<h2>TC14<a class="headerlink" href="#tc14" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.04 dB</p></td>
+<td><p>8000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.04 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.06 dB</p></td>
+<td><p>8000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.06 dB</p></td>
+<td><p>8000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.08 dB</p></td>
+<td><p>2000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.08 dB</p></td>
+<td><p>2000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc15">
+<h2>TC15<a class="headerlink" href="#tc15" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>125</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.03 dB</p></td>
+<td><p>63</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.03 dB</p></td>
+<td><p>63</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.04 dB</p></td>
+<td><p>8000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.04 dB</p></td>
+<td><p>8000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc16">
+<h2>TC16<a class="headerlink" href="#tc16" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Reflection</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>63</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc17">
+<h2>TC17<a class="headerlink" href="#tc17" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.04 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.07 dB</p></td>
+<td><p>500</p></td>
+</tr>
+</tbody>
+</table>
+<p>Reflection</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.04 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.03 dB</p></td>
+<td><p>500</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc18">
+<h2>TC18<a class="headerlink" href="#tc18" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.06 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>2000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Reflection</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc19">
+<h2>TC19<a class="headerlink" href="#tc19" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>63</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>63</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.07 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>125</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.04 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>8000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc20">
+<h2>TC20<a class="headerlink" href="#tc20" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>8000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>8000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc21">
+<h2>TC21<a class="headerlink" href="#tc21" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>125</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>250</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.08 dB</p></td>
+<td><p>8000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.07 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc22">
+<h2>TC22<a class="headerlink" href="#tc22" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.06 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>125</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.05 dB</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>125</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc23">
+<h2>TC23<a class="headerlink" href="#tc23" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>250</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc24">
+<h2>TC24<a class="headerlink" href="#tc24" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>63</p></td>
+</tr>
+</tbody>
+</table>
+<p>Reflection</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>63</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>63</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc25">
+<h2>TC25<a class="headerlink" href="#tc25" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>250</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>2000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>2000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Reflection</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>2000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc26">
+<h2>TC26<a class="headerlink" href="#tc26" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.00 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.06 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Reflection</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc27">
+<h2>TC27<a class="headerlink" href="#tc27" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.02 dB</p></td>
+<td><p>2000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.03 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Reflection</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.03 dB</p></td>
+<td><p>125</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.08 dB</p></td>
+<td><p>4000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tc28">
+<h2>TC28<a class="headerlink" href="#tc28" title="Permalink to this heading"></a></h2>
+<p>Vertical Plane</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>63</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>8000</p></td>
+</tr>
+</tbody>
+</table>
+<p>Right Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.09 dB</p></td>
+<td><p>2000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>250</p></td>
+</tr>
+</tbody>
+</table>
+<p>Left Lateral</p>
+<hr class="docutils" />
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Parameters</p></td>
+<td><p>Maximum Difference</p></td>
+<td><p>Frequency</p></td>
+</tr>
+<tr class="row-even"><td><p>Lʜ</p></td>
+<td><p>0.08 dB</p></td>
+<td><p>2000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lꜰ</p></td>
+<td><p>0.01 dB</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Get_Started_Dev.html" class="btn btn-neutral float-left" title="Get Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Noise_Map_Color_Scheme.html" class="btn btn-neutral float-right" title="Noise Map Color Scheme" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

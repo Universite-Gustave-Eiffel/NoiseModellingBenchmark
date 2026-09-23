@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Builder &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Create your own block" href="Own_Blocks.html" />
+    <link rel="prev" title="Blocks" href="Blocks.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Functions.html">List of functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Blocks.html">Blocks</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Builder</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-the-builder">What is the Builder ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#frequently-asked-question">Frequently Asked Question</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-do-the-colors-correspond-to">What do the colors correspond to?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#can-i-save-my-builder-project">Can I save my Builder project?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#export-import-the-blocks-state">1. Export/Import the blocks state</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#export-import-the-database">2. Export/Import the database</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-run-multiple-processing-at-once">How to run multiple processing at once ?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#i-want-to-run-the-same-processing-but-using-a-script-not-using-my-web-browser-how-to-do-it">I want to run the same processing but using a script not using my web browser, how to do it ?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Builder</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Builder.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="builder">
+<h1>Builder<a class="headerlink" href="#builder" title="Permalink to this heading"></a></h1>
+<section id="what-is-the-builder">
+<h2>What is the Builder ?<a class="headerlink" href="#what-is-the-builder" title="Permalink to this heading"></a></h2>
+<p>The NoiseModelling Builder (referred to as the <strong>Builder</strong>) allows you to create graphical process workflows that can be easily executed and reproduced. It allows Web Processing Services to operate through a user interface.</p>
+<p>We have developed a version of the Builder adapted to the needs of NoiseModelling. This version being very close to <a class="reference external" href="https://github.com/planetfederal/wps-gui">the original version initially developed by former BoundlessGEO company</a>.</p>
+</section>
+<section id="frequently-asked-question">
+<h2>Frequently Asked Question<a class="headerlink" href="#frequently-asked-question" title="Permalink to this heading"></a></h2>
+<section id="what-do-the-colors-correspond-to">
+<h3>What do the colors correspond to?<a class="headerlink" href="#what-do-the-colors-correspond-to" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Orange blocks are mandatory</p></li>
+<li><p>Beige blocks are optional</p></li>
+<li><p>Green blocks are the output of the process*</p></li>
+<li><p>Blocks get solid border when they are ready/filled</p></li>
+</ul>
+</section>
+<section id="can-i-save-my-builder-project">
+<h3>Can I save my Builder project?<a class="headerlink" href="#can-i-save-my-builder-project" title="Permalink to this heading"></a></h3>
+<p>Yes. To save your Builder project you have two possibilities:</p>
+<ol class="arabic simple">
+<li><p>Export the blocks state into a JSON file</p></li>
+<li><p>Export the blocks state and the whole database into a zip file (limited to 500 MB database)</p></li>
+</ol>
+<section id="export-import-the-blocks-state">
+<h4>1. Export/Import the blocks state<a class="headerlink" href="#export-import-the-blocks-state" title="Permalink to this heading"></a></h4>
+<p>Click on the <code class="docutils literal notranslate"><span class="pre">File</span></code> icon and then choose <code class="docutils literal notranslate"><span class="pre">Save</span> <span class="pre">project</span></code>. The browser will save the file in your download folder.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/export_clipboard.png"><img alt="_images/export_clipboard.png" src="_images/export_clipboard.png" style="width: 75%;" /></a>
+</figure>
+<p>Once you want to recover the saved state, click on <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">/</span> <span class="pre">Open</span> <span class="pre">project</span></code> and select the saved file.</p>
+</section>
+<section id="export-import-the-database">
+<h4>2. Export/Import the database<a class="headerlink" href="#export-import-the-database" title="Permalink to this heading"></a></h4>
+<p>Click on the <code class="docutils literal notranslate"><span class="pre">File</span></code> icon and then choose <code class="docutils literal notranslate"><span class="pre">Save</span> <span class="pre">project</span> <span class="pre">with</span> <span class="pre">database</span></code>. The browser will save the file in your download folder.</p>
+</section>
+</section>
+<section id="how-to-run-multiple-processing-at-once">
+<h3>How to run multiple processing at once ?<a class="headerlink" href="#how-to-run-multiple-processing-at-once" title="Permalink to this heading"></a></h3>
+<p>You can use the output of a processing block (like <code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">File</span></code>) as the input of another process. To do this keep the left button of your mouse down while dragging the white square on the right side of a green output block to the left white square of the input of another process. Then run the last process in the chain in order to execute the whole processing.</p>
+</section>
+<section id="i-want-to-run-the-same-processing-but-using-a-script-not-using-my-web-browser-how-to-do-it">
+<h3>I want to run the same processing but using a script not using my web browser, how to do it ?<a class="headerlink" href="#i-want-to-run-the-same-processing-but-using-a-script-not-using-my-web-browser-how-to-do-it" title="Permalink to this heading"></a></h3>
+<p>NoiseModelling WebServer is using the standard protocol named OGC Web Processing Service (<a class="reference external" href="https://www.ogc.org/standards/wps">WPS</a>) Interface Standard. When you run a Block, the Builder generates an equivalent Python script in the Python tab of the user interface. You can just copy/paste the script in a Python console and it should work (no dependency) as long as the NoiseModelling software is running in the background.</p>
+<p>The generated Python script is using the synchronous WPS execution, so the server will not respond until the process is done or after the 60 seconds default timeout.</p>
+<p>If the timeout is reached it will always return a message “Long running process…” like in the Builder (but the job will still run on the server).</p>
+<p>You can use the asynchronous WPS API so the server will return a message immediately with links to follow the progression of the execution of your job.</p>
+<p>You can use the <a class="reference external" href="https://github.com/geopython/OWSLib">OwsLib Python library</a> to do so, here is an example of how to do it:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">List all available processes</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">owslib.wps</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebProcessingService</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos"> 6</span>    <span class="c1"># Configure the root logger to output to stdout</span>
+<span class="linenos"> 7</span>    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8000/builder/ows&quot;</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>    <span class="c1"># use jwt cookie header for authentification</span>
+<span class="linenos">12</span>    <span class="n">jwt_token</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="linenos">13</span>    <span class="n">wps</span> <span class="o">=</span> <span class="n">WebProcessingService</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">skip_caps</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="n">jwt_token</span><span class="p">})</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>    <span class="c1"># 2. List all available processes</span>
+<span class="linenos">16</span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Available Processes ---&quot;</span><span class="p">)</span>
+<span class="linenos">17</span>    <span class="k">for</span> <span class="n">process</span> <span class="ow">in</span> <span class="n">wps</span><span class="o">.</span><span class="n">processes</span><span class="p">:</span>
+<span class="linenos">18</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="n">process</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">19</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Title: </span><span class="si">{</span><span class="n">process</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">20</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Abstract: </span><span class="si">{</span><span class="n">process</span><span class="o">.</span><span class="n">abstract</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">21</span>        <span class="n">process_details</span> <span class="o">=</span> <span class="n">wps</span><span class="o">.</span><span class="n">describeprocess</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+<span class="linenos">22</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Inputs:&quot;</span><span class="p">)</span>
+<span class="linenos">23</span>        <span class="k">for</span> <span class="n">data_input</span> <span class="ow">in</span> <span class="n">process_details</span><span class="o">.</span><span class="n">dataInputs</span><span class="p">:</span>
+<span class="linenos">24</span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      ID: </span><span class="si">{</span><span class="n">data_input</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">25</span>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data_input</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">):</span>
+<span class="linenos">26</span>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Title: </span><span class="si">{</span><span class="n">data_input</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">27</span>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data_input</span><span class="p">,</span> <span class="s1">&#39;dataType&#39;</span><span class="p">):</span>
+<span class="linenos">28</span>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Data Type: </span><span class="si">{</span><span class="n">data_input</span><span class="o">.</span><span class="n">dataType</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">29</span>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data_input</span><span class="p">,</span> <span class="s1">&#39;minOccurs&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data_input</span><span class="o">.</span><span class="n">minOccurs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">30</span>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Optional&quot;</span><span class="p">)</span>
+<span class="linenos">31</span>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data_input</span><span class="p">,</span> <span class="s1">&#39;abstract&#39;</span><span class="p">):</span>
+<span class="linenos">32</span>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Abstract: </span><span class="si">{</span><span class="n">data_input</span><span class="o">.</span><span class="n">abstract</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">33</span>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data_input</span><span class="p">,</span> <span class="s1">&#39;allowedValues&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_input</span><span class="o">.</span><span class="n">allowedValues</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">34</span>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Allowed values: </span><span class="si">{</span><span class="n">data_input</span><span class="o">.</span><span class="n">allowedValues</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">35</span>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data_input</span><span class="p">,</span> <span class="s1">&#39;defaultValue&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data_input</span><span class="o">.</span><span class="n">defaultValue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">36</span>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;      Default : </span><span class="si">{</span><span class="n">data_input</span><span class="o">.</span><span class="n">defaultValue</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">37</span>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">40</span>    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Execute a process</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">owslib.wps</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebProcessingService</span><span class="p">,</span> <span class="n">monitorExecution</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos"> 6</span>    <span class="c1"># Configure the root logger to output to stdout</span>
+<span class="linenos"> 7</span>    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8000/builder/ows&quot;</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>    <span class="c1"># use java web token for authentification</span>
+<span class="linenos">12</span>    <span class="n">jwt_token</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="linenos">13</span>    <span class="n">wps</span> <span class="o">=</span> <span class="n">WebProcessingService</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">skip_caps</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="n">jwt_token</span><span class="p">})</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>    <span class="n">target_id</span> <span class="o">=</span> <span class="s2">&quot;Database_Manager:Display_Database&quot;</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;showColumns&#39;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)]</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>    <span class="c1"># Execute (sync or async)</span>
+<span class="linenos">20</span>    <span class="n">execution</span> <span class="o">=</span> <span class="n">wps</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">target_id</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>    <span class="c1"># Monitor progress if it&#39;s a long task</span>
+<span class="linenos">23</span>    <span class="n">monitorExecution</span><span class="p">(</span><span class="n">execution</span><span class="p">,</span> <span class="n">sleepSecs</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>    <span class="k">if</span> <span class="n">execution</span><span class="o">.</span><span class="n">isSucceded</span><span class="p">():</span>
+<span class="linenos">26</span>        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">execution</span><span class="o">.</span><span class="n">processOutputs</span><span class="p">:</span>
+<span class="linenos">27</span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result </span><span class="si">{</span><span class="n">output</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">output</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">28</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">29</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Execution failed.&quot;</span><span class="p">)</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">32</span>    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Blocks.html" class="btn btn-neutral float-left" title="Blocks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Own_Blocks.html" class="btn btn-neutral float-right" title="Create your own block" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation guide &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Validation" href="Validation.html" />
+    <link rel="prev" title="Numerical Model" href="Numerical_Model.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#step-1-requirements">Step 1 : Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#windows">Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linux-or-mac">Linux or Mac</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#step-2-download-noisemodelling">Step 2: Download NoiseModelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-3-start-noisemodelling-gui">Step 3: Start NoiseModelling GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-4-open-noisemodelling-gui">Step 4: Open NoiseModelling GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Functions.html">List of functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Installation guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Installation_guide.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation-guide">
+<h1>Installation guide<a class="headerlink" href="#installation-guide" title="Permalink to this heading"></a></h1>
+<section id="step-1-requirements">
+<h2>Step 1 : Requirements<a class="headerlink" href="#step-1-requirements" title="Permalink to this heading"></a></h2>
+<p>Since NoiseModelling is developed with the <a class="reference external" href="https://en.wikipedia.org/wiki/Java_(programming_language)">Java language</a>, you will need to install the Java Runtime Environment (JRE) on your computer to use the application.</p>
+<p>NoiseModelling requires Java &gt;= 25. Any version of Java 25 or later is supported.</p>
+<section id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this heading"></a></h3>
+<p>If you are launching NoiseModelling thanks to the <code class="docutils literal notranslate"><span class="pre">NoiseModelling_xxx_install.exe</span></code> file, the JRE is already inside, so <strong>you don’t have anything to do</strong>.</p>
+<p>If you are not using the <code class="docutils literal notranslate"><span class="pre">.exe</span></code> file, you have to launch NoiseModelling thanks to the <code class="docutils literal notranslate"><span class="pre">`start_windows.bat</span></code> file (in the <code class="docutils literal notranslate"><span class="pre">NoiseModelling_xxx.zip</span></code> release file). In this case, Java &gt;= 25  has to be installed before.</p>
+<p>Download and install Java: choose between <a class="reference external" href="https://www.azul.com/downloads/">OpenJDK</a> or <a class="reference external" href="https://www.oracle.com/java/technologies/downloads/">Oracle</a> versions.</p>
+</section>
+<section id="linux-or-mac">
+<h3>Linux or Mac<a class="headerlink" href="#linux-or-mac" title="Permalink to this heading"></a></h3>
+<p>If not already done, you have to install the Java version &gt;= 25.</p>
+<ol class="arabic">
+<li><p>Check whether Java is already installed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">java</span> <span class="o">-</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>The command should print a version starting with <code class="docutils literal notranslate"><span class="pre">25</span></code>. Otherwise, install Java first.</p>
+</li>
+<li><p>Download and install Java: choose between <a class="reference external" href="https://www.azul.com/downloads/">OpenJDK</a> or <a class="reference external" href="https://www.oracle.com/java/technologies/downloads/">Oracle</a> versions.</p></li>
+<li><p>Find the installation path to use for <code class="docutils literal notranslate"><span class="pre">JAVA_HOME</span></code>.</p>
+<p><em>On Linux</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">readlink</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;$(command -v java)&quot;</span>
+</pre></div>
+</div>
+<p>This prints a path ending with <code class="docutils literal notranslate"><span class="pre">/bin/java</span></code> (for example
+<code class="docutils literal notranslate"><span class="pre">/usr/lib/jvm/java-25-openjdk-amd64/bin/java</span></code>); <code class="docutils literal notranslate"><span class="pre">JAVA_HOME</span></code> is the parent
+directory of <code class="docutils literal notranslate"><span class="pre">bin</span></code> (here <code class="docutils literal notranslate"><span class="pre">/usr/lib/jvm/java-25-openjdk-amd64</span></code>).</p>
+<p><em>On macOS</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">java_home</span> <span class="o">-</span><span class="n">v</span> <span class="n">latest</span>
+</pre></div>
+</div>
+<p>This prints the directory that must be used as <code class="docutils literal notranslate"><span class="pre">JAVA_HOME</span></code> for Java.</p>
+</li>
+<li><p>Set the <code class="docutils literal notranslate"><span class="pre">JAVA_HOME</span></code> environment variable and update your <code class="docutils literal notranslate"><span class="pre">PATH</span></code> (adapt the
+path with the one found above):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">JAVA_HOME</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">jvm</span><span class="o">/</span><span class="n">java</span><span class="o">-</span><span class="mi">25</span><span class="o">-</span><span class="n">openjdk</span><span class="o">-</span><span class="n">amd64</span>
+<span class="n">export</span> <span class="n">PATH</span><span class="o">=</span><span class="s2">&quot;$JAVA_HOME/bin:$PATH&quot;</span>
+</pre></div>
+</div>
+<p>On macOS you can also use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export JAVA_HOME=$(/usr/libexec/java_home -v latest)
+export PATH=&quot;$JAVA_HOME/bin:$PATH&quot;
+</pre></div>
+</div>
+</li>
+<li><p>Verify that <code class="docutils literal notranslate"><span class="pre">JAVA_HOME</span></code> is correctly set:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>echo $JAVA_HOME
+</pre></div>
+</div>
+<p>You should get the Java directory (for example
+<code class="docutils literal notranslate"><span class="pre">/usr/lib/jvm/java-25-openjdk-amd64</span></code>). If this is not the case, you are
+invited to follow the steps <a class="reference external" href="https://stackoverflow.com/questions/24641536/how-to-set-java-home-in-linux-for-all-users">proposed here</a>.</p>
+</li>
+</ol>
+</section>
+</section>
+<section id="step-2-download-noisemodelling">
+<span id="sec-download"></span><h2>Step 2: Download NoiseModelling<a class="headerlink" href="#step-2-download-noisemodelling" title="Permalink to this heading"></a></h2>
+<p>Download the latest release of NoiseModelling on <a class="reference external" href="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases">Github</a>.</p>
+<ul class="simple">
+<li><p>Windows: you can directly download and run the <code class="docutils literal notranslate"><span class="pre">NoiseModelling_*.exe</span></code> installer file <em>(or you can also follow the Linux instructions below if you have a working JRE, see previous step)</em></p></li>
+<li><p>MacOS: you can directly download and run the <code class="docutils literal notranslate"><span class="pre">NoiseModelling_*.dmg</span></code> installer file <em>(or you can also follow the Linux instructions below if you have  a working JRE, see previous step)</em></p></li>
+<li><p>Linux : download the <code class="docutils literal notranslate"><span class="pre">NoiseModelling_6.x.x.zip</span></code> file and unzip it into a chosen directory</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The chosen directory can be anywhere, but make sure you have write access. If you are using a company computer, the Program Files folder is probably not a good idea.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For <strong>Linux</strong> and <strong>Mac</strong> users, please make sure your Java environment is correctly set up (see previous step). <strong>Windows</strong> users who are using the <code class="docutils literal notranslate"><span class="pre">.exe</span></code> file are not concerned, since the Java Runtime Environment is <strong>already embedded</strong>.</p>
+</div>
+</section>
+<section id="step-3-start-noisemodelling-gui">
+<span id="sec-start-nm"></span><h2>Step 3: Start NoiseModelling GUI<a class="headerlink" href="#step-3-start-noisemodelling-gui" title="Permalink to this heading"></a></h2>
+<p>As described on the page “<a class="reference internal" href="Architecture.html"><span class="doc">Architecture</span></a>”, NoiseModelling can be used through a Graphical User Interface (GUI) in a web browser.</p>
+<p>In this tutorial, we will use the default, already configured H2GIS database.</p>
+<p>These tools (WPS Builder and H2GIS) are already included in the archive, so you don’t have to install them separately.</p>
+<p>To launch NoiseModelling with the GUI, start it from a command prompt (terminal). This will start a local server on your computer, which provides the GUI as a web application.</p>
+<p>Please execute:</p>
+<ul class="simple">
+<li><p>Windows: <code class="docutils literal notranslate"><span class="pre">NoiseModelling.exe</span></code> or <code class="docutils literal notranslate"><span class="pre">NoiseModelling_xxx\start_windows.bat</span></code></p></li>
+<li><p>Linux or Mac: <code class="docutils literal notranslate"><span class="pre">NoiseModelling_xxx/start_linux_macos.sh</span></code> <em>(make sure the file is allowed to be executed before running it)</em></p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>NoiseModelling will stay open as long as the command window is open. If you close it, NoiseModelling will automatically stop and the GUI will no longer be available.</p>
+</div>
+</section>
+<section id="step-4-open-noisemodelling-gui">
+<h2>Step 4: Open NoiseModelling GUI<a class="headerlink" href="#step-4-open-noisemodelling-gui" title="Permalink to this heading"></a></h2>
+<p>The NoiseModelling GUI is built using the <span class="xref std std-doc">WPS_Builder</span> component and runs as a web application provided by the local server started in Step 3.</p>
+<p>By running NoiseModelling your default web browser should have been opened to the <a class="reference external" href="http://localhost:8000">http://localhost:8000</a> address. If not please go to this URL, if something went wrong you should have more information on your terminal.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_images/Tutorial1_nm_landing.png"><img alt="_images/Tutorial1_nm_landing.png" src="_images/Tutorial1_nm_landing.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">Noise Modelling GUI landing page</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Click <code class="docutils literal notranslate"><span class="pre">builder</span></code> to open the builder.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/Tutorial1_nm_open.png"><img alt="_images/Tutorial1_nm_open.png" src="_images/Tutorial1_nm_open.png" style="width: 80%;" /></a>
+</figure>
+<p>You are now ready to discover the power of NoiseModelling!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Numerical_Model.html" class="btn btn-neutral float-left" title="Numerical Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Validation.html" class="btn btn-neutral float-right" title="Validation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

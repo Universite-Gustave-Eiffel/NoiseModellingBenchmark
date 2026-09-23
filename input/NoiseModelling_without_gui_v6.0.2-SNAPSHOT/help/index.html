@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoiseModelling User Guide &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Architecture" href="Architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="#" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Functions.html">List of functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li>NoiseModelling User Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="noisemodelling-user-guide">
+<h1>NoiseModelling User Guide<a class="headerlink" href="#noisemodelling-user-guide" title="Permalink to this heading"></a></h1>
+<figure class="align-center">
+<img alt="_images/NoiseModelling_banner.png" src="_images/NoiseModelling_banner.png" />
+</figure>
+<p>Welcome on the <strong>official NoiseModelling User Guide</strong>.</p>
+<p>NoiseModelling is a free and open-source Java library for producing environmental noise maps from local to national scales, implementing CNOSSOS‑EU road and rail noise emission and propagation methods while linking to H2GIS and PostGIS for spatial analysis.
+It responds to the need for robust noise assessment in public health and environmental planning by enabling simulation and prediction of noise propagation for mitigation design and compliance with EU regulations.
+The software can be used independently or through a graphical interface and is openly available to the research, education, and professional communities.
+It has been widely used for strategic noise mapping, dynamic maps driven by traffic models or sensors, sensitivity studies, and investigations of particular sources such as emergency sirens and drones.</p>
+<p>A general overview of the model (v3.4.5 - September 2020) can be found in <a class="reference external" href="https://www.youtube.com/watch?v=V1-niMT9cYE&amp;t=1s">this video</a>.</p>
+<ul class="simple">
+<li><p>for <strong>more information</strong> on NoiseModelling, visit the <a class="reference external" href="http://noise-planet.org/noisemodelling.html">offical NoiseModelling website</a></p></li>
+<li><p>to <strong>contribute to NoiseModelling</strong> source code, follow the “<a class="reference internal" href="Get_Started_Dev.html"><span class="doc">Get Started</span></a>” page</p></li>
+<li><p>for <strong>more information</strong> for the final results with the reference results in ISO/TR 17534-4: 2020 follow the “<a class="reference internal" href="Cnossos_Report.html"><span class="doc">Conformity to ISO 17534-1:2015</span></a>” page</p></li>
+<li><dl class="simple">
+<dt>to <strong>contact the support / development team</strong>,</dt><dd><ul>
+<li><p>open an <a class="reference external" href="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/issues">issue</a> or a write a <a class="reference external" href="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/discussions">message</a> <em>(we prefer these two options)</em></p></li>
+<li><p>send us an email at <a class="reference external" href="mailto:contact&#37;&#52;&#48;noise-planet&#46;org">contact<span>&#64;</span>noise-planet<span>&#46;</span>org</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<section id="packaging">
+<h2>Packaging<a class="headerlink" href="#packaging" title="Permalink to this heading"></a></h2>
+<p>The latest <a class="reference external" href="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/latest">release page</a> offers three NoiseModelling packages:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NoiseModelling_X.X.X.zip</span></code>: A cross-platform version for Windows, Linux, and macOS. It includes the web GUI and a command-line interface.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NoiseModelling_X.X.X_install.exe</span></code>: A standalone Windows installer that includes the web GUI and a bundled Java Virtual Machine.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NoiseModelling-X.X.X.dmg</span></code>: A standalone Mac OS installer that includes the web GUI and a bundled Java Virtual Machine.</p></li>
+</ul>
+<p>Please check the <a class="reference internal" href="Installation_guide.html"><span class="doc">Installation guide</span></a> before installing, and refer to <a class="reference internal" href="Tutorial_Get_Started_Script.html"><span class="doc">NoiseModelling client line interface (CLI)</span></a> for CLI usage.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The Windows and Mac OS installer have not been signed yet. So you may have a security warning when installing and you are invited to follow additional steps to bypass this issue.</p>
+</div>
+<p>In addition, a Docker image is provided in the <a class="reference external" href="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/pkgs/container/noisemodelling">packages page</a>.</p>
+</section>
+<section id="authors">
+<h2>Authors<a class="headerlink" href="#authors" title="Permalink to this heading"></a></h2>
+<p>NoiseModelling project is leaded by acousticians from the <em>Joint Research Unit in Environmental Acoustics</em> (<a class="reference external" href="https://www.umrae.fr/">UMRAE</a>, Université Gustave Eiffel - Cerema) and Geographic Information Science specialists from <a class="reference external" href="https://labsticc.fr">Lab-STICC</a> laboratory (CNRS - DECIDE Team).</p>
+<p>The NoiseModelling team owns the majority of the authorship of this application, but any external contributions are warmly welcomed.</p>
+</section>
+<section id="licence">
+<h2>Licence<a class="headerlink" href="#licence" title="Permalink to this heading"></a></h2>
+<p>NoiseModelling and its documentation are distributed for free under GPL v3 <a class="reference internal" href="License.html"><span class="doc">License</span></a>.</p>
+</section>
+<section id="publications">
+<h2>Publications<a class="headerlink" href="#publications" title="Permalink to this heading"></a></h2>
+<p>NoiseModelling was initially developed in a research context, which has led to numerous scientific publications. For more information, have a look to “<a class="reference internal" href="Scientific_production.html"><span class="doc">Scientific production</span></a>” page.
+To quote this tool, please use the bibliographic reference below:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Erwan Bocher, Gwenaël Guillaume, Judicaël Picaut, Gwendall Petit, Nicolas Fortin. <em>NoiseModelling: An Open Source GIS Based Tool to Produce Environmental Noise Maps</em>. ISPRS International Journal of Geo-Information, MDPI, 2019, 8 (3), pp.130. (<a class="reference external" href="https://www.mdpi.com/2220-9964/8/3/130">10.3390/ijgi8030130</a>)</p>
+</div>
+</section>
+<section id="fundings">
+<h2>Fundings<a class="headerlink" href="#fundings" title="Permalink to this heading"></a></h2>
+<p><em>Research projects:</em></p>
+<ul class="simple">
+<li><p>OPTImisation technique et environnementale des moyens de lutte contre le gel en viticulture par Tours-Anti-Gel en Centre-Val de Loire (OptiTAG), funded by Région Centre Val de Loire &amp; co-funded by European Union 2024-2027</p></li>
+<li><p>AMELIA, funded by the call “DIAT (Démonstrateurs d’IA frugale au service de la transition écologique) de la Banque des Territoires” 2024-2027</p></li>
+<li><p><a class="reference external" href="https://symexpo.univ-gustave-eiffel.fr/">ANR SYMEXPO</a> (ANR-21-CE22-0022-01) 2021-2026</p></li>
+<li><p>Sampols 2.0: a disruptive solution for noise pollution monitoring (SIREN), funded by Eurostars 3 - BPI 2024-2025</p></li>
+<li><p><a class="reference external" href="https://www.nature4cities.eu/">Nature4cities</a> (N4C) project, funded by European Union’s Horizon 2020 research and innovation programme under grant agreement N°730468</p></li>
+<li><p><a class="reference external" href="https://anr.fr/Projet-ANR-16-CE22-0012">ANR CENSE</a> (ANR-16-CE22-0012) 2017-2021</p></li>
+<li><p><a class="reference external" href="https://anr.fr/Projet-ANR-09-VILL-0007">ANR VegDUD</a> (ANR-09-VILL-0007) 2009-2014</p></li>
+<li><p><a class="reference external" href="https://anr.fr/Projet-ANR-08-VILL-0005">ANR Eval-PDU</a> (ANR-08-VILL-0005) 2008-2011</p></li>
+</ul>
+<p><em>Institutional (public) fundings:</em></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.cerema.fr/fr/projets/plamade-plate-forme-mutualisee-aide-au-diagnostic">DGPR</a> 2020-2022 &amp; 2025-27</p></li>
+<li><p><a class="reference external" href="https://www.univ-gustave-eiffel.fr/">Université Gustave Eiffel</a> (formerly Ifsttar, formerly LCPC), <a class="reference external" href="https://www.cnrs.fr">CNRS</a>, <a class="reference external" href="https://www.cerema.fr/">Cerema</a>, <a class="reference external" href="https://www.univ-ubs.fr/">Université Bretagne Sud</a>, <a class="reference external" href="https://www.ec-nantes.fr/">Ecole Centrale de Nantes</a></p></li>
+</ul>
+<p><em>Private fundings:</em></p>
+<ul class="simple">
+<li><p>Airbus Urban Mobility</p></li>
+</ul>
+<hr class="docutils" />
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>The official documentation is available in English only</p></li>
+<li><p>Some illustrations may refer to previous versions of NoiseModelling</p></li>
+<li><p>If you observe some mistakes or errors, please open an issue <a class="reference external" href="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/issues">here</a> or contact us at <a class="reference external" href="mailto:contact&#37;&#52;&#48;noise-planet&#46;org">contact<span>&#64;</span>noise-planet<span>&#46;</span>org</a></p></li>
+<li><p>You are also welcome to contribute to the documentation (click on <em>“Edit on Github”</em> - top of the page)</p></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Architecture.html#noisemodelling-libraries">1. NoiseModelling libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture.html#database-connection">2. Database connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture.html#noisemodelling-with-a-gui">3. NoiseModelling with a GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture.html#noisemodelling-with-command-lines">4. NoiseModelling with command lines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture.html#docker-setup">5. Docker Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Numerical_Model.html">Numerical Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Numerical_Model.html#emission-numerical-model">Emission Numerical Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Numerical_Model.html#path-finding-algorithm">Path finding algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Numerical_Model.html#propagation-numerical-model">Propagation Numerical Model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Installation_guide.html">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Installation_guide.html#step-1-requirements">Step 1 : Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Installation_guide.html#step-2-download-noisemodelling">Step 2: Download NoiseModelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Installation_guide.html#step-3-start-noisemodelling-gui">Step 3: Start NoiseModelling GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Installation_guide.html#step-4-open-noisemodelling-gui">Step 4: Open NoiseModelling GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Validation.html#acoustic-model-validation">Acoustic model validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Validation.html#implementation-validation">Implementation validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community.html">Community</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Community.html#how-to-contact">How to contact?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community.html#former-and-or-actual-users">Former and/or actual users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community.html#noisemodelling-days">NoiseModelling Days</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community.html#noisemodelling-in-videos">NoiseModelling in videos</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_GUI.html">Get Started - GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Get_Started_GUI.html#step-1-open-noisemodelling">Step 1: Open NoiseModelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Get_Started_GUI.html#step-2-load-input-files">Step 2: Load input files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Get_Started_GUI.html#step-3-convert-road-traffic-into-noise-emission-sources-lines">Step 3: Convert road traffic into noise emission sources lines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Get_Started_GUI.html#step-4-run-calculation">Step 4: Run Calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Get_Started_GUI.html#step-5-export-see-the-results">Step 5: Export (&amp; see) the results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Get_Started_GUI.html#step-6-know-the-possibilities">Step 6: Know the possibilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html#step-1-create-the-source-point">Step 1: Create the source point</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html#step-2-import-input-data-in-noisemodelling">Step 2: Import input data in NoiseModelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html#step-3-generate-the-noise-map">Step 3: Generate the noise map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html#step-4-change-the-default-parameters">Step 4: Change the default parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html#step-5-bonus-change-the-directivity">Step 5 (bonus): Change the directivity</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html#step-1-get-osm-data">Step 1:  Get OSM data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html#step-2-visualize-osm-data">Step 2: Visualize OSM data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html#step-3-generate-a-receiver-table">Step 3: Generate a Receiver table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html#step-4-associate-emission-noise-level-with-roads">Step 4: Associate emission noise level with roads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html#step-5-source-to-receiver-propagation">Step 5: Source to Receiver Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html#step-6-create-isosurfaces-map">Step 6: Create Isosurfaces map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html#step-7-view-the-result">Step 7: View the result</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Matsim.html">MATSim - GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Matsim.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Matsim.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Matsim.html#the-data">The data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Matsim.html#step-1-import-buildings">Step 1: Import Buildings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Matsim.html#step-2-import-matsim-traffic-data">Step 2: Import MATSim Traffic Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Matsim.html#step-3-import-matsim-activities">Step 3: Import MATSim Activities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Matsim.html#step-4-assign-a-receiver-to-each-activity">Step 4: Assign a Receiver to each Activity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Matsim.html#step-5-calculate-noise-receiver-levels">Step 5: Calculate Noise Receiver Levels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Matsim.html#visualization">Visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Dynamic.html">Dynamic Maps - GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Dynamic.html#a-word-of-caution">A word of caution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Dynamic.html#case-1-a-road-network-with-a-single-traffic-flow">Case 1: A Road Network with a Single Traffic Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Dynamic.html#case-2-a-road-network-with-traffic-flows-at-regular-intervals">Case 2: A Road Network with Traffic Flows at Regular Intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Dynamic.html#case-3-spatio-temporal-data-of-moving-sources">Case 3: Spatio-Temporal Data of Moving Sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Data_Assimilation.html">Data Assimilation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Data_Assimilation.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Data_Assimilation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Data_Assimilation.html#the-data">The data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Data_Assimilation.html#how-to-compute-the-assimilation">How to compute the assimilation?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Data_Assimilation.html#data-simulation">Data Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Data_Assimilation.html#execute-simulation-generate-the-dynamic-map">Execute Simulation: Generate the Dynamic Map</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Get_Started_Script.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Get_Started_Script.html#simple-command-line">1. Simple command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Get_Started_Script.html#bash-script">2. Bash script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial_Get_Started_Script.html#groovy-script-block">3. Groovy script (Block)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials_FAQ.html">Tutorials - FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials_FAQ.html#shapefiles-or-geojson">Shapefiles or GeoJSON?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials_FAQ.html#postgresql-or-h2">PostGreSQL or H2?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials_FAQ.html#osm">OSM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials_FAQ.html#metric-srid">Metric SRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials_FAQ.html#primary-key">Primary Key</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Functions.html">List of functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Functions.html#acoustic-tools">Acoustic Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functions.html#data-assimilation">Data Assimilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functions.html#database-manager">Database Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functions.html#deprecated">Deprecated</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functions.html#dynamic">Dynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functions.html#experimental">Experimental</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functions.html#experimental-matsim">Experimental Matsim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functions.html#geometric-tools">Geometric Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functions.html#import-and-export">Import and Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functions.html#noisemodelling">NoiseModelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Functions.html#receivers">Receivers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Blocks.html">Blocks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Blocks.html#wps-general-presentation">WPS general presentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Blocks.html#noisemodelling-and-wps">NoiseModelling and WPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Blocks.html#create-your-own-block">Create your own block</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Builder.html">Builder</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Builder.html#what-is-the-builder">What is the Builder ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Builder.html#frequently-asked-question">Frequently Asked Question</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Own_Blocks.html">Create your own block</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Own_Blocks.html#presentation">Presentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Own_Blocks.html#general-structure">General Structure</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModelling_db.html">Access NoiseModelling database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NoiseModelling_db.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NoiseModelling_db.html#use-blocks">1. Use blocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NoiseModelling_db.html#use-h2-h2gis-web-client">2. Use H2/H2GIS web client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NoiseModelling_db.html#use-dbeaver-client">3. Use DBeaver client</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NoiseModellingOnPostGIS.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NoiseModellingOnPostGIS.html#using-scriptrunner-with-postgis">Using ScriptRunner with PostGIS</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Get_Started_Dev.html">Get Started</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Cnossos_Report.html">Conformity to ISO 17534-1:2015</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#clarifications-on-the-iso-standard">Clarifications on the ISO Standard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#conformity-table">Conformity table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc01">TC01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc02">TC02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc03">TC03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc04">TC04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc05">TC05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc06">TC06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc07">TC07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc08">TC08</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc09">TC09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc10">TC10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc11">TC11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc12">TC12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc13">TC13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc14">TC14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc15">TC15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc16">TC16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc17">TC17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc18">TC18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc19">TC19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc20">TC20</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc21">TC21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc22">TC22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc23">TC23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc24">TC24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc25">TC25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc26">TC26</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc27">TC27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Cnossos_Report.html#tc28">TC28</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Noise_Map_Color_Scheme.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Noise_Map_Color_Scheme.html#french-nf-s31-130">French NF S31-130</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Noise_Map_Color_Scheme.html#german-din-18005-2-1991">German DIN 18005-2:1991</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Noise_Map_Color_Scheme.html#italian-normativa-tecnica-uni-9884">Italian Normativa tecnica UNI 9884</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Noise_Map_Color_Scheme.html#coloring-noise">Coloring Noise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Noise_Map_Color_Scheme.html#create-your-own-sld-file">Create your own .SLD file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Architecture.html" class="btn btn-neutral float-right" title="Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

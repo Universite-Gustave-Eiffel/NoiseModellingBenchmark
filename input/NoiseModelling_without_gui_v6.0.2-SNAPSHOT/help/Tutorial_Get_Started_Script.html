@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoiseModelling client line interface (CLI) &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorials - FAQ" href="Tutorials_FAQ.html" />
+    <link rel="prev" title="Data Assimilation" href="Tutorial_Data_Assimilation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NoiseModelling client line interface (CLI)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simple-command-line">1. Simple command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bash-script">2. Bash script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#groovy-script-block">3. Groovy script (Block)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Functions.html">List of functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>NoiseModelling client line interface (CLI)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Tutorial_Get_Started_Script.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="noisemodelling-client-line-interface-cli">
+<h1>NoiseModelling client line interface (CLI)<a class="headerlink" href="#noisemodelling-client-line-interface-cli" title="Permalink to this heading"></a></h1>
+<p>In this tutorial, we describe the different method to pilot NoiseModelling thanks to scripts. To do so, we will use a separate command-line interface, called <code class="docutils literal notranslate"><span class="pre">ScriptRunner</span></code>, in which the GUI has been removed (no more  <a class="reference internal" href="Builder.html"><span class="doc">Builder</span></a>).</p>
+<p>From that point, NoiseModelling can be executed in 3 different manners:</p>
+<ol class="arabic simple">
+<li><p>with simple command lines</p></li>
+<li><p>with Bash script</p></li>
+<li><p>with Groovy script (Block)</p></li>
+</ol>
+<p>To illustrate, users are invited to reproduce the tutorial “<a class="reference internal" href="Tutorial_Get_Started_GUI.html"><span class="doc">Get Started - GUI</span></a>” in command lines.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This tutorial is mainly dedicated to advanced users.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The URL is here adapted to Linux or Mac users. Windows user may adapt the address by replacing <code class="docutils literal notranslate"><span class="pre">/</span></code> by <code class="docutils literal notranslate"><span class="pre">\</span></code> in the folders paths.</p>
+</div>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For all users (<strong>Linux</strong> , <strong>Mac</strong> and <strong>Windows</strong>), please make sure your Java environment is well configured. For more information, please read the page <a class="reference internal" href="Installation_guide.html"><span class="doc">Installation guide</span></a>.</p>
+</div>
+</section>
+<section id="simple-command-line">
+<h2>1. Simple command line<a class="headerlink" href="#simple-command-line" title="Permalink to this heading"></a></h2>
+<p>Using the terminal of your operating system</p>
+<p>Below is an example of a bash instruction, executing the <code class="docutils literal notranslate"><span class="pre">Import_File.groovy</span></code> script (located in the directory <code class="docutils literal notranslate"><span class="pre">scripts/</span></code>). This block has three arguments. The first one sets the working directory to create the NoiseModelling database, the second parameter specifies the groovy import script. The third parameter sets the filepath of the dataset to be imported to the database. This third parameter is specified by the <code class="docutils literal notranslate"><span class="pre">Import_File.groovy</span></code>. Each groovy script has its own set of required and/or optional parameters.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">cd</span><span class="w"> </span>/home/user/NoiseModelling/
+<span class="linenos">2</span>
+<span class="linenos">3</span>./bin/ScriptRunner<span class="w"> </span>-w<span class="w"> </span>./<span class="w"> </span>-s<span class="w"> </span>scripts/Import_and_Export/Import_File.groovy<span class="w"> </span>--pathFile<span class="w"> </span>resources/ground_type.shp
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Adapt <code class="docutils literal notranslate"><span class="pre">/home/user/NoiseModelling</span></code> address with the real installation folder of NoiseModelling. Use the appropriate <code class="docutils literal notranslate"><span class="pre">./bin/ScriptRunner</span></code> or <code class="docutils literal notranslate"><span class="pre">./bin/ScriptRunner.bat</span></code> <em>(depending on if you are on Linux / Mac or Windows)</em> file, which is located in the <code class="docutils literal notranslate"><span class="pre">bin/</span></code> directory.</p>
+</div>
+</section>
+<section id="bash-script">
+<h2>2. Bash script<a class="headerlink" href="#bash-script" title="Permalink to this heading"></a></h2>
+<p>Below is an example of a sequence of simple .groovy scripts (Blocks), using bash instructions and launching the steps described in the “<a class="reference internal" href="Tutorial_Get_Started_GUI.html"><span class="doc">Get Started - GUI</span></a>”.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#! /bin/bash</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="c1"># Run the get started turorial</span>
+<span class="linenos"> 4</span><span class="c1"># https://noisemodelling.readthedocs.io/en/latest/Get_Started_Tutorial.html</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1"># Step 4: Upload files to database</span>
+<span class="linenos"> 7</span><span class="c1"># create (or load existing) database and load a shape file into the database</span>
+<span class="linenos"> 8</span>./bin/ScriptRunner<span class="w"> </span>-w<span class="w"> </span>./<span class="w"> </span>-s<span class="w"> </span>scripts/Import_and_Export/Import_File.groovy<span class="w"> </span>--pathFile<span class="w"> </span>resources/ground_type.shp
+<span class="linenos"> 9</span>./bin/ScriptRunner<span class="w"> </span>-w<span class="w"> </span>./<span class="w"> </span>-s<span class="w"> </span>scripts/Import_and_Export/Import_File.groovy<span class="w"> </span>--pathFile<span class="w"> </span>resources/buildings.shp
+<span class="linenos">10</span>./bin/ScriptRunner<span class="w"> </span>-w<span class="w"> </span>./<span class="w"> </span>-s<span class="w"> </span>scripts/Import_and_Export/Import_File.groovy<span class="w"> </span>--pathFile<span class="w"> </span>resources/receivers.shp
+<span class="linenos">11</span>./bin/ScriptRunner<span class="w"> </span>-w<span class="w"> </span>./<span class="w"> </span>-s<span class="w"> </span>scripts/Import_and_Export/Import_File.groovy<span class="w"> </span>--pathFile<span class="w"> </span>resources/ROADS2.shp
+<span class="linenos">12</span>./bin/ScriptRunner<span class="w"> </span>-w<span class="w"> </span>./<span class="w"> </span>-s<span class="w"> </span>scripts/Import_and_Export/Import_File.groovy<span class="w"> </span>--pathFile<span class="w"> </span>resources/dem.geojson
+<span class="linenos">13</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="c1"># Step 5: Run Calculation</span>
+<span class="linenos">16</span>./bin/ScriptRunner<span class="w"> </span>-w<span class="w"> </span>./<span class="w"> </span>-s<span class="w"> </span>scripts/NoiseModelling/Noise_level_from_sources.groovy<span class="w"> </span>--tableBuilding<span class="w"> </span>BUILDINGS<span class="w"> </span>--tableSources<span class="w"> </span>ROADS2<span class="w"> </span>--tableReceivers<span class="w"> </span>RECEIVERS<span class="w"> </span>--tableDEM<span class="w"> </span>DEM<span class="w"> </span>--tableGroundAbs<span class="w"> </span>GROUND_TYPE
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="c1"># Step 6: Export (&amp; see) the results</span>
+<span class="linenos">19</span>./bin/ScriptRunner<span class="w"> </span>-w<span class="w"> </span>./<span class="w"> </span>-s<span class="w"> </span>scripts/Import_and_Export/Export_Table.groovy<span class="w"> </span>--exportPath<span class="w"> </span>RECEIVERS_LEVEL.shp<span class="w"> </span>--tableToExport<span class="w"> </span>RECEIVERS_LEVEL
+</pre></div>
+</div>
+</section>
+<section id="groovy-script-block">
+<h2>3. Groovy script (Block)<a class="headerlink" href="#groovy-script-block" title="Permalink to this heading"></a></h2>
+<p>Below is an example of a complex .groovy script (Block), launching the different steps described in the “<a class="reference internal" href="Tutorial_Get_Started_GUI.html"><span class="doc">Get Started - GUI</span></a>”.</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">package</span><span class="w"> </span><span class="n">org</span><span class="o">.</span><span class="na">noise_planet</span><span class="o">.</span><span class="na">noisemodelling</span><span class="o">.</span><span class="na">scripts</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span><span class="w"> </span><span class="nn">org.h2gis.api.ProgressVisitor</span>
+<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">org.noise_planet.noisemodelling.scripts.Import_and_Export.Import_File</span>
+<span class="linenos"> 5</span><span class="kn">import</span><span class="w"> </span><span class="nn">org.noise_planet.noisemodelling.scripts.NoiseModelling.Noise_level_from_source</span>
+<span class="linenos"> 6</span><span class="kn">import</span><span class="w"> </span><span class="nn">org.noise_planet.noisemodelling.scripts.NoiseModelling.Road_Emission_from_Traffic</span>
+<span class="linenos"> 7</span><span class="kn">import</span><span class="w"> </span><span class="nn">org.noise_planet.noisemodelling.webserver.utilities.Logging</span>
+<span class="linenos"> 8</span><span class="kn">import</span><span class="w"> </span><span class="nn">org.slf4j.Logger</span>
+<span class="linenos"> 9</span><span class="kn">import</span><span class="w"> </span><span class="nn">org.slf4j.LoggerFactory</span>
+<span class="linenos">10</span><span class="kn">import</span><span class="w"> </span><span class="nn">groovy.sql.Sql</span>
+<span class="linenos">11</span><span class="kn">import</span><span class="w"> </span><span class="nn">java.io.File</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="kn">import</span><span class="w"> </span><span class="nn">java.sql.Connection</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Tutorial script&#39;</span>
+<span class="linenos">16</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Long description of tutorial script&#39;</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="n">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="n">resourcesFolder</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">[</span>
+<span class="linenos">19</span><span class="w">        </span><span class="nl">description:</span><span class="w"> </span><span class="s2">&quot;Path of the resource folder for input data&quot;</span><span class="o">,</span>
+<span class="linenos">20</span><span class="w">        </span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Resource folder&quot;</span><span class="o">,</span>
+<span class="linenos">21</span><span class="w">        </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;resources&#39;</span><span class="o">,</span>
+<span class="linenos">22</span><span class="w">        </span><span class="nl">type:</span><span class="w"> </span><span class="n">String</span><span class="o">.</span><span class="na">class</span>
+<span class="linenos">23</span><span class="o">]]</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="n">outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="nl">result:</span><span class="w"> </span><span class="o">[</span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;Result output string&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">title:</span><span class="w"> </span><span class="s1">&#39;Result output string&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">description:</span><span class="w"> </span><span class="s1">&#39;Result table name. Can be used as input for another WPS process&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">type:</span><span class="w"> </span><span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">]]</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="kt">def</span><span class="w"> </span><span class="nf">exec</span><span class="o">(</span><span class="n">Connection</span><span class="w"> </span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="n">Map</span><span class="w"> </span><span class="n">input</span><span class="o">,</span><span class="w"> </span><span class="n">ProgressVisitor</span><span class="w"> </span><span class="n">progress</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="linenos">28</span><span class="w">    </span><span class="n">Logger</span><span class="w"> </span><span class="n">logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="s2">&quot;tutorial&quot;</span><span class="o">)</span>
+<span class="linenos">29</span><span class="w">    </span><span class="n">ProgressVisitor</span><span class="w"> </span><span class="n">tutorialProgress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">progress</span><span class="o">.</span><span class="na">subProcess</span><span class="o">(</span><span class="mi">8</span><span class="o">)</span>
+<span class="linenos">30</span><span class="w">    </span><span class="c1">// 8 steps in this task</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">resourceFolder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input</span><span class="o">.</span><span class="na">resourcesFolder</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">String</span>
+<span class="linenos">33</span><span class="w">    </span><span class="c1">// Upload files to database</span>
+<span class="linenos">34</span><span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">groundTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Import_File</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;pathFile&quot;</span><span class="o">:</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">File</span><span class="o">(</span><span class="n">resourceFolder</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;ground_type.shp&quot;</span><span class="o">)],</span><span class="w"> </span><span class="n">tutorialProgress</span><span class="o">)[</span><span class="s2">&quot;outputTable&quot;</span><span class="o">]</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">buildingTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Import_File</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;pathFile&quot;</span><span class="o">:</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">File</span><span class="o">(</span><span class="n">resourceFolder</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;buildings.shp&quot;</span><span class="o">)],</span><span class="w"> </span><span class="n">tutorialProgress</span><span class="o">)[</span><span class="s2">&quot;outputTable&quot;</span><span class="o">]</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span><span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">receiversTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Import_File</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;pathFile&quot;</span><span class="o">:</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">File</span><span class="o">(</span><span class="n">resourceFolder</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;receivers.shp&quot;</span><span class="o">)],</span><span class="w"> </span><span class="n">tutorialProgress</span><span class="o">)[</span><span class="s2">&quot;outputTable&quot;</span><span class="o">]</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span><span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">roadsTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Import_File</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;pathFile&quot;</span><span class="o">:</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">File</span><span class="o">(</span><span class="n">resourceFolder</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;ROADS2.shp&quot;</span><span class="o">)],</span><span class="w"> </span><span class="n">tutorialProgress</span><span class="o">)[</span><span class="s2">&quot;outputTable&quot;</span><span class="o">]</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span><span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">demTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Import_File</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;pathFile&quot;</span><span class="o">:</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">File</span><span class="o">(</span><span class="n">resourceFolder</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;dem.geojson&quot;</span><span class="o">)],</span><span class="w"> </span><span class="n">tutorialProgress</span><span class="o">)[</span><span class="s2">&quot;outputTable&quot;</span><span class="o">]</span>
+<span class="linenos">43</span>
+<span class="linenos">44</span><span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">roadEmissionTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Road_Emission_from_Traffic</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="o">[</span><span class="n">tableRoads</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">roadsTable</span><span class="o">],</span><span class="w"> </span><span class="n">tutorialProgress</span><span class="o">).</span><span class="na">result</span>
+<span class="linenos">45</span>
+<span class="linenos">46</span><span class="w">    </span><span class="c1">// print some lines of road emission</span>
+<span class="linenos">47</span><span class="w">    </span><span class="n">Logging</span><span class="o">.</span><span class="na">formatSqlQueryResult</span><span class="o">(</span><span class="k">new</span><span class="w"> </span><span class="n">Sql</span><span class="o">(</span><span class="n">connection</span><span class="o">),</span><span class="w"> </span><span class="s2">&quot;SELECT * FROM $roadEmissionTable LIMIT 10&quot;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">String</span><span class="o">)</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span><span class="w">    </span><span class="c1">// Run Calculation</span>
+<span class="linenos">50</span><span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">resultTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Noise_level_from_source</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;tableBuilding&quot;</span><span class="o">:</span><span class="w"> </span><span class="n">buildingTable</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;tableSources&quot;</span><span class="o">:</span><span class="w"> </span><span class="n">roadEmissionTable</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;tableReceivers&quot;</span><span class="o">:</span><span class="w"> </span><span class="n">receiversTable</span><span class="o">,</span>
+<span class="linenos">51</span><span class="w">                                                                      </span><span class="s2">&quot;tableDEM&quot;</span><span class="w">     </span><span class="o">:</span><span class="w"> </span><span class="n">demTable</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;tableGroundAbs&quot;</span><span class="o">:</span><span class="w"> </span><span class="n">groundTable</span><span class="o">],</span><span class="w"> </span><span class="n">tutorialProgress</span><span class="o">)</span>
+<span class="linenos">52</span>
+<span class="linenos">53</span><span class="w">    </span><span class="c1">// Return results</span>
+<span class="linenos">54</span><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Logging</span><span class="o">.</span><span class="na">formatSqlQueryResult</span><span class="o">(</span><span class="k">new</span><span class="w"> </span><span class="n">Sql</span><span class="o">(</span><span class="n">connection</span><span class="o">),</span><span class="w"> </span><span class="s2">&quot;SELECT * FROM $resultTable.result ORDER BY IDRECEIVER, PERIOD LIMIT 10&quot;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">String</span><span class="o">,</span><span class="w"> </span><span class="mi">120</span><span class="o">)</span>
+<span class="linenos">55</span><span class="o">}</span>
+</pre></div>
+</div>
+<p>You can find this script <code class="docutils literal notranslate"><span class="pre">get_started_tutorial_complex.groovy</span></code> on the installation folder of NoiseModelling</p>
+<p>To run it use this bash command.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>./bin/ScriptRunner<span class="w"> </span>-w<span class="w"> </span>./<span class="w"> </span>-s<span class="w"> </span>get_started_tutorial_complex.groovy
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Tutorial_Data_Assimilation.html" class="btn btn-neutral float-left" title="Data Assimilation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Tutorials_FAQ.html" class="btn btn-neutral float-right" title="Tutorials - FAQ" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

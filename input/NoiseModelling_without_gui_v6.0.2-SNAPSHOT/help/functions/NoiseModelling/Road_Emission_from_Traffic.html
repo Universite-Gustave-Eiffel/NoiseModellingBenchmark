@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Road Emission from Traffic &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Building Grid" href="../Receivers/Building_Grid.html" />
+    <link rel="prev" title="Railway Emission from Traffic" href="Railway_Emission_from_Traffic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../Functions.html">List of functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#acoustic-tools">Acoustic Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#data-assimilation">Data Assimilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#database-manager">Database Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#deprecated">Deprecated</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#dynamic">Dynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#experimental">Experimental</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#experimental-matsim">Experimental Matsim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#geometric-tools">Geometric Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#import-and-export">Import and Export</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../Functions.html#noisemodelling">NoiseModelling</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Atmospheric_Template.html">Atmospheric Template</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Noise_level_from_source.html">Noise level from source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PlotDirectivity.html">PlotDirectivity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Railway_Emission_from_Traffic.html">Railway Emission from Traffic</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Road Emission from Traffic</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#arguments">Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#receivers">Receivers</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../Functions.html">List of functions</a> &raquo;</li>
+      <li>Road Emission from Traffic</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/functions/NoiseModelling/Road_Emission_from_Traffic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="road-emission-from-traffic">
+<h1>Road Emission from Traffic<a class="headerlink" href="#road-emission-from-traffic" title="Permalink to this heading"></a></h1>
+<p>Compute road emission noise map from road table.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>➡️ Compute Road Emission Noise Map from Day Evening Night traffic flow rate and speed estimates (specific format, see input details).
+✅ The output table is called: LW_ROADS</p>
+</section>
+<section id="arguments">
+<h2>Arguments<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
+<section id="mandatory-inputs">
+<h3>Mandatory inputs<a class="headerlink" href="#mandatory-inputs" title="Permalink to this heading"></a></h3>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">tableRoads</span></code> — <em>Roads table name</em></dt><dd><p>Name of the Roads table.
+If you provide the PERIOD field you do not need to provide the fields with the extension  _D _E _N. This function recognize the following columns (* mandatory) :</p>
+<ul class="simple">
+<li><p>PK  : If there is a primary key defined, it will be copied with the same name and set as a primary for the output table</p></li>
+<li><p>IDSOURCE  : an identifier, if present will be copied as is. It is expected if you will use LW_ROADS as SOURCES_EMISSION in the Noise_Level_From_Source script input (INTEGER)</p></li>
+<li><p>PERIOD  : Any text that could be time period ex. D, E, N, DEN (Varchar), if present will be copied as is</p></li>
+<li><p>LV  : Hourly average light vehicle count (DOUBLE)</p></li>
+<li><p>MV  : Hourly average medium heavy vehicles, delivery vans &gt; 3.5 tons,  buses, touring cars, etc. with two axles and twin tyre mounting on rear axle count (DOUBLE)</p></li>
+<li><p>HGV  : Hourly average heavy duty vehicles, touring cars, buses, with three or more axles (DOUBLE)</p></li>
+<li><p>WAV  : Hourly average mopeds, tricycles or quads ≤ 50 cc count (DOUBLE)</p></li>
+<li><p>WBV  : Hourly average motorcycles, tricycles or quads &gt; 50 cc count (DOUBLE)</p></li>
+<li><p>LV_SPD  : Hourly average light vehicle speed (DOUBLE)</p></li>
+<li><p>MV_SPD  : Hourly average medium heavy vehicles speed (DOUBLE)</p></li>
+<li><p>HGV_SPD  : Hourly average heavy duty vehicles speed (DOUBLE)</p></li>
+<li><p>WAV_SPD  : Hourly average mopeds, tricycles or quads ≤ 50 cc speed (DOUBLE)</p></li>
+<li><p>WBV_SPD  : Hourly average motorcycles, tricycles or quads &gt; 50 cc speed (DOUBLE)</p></li>
+<li><p>LV_D LV_E LV_N  : Hourly average light vehicle count (6-18h)(18-22h)(22-6h) (DOUBLE)</p></li>
+<li><p>MV_D MV_E MV_N  : Hourly average medium heavy vehicles, delivery vans &gt; 3.5 tons,  buses, touring cars, etc. with two axles and twin tyre mounting on rear axle count (6-18h)(18-22h)(22-6h) (DOUBLE)</p></li>
+<li><p>HGV_D  HGV_E  HGV_N  : Hourly average heavy duty vehicles, touring cars, buses, with three or more axles (6-18h)(18-22h)(22-6h) (DOUBLE)</p></li>
+<li><p>WAV_D  WAV_E  WAV_N  : Hourly average mopeds, tricycles or quads ≤ 50 cc count (6-18h)(18-22h)(22-6h) (DOUBLE)</p></li>
+<li><p>WBV_D  WBV_E  WBV_N  : Hourly average motorcycles, tricycles or quads &gt; 50 cc count (6-18h)(18-22h)(22-6h) (DOUBLE)</p></li>
+<li><p>LV_SPD_D  LV_SPD_E LV_SPD_N  : Hourly average light vehicle speed (6-18h)(18-22h)(22-6h) (DOUBLE)</p></li>
+<li><p>MV_SPD_D  MV_SPD_E MV_SPD_N  : Hourly average medium heavy vehicles speed (6-18h)(18-22h)(22-6h) (DOUBLE)</p></li>
+<li><p>HGV_SPD_D  HGV_SPD_E  HGV_SPD_N  : Hourly average heavy duty vehicles speed (6-18h)(18-22h)(22-6h) (DOUBLE)</p></li>
+<li><p>WAV_SPD_D  WAV_SPD_E  WAV_SPD_N  : Hourly average mopeds, tricycles or quads ≤ 50 cc speed (6-18h)(18-22h)(22-6h) (DOUBLE)</p></li>
+<li><p>WBV_SPD_D  WBV_SPD_E  WBV_SPD_N  : Hourly average motorcycles, tricycles or quads &gt; 50 cc speed (6-18h)(18-22h)(22-6h) (DOUBLE)</p></li>
+<li><p>TEMP  : Hourly average air temperature (DOUBLE)</p></li>
+<li><p>TEMP_D  TEMP_E  TEMP_N  : Hourly average air temperature (6-18h)(18-22h)(22-6h) (DOUBLE)</p></li>
+<li><p>PVMT  : CNOSSOS road pavement identifier (ex: NL05)(default NL08) (VARCHAR)</p></li>
+<li><p>TS_STUD  : A limited period Ts (in months) over the year where a average proportion pm of light vehicles are equipped with studded tyres (0-12) (DOUBLE)</p></li>
+<li><p>PM_STUD  : Average proportion of vehicles equipped with studded tyres during TS_STUD period (0-1) (DOUBLE)</p></li>
+<li><p>JUNC_DIST  : Distance to junction in meters (DOUBLE)</p></li>
+<li><p>JUNC_TYPE  : Type of junction (k=0 none, k = 1 for a crossing with traffic lights ; k = 2 for a roundabout) (INTEGER)</p></li>
+<li><p>SLOPE  : Slope (in %) of the road section. If the field is not filled in, the LINESTRING z-values will be used to calculate the slope and the traffic direction (way field) will be force to 3 (bidirectional). (DOUBLE)</p></li>
+<li><p>WAY  : Define the way of the road section. 1 = one way road section and the traffic goes in the same way that the slope definition you have used, 2 = one way road section and the traffic goes in the inverse way that the slope definition you have used, 3 = bi-directional traffic flow, the flow is split into two components and correct half for uphill and half for downhill (INTEGER)</p></li>
+</ul>
+<p>This table can be generated from the WPS Block ‘Import_OSM’. .</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+</dl>
+</section>
+<section id="optional-inputs">
+<h3>Optional inputs<a class="headerlink" href="#optional-inputs" title="Permalink to this heading"></a></h3>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">coefficientVersion</span></code> — <em>Coefficient version</em></dt><dd><p>🌧 Cnossos coefficient version  (1 = 2015, 2 = 2020, 528 = NL)</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Double</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">outputTable</span></code> — <em>Output table name</em></dt><dd><p>🛠 Name of the output table. If the table already exists, it will be dropped and replaced by the new one.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">LW_ROADS</span></code></p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">result</span></code> — <em>Result output string</em></dt><dd><p>This type of result does not allow the blocks to be linked together.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Railway_Emission_from_Traffic.html" class="btn btn-neutral float-left" title="Railway Emission from Traffic" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../Receivers/Building_Grid.html" class="btn btn-neutral float-right" title="Building Grid" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

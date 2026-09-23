@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flow 2 Noisy Vehicles &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Ind Vehicles 2 Noisy Vehicles" href="Ind_Vehicles_2_Noisy_Vehicles.html" />
+    <link rel="prev" title="Noise level from traffic" href="../Deprecated/Noise_level_from_traffic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../Functions.html">List of functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#acoustic-tools">Acoustic Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#data-assimilation">Data Assimilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#database-manager">Database Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#deprecated">Deprecated</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../Functions.html#dynamic">Dynamic</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Flow 2 Noisy Vehicles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#arguments">Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Ind_Vehicles_2_Noisy_Vehicles.html">Ind Vehicles 2 Noisy Vehicles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Noise_From_Attenuation_Matrix.html">Noise From Attenuation Matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Point_Source_From_Network.html">Point Source From Network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Split_Sources_Period.html">Split Sources Period</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#experimental">Experimental</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#experimental-matsim">Experimental Matsim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#geometric-tools">Geometric Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#import-and-export">Import and Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#noisemodelling">NoiseModelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#receivers">Receivers</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../Functions.html">List of functions</a> &raquo;</li>
+      <li>Flow 2 Noisy Vehicles</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/functions/Dynamic/Flow_2_Noisy_Vehicles.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="flow-2-noisy-vehicles">
+<h1>Flow 2 Noisy Vehicles<a class="headerlink" href="#flow-2-noisy-vehicles" title="Permalink to this heading"></a></h1>
+<p>From Road traffic flows to noisy individual vehicles</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>Calculates individual vehicle position and noise level based on average traffic flows.   A first output table is called : SOURCES_GEOM  which is needed to compute the Noise Attenuation Matrixand contain : -   IDSOURCE  : an identifier (INTEGER, PRIMARY KEY). -   ROAD_ID  : id link to the road segment (INTEGER). -   THE_GEOM  : the 3D geometry of the sources (POINT).     The output table is called : SOURCES_EMISSION  and contain : -   PK  : an identifier (INTEGER, PRIMARY KEY). -   IDSOURCE  : link to the source point (INTEGER). -   PERIOD  : The TIMESTAMP iteration (VARCHAR).-   HZ63, HZ125, HZ250, HZ500, HZ1000,HZ2000, HZ4000, HZ8000  : 8 columns giving the instantaneous emission sound level for each octave band (FLOAT).</p>
+</section>
+<section id="arguments">
+<h2>Arguments<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
+<section id="mandatory-inputs">
+<h3>Mandatory inputs<a class="headerlink" href="#mandatory-inputs" title="Permalink to this heading"></a></h3>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">method</span></code> — <em>Selected Method</em></dt><dd><p>Two methods are available :  - PROBA : Probabilistic representation of vehicle appearances for each time step (quicker, but sacrifices temporal coherence) Aumond, P., Jacquesson, L., &amp; Can, A. (2018). Probabilistic modeling framework for multisource sound mapping. Applied Acoustics, 139, 34-43. . - TNP : Simplified vehicle movements (slower, but maintaining temporal coherence) De Coensel, B.; Brown, A.L.; Tomerini, D. A road traffic noise pattern simulation model that includes distributions of vehicle sound power levels. Appl. Acoust. 2016, 111, 170–178. .</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Allowed values: <code class="docutils literal notranslate"><span class="pre">PROBA</span></code>, <code class="docutils literal notranslate"><span class="pre">TNP</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tableRoads</span></code> — <em>Roads table name</em></dt><dd><p>Name of the Roads table.
+The table shall contain : -  PK  : an identifier. It shall be a primary key (INTEGER, PRIMARY KEY)
+-  LV_D  : Hourly average light and heavy vehicle count (DOUBLE)
+-  HGV_D  :  Hourly average heavy vehicle count (DOUBLE)
+-  LV_SPD_D  :  Hourly average light vehicle speed (DOUBLE)
+-  HGV_SPD_D  :  Hourly average heavy vehicle speed  (DOUBLE)
+-  PVMT  :  CNOSSOS road pavement identifier (ex: NL05) (VARCHAR)   This table can be generated from the WPS Block ‘Import_OSM’. .</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+</dl>
+</section>
+<section id="optional-inputs">
+<h3>Optional inputs<a class="headerlink" href="#optional-inputs" title="Permalink to this heading"></a></h3>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">duration</span></code> — <em>duration in sec.</em></dt><dd><p>Number of seconds to compute (INTEGER).</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Integer</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">60</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">gridStep</span></code></dt><dd><p>Distance between location of vehicle along the network in meters.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Integer</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">10</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">timestep</span></code></dt><dd><p>Number of iterations. Timestep in sec.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Integer</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">1</span></code></p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">result</span></code> — <em>Generated table name</em></dt><dd><p>Name of the generated table. Can be used as the input of other process.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../Deprecated/Noise_level_from_traffic.html" class="btn btn-neutral float-left" title="Noise level from traffic" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Ind_Vehicles_2_Noisy_Vehicles.html" class="btn btn-neutral float-right" title="Ind Vehicles 2 Noisy Vehicles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

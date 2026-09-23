@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noise level from source &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="PlotDirectivity" href="PlotDirectivity.html" />
+    <link rel="prev" title="Atmospheric Template" href="Atmospheric_Template.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../Functions.html">List of functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#acoustic-tools">Acoustic Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#data-assimilation">Data Assimilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#database-manager">Database Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#deprecated">Deprecated</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#dynamic">Dynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#experimental">Experimental</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#experimental-matsim">Experimental Matsim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#geometric-tools">Geometric Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#import-and-export">Import and Export</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../Functions.html#noisemodelling">NoiseModelling</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Atmospheric_Template.html">Atmospheric Template</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Noise level from source</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#arguments">Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="PlotDirectivity.html">PlotDirectivity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Railway_Emission_from_Traffic.html">Railway Emission from Traffic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Road_Emission_from_Traffic.html">Road Emission from Traffic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../Functions.html#receivers">Receivers</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../Functions.html">List of functions</a> &raquo;</li>
+      <li>Noise level from source</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/functions/NoiseModelling/Noise_level_from_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="noise-level-from-source">
+<h1>Noise level from source<a class="headerlink" href="#noise-level-from-source" title="Permalink to this heading"></a></h1>
+<p>Computes the propagation from the sounds sources to the receivers</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>➡️ Computes the propagation from the sounds sources to the receivers location using the noise emission table.
+🌍 Tables must be projected in a metric coordinate system (SRID). Use “Change_SRID” WPS Block if needed. ✅ The output table are called:  RECEIVERS_LEVEL  The output table contain:</p>
+<ul class="simple">
+<li><p>IDRECEIVER: receiver an identifier (INTEGER) linked to RECEIVERS table primary key</p></li>
+<li><p>IDSOURCE: source identifier (INTEGER) linked to SOURCES_GEOM primary key. Only if Keep source id is checked.</p></li>
+<li><p>PERIOD : Time period (VARCHAR) ex. L D E and DEN. Only if you provide emission power to sources or the atmospheric settings table.</p></li>
+<li><p>THE_GEOM : the 3D geometry of the receivers with the Z as the altitude (POINTZ)</p></li>
+<li><p>Hz63, Hz125, Hz250, Hz500, Hz1000,Hz2000, Hz4000, Hz8000 : 8 columns giving the sound level for each octave band (FLOAT)</p></li>
+</ul>
+</section>
+<section id="arguments">
+<h2>Arguments<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
+<section id="mandatory-inputs">
+<h3>Mandatory inputs<a class="headerlink" href="#mandatory-inputs" title="Permalink to this heading"></a></h3>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">tableBuilding</span></code> — <em>Buildings table name</em></dt><dd><p>🏠 Name of the Buildings table The table must contain:</p>
+<ul class="simple">
+<li><p>THE_GEOM : the 2D or 3D geometry of the building (POLYGON, MULTIPOLYGON or LINESTRING). If the geometry is 2D then the <em>HEIGHT</em> column is mandatory. LineString is used to add noise barriers</p></li>
+<li><p>HEIGHT : Optional, the height of the building above the ground (mandatory if geometry is 2D, ignored if geometry is 3D) (FLOAT)</p></li>
+<li><p>G : Optional, Wall absorption value if g is [0, 1] or wall surface impedance ([N.s.m-4] static air flow resistivity of material) if G is [20, 20000] (default is 0.1 if the column G does not exists) (FLOAT)</p></li>
+</ul>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tableReceivers</span></code> — <em>Receivers table name</em></dt><dd><p>Name of the Receivers table  The table must contain:</p>
+<ul class="simple">
+<li><p>PK  : an identifier. It shall be a primary key (INTEGER, PRIMARY KEY)</p></li>
+<li><p>THE_GEOM  : the 3D geometry of the receivers (POINTZ)</p></li>
+</ul>
+<p>💡 This table can be generated from the WPS Blocks in the “Receivers” folder</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tableSources</span></code> — <em>Sources geometry table name</em></dt><dd><p>Name of the Sources table (if only geometry is specified)  The table must contain (* mandatory):</p>
+<ul class="simple">
+<li><p>PK * : an identifier. It shall be a primary key (INTEGER, PRIMARY KEY)</p></li>
+<li><p>THE_GEOM * : the 3D geometry of the sources (POINT, MULTIPOINT, LINESTRING, MULTILINESTRING). According to CNOSSOS-EU, you need to set a height of 0.05 m for a road traffic emission</p></li>
+<li><p>HZD63, HZD125, HZD250, HZD500, HZD1000, HZD2000, HZD4000, HZD8000  : 8 columns giving the day emission sound level for each octave band (FLOAT)</p></li>
+<li><p>HZE  : 8 columns giving the evening emission sound level for each octave band (FLOAT)</p></li>
+<li><p>HZN  : 8 columns giving the night emission sound level for each octave band (FLOAT)</p></li>
+<li><p>YAW  : Source horizontal orientation in degrees. For points 0° North, 90° East. For lines 0° line direction, 90° right of the line direction.  (FLOAT)</p></li>
+<li><p>PITCH  : Source vertical orientation in degrees. 0° front, 90° top, -90° bottom. (FLOAT)</p></li>
+<li><p>ROLL  : Source roll in degrees (FLOAT)</p></li>
+<li><p>DIR_ID  : identifier of the directivity sphere from tableSourceDirectivity parameter or train directivity if not provided -&gt; OMNIDIRECTIONAL(0), ROLLING(1), TRACTIONA(2), TRACTIONB(3), AERODYNAMICA(4), AERODYNAMICB(5), BRIDGE(6) (INTEGER)</p></li>
+</ul>
+<p>💡 This table can be generated from the WPS Block “Road_Emission_from_Traffic”</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+</dl>
+</section>
+<section id="optional-inputs">
+<h3>Optional inputs<a class="headerlink" href="#optional-inputs" title="Permalink to this heading"></a></h3>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">confDiffHorizontal</span></code> — <em>Diffraction on horizontal edges</em></dt><dd><p>Compute or not the diffraction on horizontal edges</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confDiffVertical</span></code> — <em>Diffraction on vertical edges</em></dt><dd><p>Compute or not the diffraction on vertical edges. Following Directive 2015/996, enable this option for rail and industrial sources only</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confExportSourceId</span></code> — <em>Separate receiver level by source identifier</em></dt><dd><p>Keep source identifier in output in order to get noise contribution of each noise source. When only the source geometry is given, the attenuation between each pair of “source-receiver” points is specified (commonly referred to as the “attenuation matrix”)</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confFavourableOccurrencesDefault</span></code> — <em>Default favourable occurrences</em></dt><dd><p>Comma-delimited string containing the probability ([0,1]) of occurrences of favourable propagation conditions. Follow the clockwise direction. The north slice is the last array index (n°16 in the schema below) not the first one.</p>
+<figure class="align-center">
+<img alt="Noise level from source" src="../../_images/acoustics_parameters_confFavorableOccurrences2.png" />
+</figure>
+<p>. For Netherlands favourable conditions you should define the period dependant values by using the tablePeriodAtmosphericSettings parameter.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confHumidity</span></code> — <em>Relative humidity</em></dt><dd><p>🌧 Humidity for noise propagation (%) [0,100]</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Double</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">70</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confLineSourceSpacingRatio</span></code> — <em>Line source spacing ratio</em></dt><dd><p>Dictates the density of source points created from a line sound source. A higher value means more points and finer discretization : DistanceBetweenPoints = DistanceSourceToReceiver / LineSourceSpacingRatio (this parameter)</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Double</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confMaxError</span></code> — <em>Max Error (dB)</em></dt><dd><p>Threshold for excluding negligible sound sources in calculations.This parameter is ignored if no emission level is specified or if you set it to 0 dB. This parameter have a great impact on computation time.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Double</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">0.1</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confMaxReflDist</span></code> — <em>Maximum source-reflexion distance</em></dt><dd><p>Maximum search distance of walls / facades from the “Source-Receiver” segment, for the calculation of specular reflections (meters).</p>
+<figure class="align-center">
+<img alt="Noise level from source" src="../../_images/acoustics_parameters_confMaxReflDist2.png" />
+</figure>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Double</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">50</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confMaxSrcDist</span></code> — <em>Maximum source-receiver distance</em></dt><dd><p>Maximum distance between source and receiver (FLOAT, in meters).</p>
+<figure class="align-center">
+<img alt="Noise level from source" src="../../_images/acoustics_parameters_confMaxSrcDist2.png" />
+</figure>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Double</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">150</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confMinWallReflDist</span></code> — <em>Ignore close reflections</em></dt><dd><p>Optional maximum receiver-to-wall distance (meters) below which reflection cut profiles are ignored. With regard to the population’s exposure to noise, it is recommended that the contribution due to reflection off the façade wall of the building where the resident lives should be disregarded. If you have placed the receivers 0.1 m from the façades, you can set this parameter to 0.2 m. This offset is set to ensure that the contribution from the nearby wall is ignored. Use 0 to keep all reflections.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Double</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">0</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confRaysName</span></code> — <em>Export scene</em></dt><dd><p>You can provide a table name to export the propagation rays with the attenuation computation details into the specified table (ex:RAYS).You can also provide a folder path URI (ex: file:///C:/Users/joe/My%20Documents/3D%20Scene/ or file:/home/user/scene3d/; you can paste the path in the browser address to convert it to an URI) to export the 3D scene (DEM, Buildings, Sources) for each sub-domains. The export format is KML and can be viewed into earth.google.com .🛠 If not provided nothing is exported</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confReceiversZIsAltitude</span></code> — <em>Receivers Z is altitude</em></dt><dd><p>If checked, the Z value of the receiver’s geometry is considered as an altitude (above sea level) otherwise (false by default) the Z value is a height relative to the ground/DEM. In this case, NoiseModelling will deduce the altitude using the provided DEM table.  🛠</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confReflOrder</span></code> — <em>Order of reflexion</em></dt><dd><p>Maximum number of reflections to be taken into account (INTEGER).  🚨 Adding 1 order of reflexion can significantly increase the processing time.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Integer</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">1</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confSourcesZIsAltitude</span></code> — <em>Sources Z is altitude</em></dt><dd><p>If checked, the Z value of the source’s geometry is considered as an altitude (above sea level) otherwise (false by default) the Z value is a height relative to the ground/DEM. In this case, NoiseModelling will deduce the altitude using the provided DEM table.  🛠</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Boolean</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confTemperature</span></code> — <em>Air temperature</em></dt><dd><p>🌡 Air temperature (°C)</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Double</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">15</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">confThreadNumber</span></code> — <em>Thread number</em></dt><dd><p>Number of thread to use on the computer (INTEGER).  🛠</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Integer</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">0</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">frequencyFieldPrepend</span></code> — <em>Frequency field name</em></dt><dd><p>Frequency field name prepend. Ex. for 1000 Hz frequency the default column name is HZ1000.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">HZ</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">paramWallAlpha</span></code> — <em>Wall absorption coefficient</em></dt><dd><p>Wall absorption coefficient [0,1] (between <code class="docutils literal notranslate"><span class="pre">0</span></code> : “fully reflective” and <code class="docutils literal notranslate"><span class="pre">1</span></code> : “fully absorbent”)</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">Double</span></code></p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">0.1</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tableDEM</span></code> — <em>DEM table name</em></dt><dd><p>Name of the Digital Elevation Model (DEM) table  The table must contain:</p>
+<ul class="simple">
+<li><p>THE_GEOM  : the 3D geometry of the elevation points (POINTZ)</p></li>
+</ul>
+<p>💡 This table can be generated from the WPS Block “Import_Asc_File”</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tableGroundAbs</span></code> — <em>Ground absorption table name</em></dt><dd><p>Name of the surface/ground acoustic absorption table  The table must contain:</p>
+<ul class="simple">
+<li><p>THE_GEOM : the 2D geometry of the ground (POLYGON)</p></li>
+<li><p>G : the acoustic absorption of a ground (FLOAT between 0 : very hard and 1 : very soft)</p></li>
+</ul>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tablePeriodAtmosphericSettings</span></code> — <em>Atmospheric settings table name for each time period</em></dt><dd><p>Name of the Atmospheric settings table  The table must contain the following columns:</p>
+<ul class="simple">
+<li><p>PERIOD : time period (VARCHAR PRIMARY KEY)</p></li>
+<li><p>WINDROSE : Comma-delimited string containing the probability ([0,1]) of occurrences of favourable propagation conditions. Follow the clockwise direction. The north slice is the last array index (n°16 in the schema below) not the first one.</p></li>
+</ul>
+<figure class="align-center">
+<img alt="Noise level from source" src="../../_images/acoustics_parameters_confFavorableOccurrences2.png" />
+</figure>
+<p>or DutchD, DutchE, DutchN for Netherlands</p>
+<ul class="simple">
+<li><p>TEMPERATURE : Temperature in celsius (FLOAT)</p></li>
+<li><p>PRESSURE : air pressure in pascal (FLOAT)</p></li>
+<li><p>HUMIDITY : air humidity in percentage (FLOAT)</p></li>
+<li><p>GDISC : choose between accept G discontinuity or not (BOOLEAN) default true</p></li>
+<li><p>PRIME2520 : choose to use prime values to compute eq. 2.5.20 (BOOLEAN) default false</p></li>
+</ul>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tableSourceDirectivity</span></code> — <em>Source directivity table name</em></dt><dd><p>Name of the emission directivity table  If not specified the default is train directivity of CNOSSOS-EU  The table must contain the following columns:</p>
+<ul class="simple">
+<li><p>DIR_ID : identifier of the directivity sphere (INTEGER)</p></li>
+<li><p>THETA : [-90;90] Vertical angle in degree. 0° front 90° top -90° bottom (FLOAT)</p></li>
+<li><p>PHI : [0;360] Horizontal angle in degree. 0° front 90° right (FLOAT)</p></li>
+<li><p>HZ63, HZ125, HZ250, HZ500, HZ1000, HZ2000, HZ4000, HZ8000 : attenuation levels in dB for each octave or third octave (FLOAT)</p></li>
+</ul>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tableSourcesEmission</span></code> — <em>Sources emission table name</em></dt><dd><p>Name of the Sources table (ex. SOURCES_EMISSION)  The table must contain:</p>
+<ul class="simple">
+<li><p>IDSOURCE * : an identifier. It shall be linked to the primary key of tableRoads (INTEGER)</p></li>
+<li><p>PERIOD * : Time period, you will find this column on the output (VARCHAR)</p></li>
+<li><p>HZ63, HZ125, HZ250, HZ500, HZ1000, HZ2000, HZ4000, HZ8000  : Emission noise level in dB can be third-octave 50Hz to 10000Hz (FLOAT)</p></li>
+</ul>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">result</span></code> — <em>Created table</em></dt><dd><p>Name of the table containing the results of the computation. Can be used as input for another process.</p>
+<p>Type: <code class="docutils literal notranslate"><span class="pre">String</span></code></p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Atmospheric_Template.html" class="btn btn-neutral float-left" title="Atmospheric Template" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PlotDirectivity.html" class="btn btn-neutral float-right" title="PlotDirectivity" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Assimilation &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="NoiseModelling client line interface (CLI)" href="Tutorial_Get_Started_Script.html" />
+    <link rel="prev" title="Dynamic Maps - GUI" href="Tutorial_Dynamic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Dynamic.html">Dynamic Maps - GUI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Assimilation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-data">The data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sensor-measurements">Sensor measurements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sensor-localization">Sensor localization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-compute-the-assimilation">How to compute the assimilation?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-simulation">Data Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-generate-all-possible-combinations">Step 1 : Generate all possible combinations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#execute-all-possible-configuration-block">Execute <code class="docutils literal notranslate"><span class="pre">All_Possible_Configuration</span></code> Block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#result">Result</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-import-sensor-positions">Step 2 : Import sensor positions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Result</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-prepare-sensor-data">Step 3 : Prepare sensor data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#execution">Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Result</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#step-4-import-buildings-and-roads">Step 4: Import buildings and roads</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Result</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#step-5-generate-all-traffic-emissions-and-maps">Step 5 : Generate all traffic emissions and maps</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#generate-emissions">1. Generate emissions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Result</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#calculate-noise-levels">2. Calculate noise levels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7">Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">Result</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#step-6-extract-best-configuration">Step 6 : Extract best configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id9">Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10">Result</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#execute-simulation-generate-the-dynamic-map">Execute Simulation: Generate the Dynamic Map</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-7-generate-new-receivers">Step 7 : Generate new receivers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id11">Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">Result</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#step-8-adding-sensors-as-receivers">Step 8 : Adding sensors as receivers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id13">Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14">Result</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#step-9-generate-dynamic-road-emissions">Step 9 : Generate dynamic road emissions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id15">Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id16">Result</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#step-10-generate-the-noise-levels">Step 10 : Generate the noise levels</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id17">Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id18">Result</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#step-11-create-visualize-the-resulting-table">Step 11 : Create &amp; visualize the resulting table</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id19">Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id20">Result</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#visualize-the-map">Visualize the map</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Functions.html">List of functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Data Assimilation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Tutorial_Data_Assimilation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-assimilation">
+<h1>Data Assimilation<a class="headerlink" href="#data-assimilation" title="Permalink to this heading"></a></h1>
+<img alt="Data assimilation" src="_images/data_assimilation_banner.png" />
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p>Data assimilation is a technique that combines observations with a numerical model to improve the accuracy of forecasts or analyses. Applied to acoustics and noise maps, data assimilation makes it possible to integrate real noise measurements (<em>e.g</em> coming from sensors) into noise propagation models to produce more accurate and reliable noise maps.</p>
+<p>In this tutorial, we will see how to model and simulate noise in <a class="reference external" href="https://www.openstreetmap.org/relation/1685488">Geneva</a> 🇨🇭 using static (road network, buildings) and dynamic (traffic, temperature) data.
+The main objective is to <strong>combine measurements from sensors</strong> located in Geneva <strong>with acoustic simulations</strong> to <strong>identify traffic configurations that best match measurements</strong>.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<p>To play with this tutorial, you will need:</p>
+<ul class="simple">
+<li><p>a working installation of NoiseModelling (NM) with at least version 5. If needed, get the last release on the official <a class="reference external" href="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases">GitHub repository</a>,</p></li>
+<li><p>the tutorial’s datasets, stored in the folder <code class="docutils literal notranslate"><span class="pre">.../NoiseModelling/resources/dataAssimilation/</span></code>,</p></li>
+<li><p>the dedicated Groovy scripts (Blocks), stored in the folder <code class="docutils literal notranslate"><span class="pre">.../NoiseModelling/scripts/DataAssimilation/</span></code>.</p></li>
+</ul>
+</section>
+<section id="the-data">
+<h2>The data<a class="headerlink" href="#the-data" title="Permalink to this heading"></a></h2>
+<p>In the the tutorial’s folder, you have the following data:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>sensor measurement <code class="docutils literal notranslate"><span class="pre">.csv</span></code> files, stored in the <code class="docutils literal notranslate"><span class="pre">devices_data/</span></code> folder (One file per sensor),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">device_mapping_sf.geojson</span></code> containing two columns : the point geometry (<code class="docutils literal notranslate"><span class="pre">THE_GEOM</span></code>) and a sensor’s unique identifier (<code class="docutils literal notranslate"><span class="pre">DEVEUI`</span></code>). This file is also provided in <code class="docutils literal notranslate"><span class="pre">.csv</span></code> format,</p></li>
+<li><p>the <a class="reference external" href="https://www.openstreetmap.org/">OpenStreetMap</a> (OSM) dataset of the studied area : <code class="docutils literal notranslate"><span class="pre">geneva.osm.pbf</span></code>.</p></li>
+</ol>
+</div></blockquote>
+<section id="sensor-measurements">
+<h3>Sensor measurements<a class="headerlink" href="#sensor-measurements" title="Permalink to this heading"></a></h3>
+<p>Each <code class="docutils literal notranslate"><span class="pre">.csv</span></code> files in the folder <code class="docutils literal notranslate"><span class="pre">devices_data/</span></code> contains environmental noise measurements recorded by individual sensors.
+The columns are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">deveui</span></code> : Unique identifier of the sensor,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">epoch</span></code> : Time of measurement (Epoch format - Unix time, ex:1724567400),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Leq</span></code> : Equivalent continuous sound level in dB(A), calculated over a period (15 min),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Temp</span></code> : Temperature (°C) recorded by the sensor at the time of measurement,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code> : Time of measurement (timestamp format <code class="docutils literal notranslate"><span class="pre">&quot;YYYY-MM-DD</span> <span class="pre">HH:MM:SS&quot;</span></code>).</p></li>
+</ul>
+<p>Below is an illustration with the file <code class="docutils literal notranslate"><span class="pre">4a6.csv</span></code>. Here we can see that 5 measurements were taken, every 15 minutes, between 6:30 and 7:30 am. During this period, noise levels rose slightly, while temperatures remained stable overall (except for the first measurement).</p>
+<table class="colwidths-given docutils align-default" id="id21">
+<caption><span class="caption-text">Informations stored in the sensor’s file <code class="docutils literal notranslate"><span class="pre">4a6.csv</span></code></span><a class="headerlink" href="#id21" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>deveui</p></th>
+<th class="head"><p>epoch</p></th>
+<th class="head"><p>Leq</p></th>
+<th class="head"><p>Temp</p></th>
+<th class="head"><p>timestamp</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>4a6</p></td>
+<td><p>1724567400</p></td>
+<td><p>40.6</p></td>
+<td><p>10.00</p></td>
+<td><p>2024-08-25 06:30:00</p></td>
+</tr>
+<tr class="row-odd"><td><p>4a6</p></td>
+<td><p>1724568300</p></td>
+<td><p>41.9</p></td>
+<td><p>18.125</p></td>
+<td><p>2024-08-25 06:45:00</p></td>
+</tr>
+<tr class="row-even"><td><p>4a6</p></td>
+<td><p>1724569200</p></td>
+<td><p>43.9</p></td>
+<td><p>18.125</p></td>
+<td><p>2024-08-25 07:00:00</p></td>
+</tr>
+<tr class="row-odd"><td><p>4a6</p></td>
+<td><p>1724570100</p></td>
+<td><p>42.3</p></td>
+<td><p>18.125</p></td>
+<td><p>2024-08-25 07:15:00</p></td>
+</tr>
+<tr class="row-even"><td><p>4a6</p></td>
+<td><p>1724571000</p></td>
+<td><p>45.5</p></td>
+<td><p>18.125</p></td>
+<td><p>2024-08-25 07:30:00</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In this tutorial all the values, coming from the 7 sensors, are sampled approximately every 15 minutes, but the exact spacing may vary slightly.</p>
+<p>We could also have had data with a time step of 5 minutes, 10 minutes, 1 hour, etc.</p>
+<p><strong>In all cases, it is important that all the measurements from the sensors are set to the same time step AND that they are phased (i.e. set to the same time intervals).</strong></p>
+</div>
+</section>
+<section id="sensor-localization">
+<h3>Sensor localization<a class="headerlink" href="#sensor-localization" title="Permalink to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">device_mapping_sf.geojson</span></code> columns are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">deveui</span></code> : Unique Identifier of the sensor,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">the_geom</span></code> : 3D point geometry in WKT (Well-Known Text) format — includes coordinates (X, Y) and altitude (Z) in the projected coordinate system.</p></li>
+</ul>
+<p>Below is a map, showing the seven sensors (red points), with their identifier <code class="docutils literal notranslate"><span class="pre">deveui</span></code>.</p>
+<img alt="Sensors in Geneva" src="_images/geneva_sensors.png" />
+</section>
+</section>
+<section id="how-to-compute-the-assimilation">
+<h2>How to compute the assimilation?<a class="headerlink" href="#how-to-compute-the-assimilation" title="Permalink to this heading"></a></h2>
+<p>To compute the data assimilation, you will have to execute several Groovy scripts (Blocks). You can play with them in two ways:</p>
+<ul class="simple">
+<li><p>with the NoiseModelling’s GUI (Graphic User Interface). In this case, the Blocks are listed in the <code class="docutils literal notranslate"><span class="pre">Data_Assimilation</span></code> tab <em>(see screenshot below)</em>,</p></li>
+<li><p>in command line (see how to <a class="reference internal" href="Tutorial_Get_Started_Script.html"><span class="doc">NoiseModelling client line interface (CLI)</span></a>). In this case, just note that they are stored in the folder <code class="docutils literal notranslate"><span class="pre">.../NoiseModelling_x.x.x/scripts/DataAssimilation/</span></code>,</p></li>
+<li><p>in a Groovy script (Block), calling one or various Groovy scripts (Blocks).</p></li>
+</ul>
+<img alt="List of Blocks" src="_images/NM_GUI_wps_list.png" />
+</section>
+<section id="data-simulation">
+<h2>Data Simulation<a class="headerlink" href="#data-simulation" title="Permalink to this heading"></a></h2>
+<p>This process prepares the training dataset from sensor measurements, importing it into NoiseModelling (in a spatial database) and performing various calculations to determine noise levels.</p>
+<p>Maps are generated with all possible combinations, in order to identify the best road configuration in terms of noise levels generated.</p>
+<section id="step-1-generate-all-possible-combinations">
+<h3>Step 1 : Generate all possible combinations<a class="headerlink" href="#step-1-generate-all-possible-combinations" title="Permalink to this heading"></a></h3>
+<p>Generates all possible combinations of values from two given lists and inserts them into a table named <code class="docutils literal notranslate"><span class="pre">ALL_CONFIGURATIONS</span></code>.</p>
+<p>To calculate the combinations, you have to execute the script <code class="docutils literal notranslate"><span class="pre">All_Possible_Configuration</span></code>.</p>
+<p>Two input parameters are needed:</p>
+<ul class="simple">
+<li><p><strong>Traffic values</strong> (<code class="docutils literal notranslate"><span class="pre">trafficValues</span></code>):  variation around standard values for the 4 types of roads: primary, secondary, tertiary and others. When generating a variation of the default map (the set of maps), the values taken by the primary, the secondary, … sections, will be calculated from these parameters (between 1 and <em>n</em>). For example, if <code class="docutils literal notranslate"><span class="pre">&quot;trafficValues&quot;:</span> <span class="pre">&quot;0.01,</span> <span class="pre">1&quot;</span></code>, then the primary sections will take 1% or 100% of their default value. The same applies to the remaining road types.</p></li>
+<li><p><strong>Temperature values</strong> (<code class="docutils literal notranslate"><span class="pre">temperatureValues</span></code>) : the temperatures (in °C - Double). The 1 to <em>n</em> possible temperatures to play (in the example below, 3 temperatures are defined: 10, 15 and 20°C)</p></li>
+</ul>
+<section id="execute-all-possible-configuration-block">
+<h4>Execute <code class="docutils literal notranslate"><span class="pre">All_Possible_Configuration</span></code> Block<a class="headerlink" href="#execute-all-possible-configuration-block" title="Permalink to this heading"></a></h4>
+<p>With the <strong>NoiseModelling GUI</strong></p>
+<img alt="All possible configuration" src="_images/all_possible_configuration_all.png" />
+<p>With <strong>command lines</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>./bin/wps_scripts<span class="w"> </span>-w<span class="w"> </span>./<span class="w"> </span>-s<span class="w"> </span>scripts/Data_Assimilation/All_Possible_Configuration.groovy<span class="w"> </span>-trafficValues<span class="w"> </span><span class="s2">&quot;0.01,1,2&quot;</span><span class="w"> </span>-temperatureValues<span class="w"> </span><span class="s2">&quot;10,15,20&quot;</span>
+</pre></div>
+</div>
+<p>With <strong>Groovy script (Block)</strong></p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">All_Possible_Configuration</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,[</span>
+<span class="w">               </span><span class="s2">&quot;trafficValues&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;0.01,1.0,2.0&quot;</span><span class="o">,</span>
+<span class="w">               </span><span class="s2">&quot;temperatureValues&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;10,15,20&quot;</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+</section>
+<section id="result">
+<span id="all-configuration-result"></span><h4>Result<a class="headerlink" href="#result" title="Permalink to this heading"></a></h4>
+<p>The generated combinations include values for type of roads primary, secondary, tertiary, others, and temperature. The resulting table <code class="docutils literal notranslate"><span class="pre">ALL_CONFIGURATIONS</span></code> has the following columns:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IT</span></code>: Unique identifier of the combination (Primary Key - Integer)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PRIMARY_VAL</span></code>: percentage of primary roads traffic, given by trafficValues (Double)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SECONDARY_VAL</span></code>: … of secondary roads … (Double)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TERTIARY_VAL</span></code>: … of tertiary roads …(Double)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OTHERS_VAL</span></code>: … of other roads …(Double)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TEMP_VAL</span></code>: temperature (Double)</p></li>
+</ul>
+<p>The first 10 lines of this table are shown below:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>IT</p></th>
+<th class="head"><p>PRIMARY_VAL</p></th>
+<th class="head"><p>SECONDARY_VAL</p></th>
+<th class="head"><p>TERTIARY_VAL</p></th>
+<th class="head"><p>OTHERS_VAL</p></th>
+<th class="head"><p>TEMP_VAL</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>10</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>1.0</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>10</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>1.0</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>1.0</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>10</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.01</p></td>
+<td><p>0.01</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.01</p></td>
+<td><p>10</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The total number of combinations can be huge. This value is defined as: (number of <code class="docutils literal notranslate"><span class="pre">trafficValues</span></code> elements) ^ 4  * (number of <code class="docutils literal notranslate"><span class="pre">temperatureValues</span></code> elements).</p>
+<p>In our example, we have <code class="docutils literal notranslate"><span class="pre">&quot;trafficValues&quot;:</span> <span class="pre">&quot;0.01,</span> <span class="pre">1.0,</span> <span class="pre">2.0&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;temperatureValues&quot;:</span> <span class="pre">&quot;10,15,20&quot;</span></code>, so the number of combinations = 3 ^ 4 * 3 = 243 <em>(before filtration - see ‘note’ tab just below)</em></p>
+<p>Even though this table is very important, only part of it will be used for all the maps to be simulated (see <a class="reference internal" href="#generate-all-traffic-emissions-and-maps"><span class="std std-ref">Step 5</span></a>)</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When the combinations are calculated, <strong>a filter is applied to remove inconsistent pairs</strong> (e.g. an ‘other’ type road with much more traffic than a ‘primary’ road).</p>
+<p>As a result, only pairs meeting the following rule are retained: <code class="docutils literal notranslate"><span class="pre">traffic</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">lower</span> <span class="pre">type</span> <span class="pre">of</span> <span class="pre">road</span> <span class="pre">/</span> <span class="pre">traffic</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">higher</span> <span class="pre">type</span> <span class="pre">of</span> <span class="pre">road</span> <span class="pre">&lt;=</span> <span class="pre">20</span></code></p>
+<p>This rule eliminates cases where a road of a lower type would have 20 times more traffic than another of a higher type.</p>
+</div>
+</section>
+</section>
+<section id="step-2-import-sensor-positions">
+<h3>Step 2 : Import sensor positions<a class="headerlink" href="#step-2-import-sensor-positions" title="Permalink to this heading"></a></h3>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">Import_File</span></code> Block*, import the location of the sensors into the NoiseModelling’s database from the .geojson file <code class="docutils literal notranslate"><span class="pre">device_mapping_sf.geojson</span></code>. This file will be stored in a table called <code class="docutils literal notranslate"><span class="pre">SENSORS_LOCATION</span></code>.</p>
+<p>* in the <code class="docutils literal notranslate"><span class="pre">scripts/Import_and_Export/</span></code> folder</p>
+<p>🌍 Since we are in the Geneva area, we are using the <code class="docutils literal notranslate"><span class="pre">CH1903+</span></code> metric coordinate system (identified as <a class="reference external" href="https://epsg.io/2056">EPSG:2056</a>).</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pathFile</span></code> : <code class="docutils literal notranslate"><span class="pre">./resources/dataAssimilation/device_mapping_sf.geojson</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputSRID</span></code> : <code class="docutils literal notranslate"><span class="pre">2056</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tableName</span></code> : <code class="docutils literal notranslate"><span class="pre">SENSORS_LOCATION</span></code></p></li>
+</ul>
+<p>If you are using the Groovy script (Block)</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">Import_File</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,[</span>
+<span class="w">                </span><span class="s2">&quot;pathFile&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">workingFolder</span><span class="o">+</span><span class="s2">&quot;device_mapping_sf.geojson&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;inputSRID&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">2056</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;tableName&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SENSORS_LOCATION&quot;</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+<section id="id1">
+<h4>Result<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
+<p>Once done, you have the table <code class="docutils literal notranslate"><span class="pre">SENSORS_LOCATION</span></code>, presented below.</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 80%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>THE_GEOM</p></th>
+<th class="head"><p>DEVEUI</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>POINT Z(2499748.01396418 1118023.64763599 4)</p></td>
+<td><p>57a</p></td>
+</tr>
+<tr class="row-odd"><td><p>POINT Z(2497926.50847343 1119715.69600241 4)</p></td>
+<td><p>649</p></td>
+</tr>
+<tr class="row-even"><td><p>POINT Z(2499855.07784477 1118032.40228679 4)</p></td>
+<td><p>582</p></td>
+</tr>
+<tr class="row-odd"><td><p>POINT Z(2497737.00785445 1119351.14658559 4)</p></td>
+<td><p>51b</p></td>
+</tr>
+<tr class="row-even"><td><p>POINT Z(2499392.11210506 1118441.15233318 4)</p></td>
+<td><p>4a6</p></td>
+</tr>
+<tr class="row-odd"><td><p>POINT Z(2498584.3443027 1119522.320612 4)</p></td>
+<td><p>650</p></td>
+</tr>
+<tr class="row-even"><td><p>POINT Z(2498084.77671566 1119172.90847018 4)</p></td>
+<td><p>5c5</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="step-3-prepare-sensor-data">
+<h3>Step 3 : Prepare sensor data<a class="headerlink" href="#step-3-prepare-sensor-data" title="Permalink to this heading"></a></h3>
+<p>Now we can extract and prepare the sensors, for a given period. To do so, we are using the <code class="docutils literal notranslate"><span class="pre">Prepare_Sensors</span></code> Groovy script (Block) stored in the folder <code class="docutils literal notranslate"><span class="pre">.../scripts/DataAssimilation/</span></code>.</p>
+<p>This script has the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">startDate</span></code> : the start timestamp for the dataset extraction (in format <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span> <span class="pre">HH:MM:SS</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">endDate</span></code> : the final timestamp for the dataset extraction  (in format <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span> <span class="pre">HH:MM:SS</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">trainingRatio</span></code> : define the percentage of data to be used for training (e.g a value of 0.7 means that 70% of the data will be used for training. The remaining 30% will be used for validation) (Double)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workingFolder</span></code> : folder containing the file <code class="docutils literal notranslate"><span class="pre">device_mapping_sf.csv</span></code>, the OSM file and the <code class="docutils literal notranslate"><span class="pre">devices_data</span></code> folder.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">targetSRID</span></code>: Target projection identifier (also called SRID) of your project (Integer)</p></li>
+</ul>
+<section id="execution">
+<h4>Execution<a class="headerlink" href="#execution" title="Permalink to this heading"></a></h4>
+<p>For this tutorial, you can fill with these informations:</p>
+<ul class="simple">
+<li><p>Start time stamp (<code class="docutils literal notranslate"><span class="pre">startDate</span></code>) : <code class="docutils literal notranslate"><span class="pre">2024-08-25</span> <span class="pre">06:30:00</span></code></p></li>
+<li><p>End time stamp (<code class="docutils literal notranslate"><span class="pre">endDate</span></code>) : <code class="docutils literal notranslate"><span class="pre">2024-08-25</span> <span class="pre">07:30:00</span></code></p></li>
+<li><p>Training data percentage(<code class="docutils literal notranslate"><span class="pre">trainingRatio</span></code>) : <code class="docutils literal notranslate"><span class="pre">0.8</span></code></p></li>
+<li><p>Working directory path with input files (<code class="docutils literal notranslate"><span class="pre">workingFolder</span></code>) : <code class="docutils literal notranslate"><span class="pre">./resources/dataAssimilation/</span></code> (enter the full URL e.g <code class="docutils literal notranslate"><span class="pre">/home/myUserName/Documents/NoiseModelling/resources/dataAssimilation/</span></code>)</p></li>
+<li><p>Target projection identifier (<code class="docutils literal notranslate"><span class="pre">targetSRID</span></code>) : <code class="docutils literal notranslate"><span class="pre">2056</span></code></p></li>
+</ul>
+<p>If you are using the Groovy script (Block)</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">Prepare_Sensors</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,[</span>
+<span class="w">                </span><span class="s2">&quot;startDate&quot;</span><span class="o">:</span><span class="s2">&quot;2024-08-25 06:30:00&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;endDate&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2024-08-25 07:30:00&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;trainingRatio&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.8</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;workingFolder&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;./resources/dataAssimilation/&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;targetSRID&quot;</span><span class="o">:</span><span class="w"> </span><span class="mi">2056</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h4>Result<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
+<p>Once executed, two tables are created:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">SENSORS_MEASUREMENTS</span></code> : representing all the data for this period, with sensor’s position (POINT geometry)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SENSORS_MEASUREMENTS_TRAINING</span></code> : filtering <code class="docutils literal notranslate"><span class="pre">SENSORS_MEASUREMENTS</span></code> to keep only the training dataset. This table (described below) will be used as the RECEIVER table for the following steps.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IDSENSOR</span></code> : Unique identifier of the sensor,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">THE_GEOM</span></code> : The sensor’s position (POINT geometry),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IDRECEIVER</span></code> : The receiver’s unique Id</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH</span></code> : Time of measurement (Epoch format - Unix time, ex:1724567400),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LAEQ</span></code> : Equivalent continuous sound level in dB(A), calculated over a period (15 min),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TEMP</span></code> : Temperature (°C) recorded by the sensor at the time of measurement.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+<section id="step-4-import-buildings-and-roads">
+<h3>Step 4: Import buildings and roads<a class="headerlink" href="#step-4-import-buildings-and-roads" title="Permalink to this heading"></a></h3>
+<p>Now, using the <code class="docutils literal notranslate"><span class="pre">Import_OSM</span></code> Block, you can import buildings and road network (with predicted traffic flows) from the <code class="docutils literal notranslate"><span class="pre">geneva.osm.pbf</span></code> OSM file.</p>
+<section id="id3">
+<h4>Execution<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>Path of the OSM file (<code class="docutils literal notranslate"><span class="pre">pathFile</span></code>): <code class="docutils literal notranslate"><span class="pre">./resources/dataAssimilation/geneva.osm.pbf</span></code></p></li>
+<li><p>Target projection identifier (<code class="docutils literal notranslate"><span class="pre">targetSRID</span></code>): <code class="docutils literal notranslate"><span class="pre">2056</span></code></p></li>
+<li><p>Do not import Surface acoustic absorption (<code class="docutils literal notranslate"><span class="pre">ignoreGround</span></code>): <code class="docutils literal notranslate"><span class="pre">true</span></code></p></li>
+<li><p>Remove tunnels from OSM data (<code class="docutils literal notranslate"><span class="pre">removeTunnels</span></code>): <code class="docutils literal notranslate"><span class="pre">true</span></code></p></li>
+</ul>
+<p><strong>The other parameters are left as default</strong></p>
+<p>If you are using the Groovy script (Block)</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">Import_OSM</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="o">[</span>
+<span class="w">                </span><span class="s2">&quot;pathFile&quot;</span><span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;./resources/dataAssimilation/geneva.osm.pbf&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;targetSRID&quot;</span><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="mi">2056</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;ignoreGround&quot;</span><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;removeTunnels&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h4>Result<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
+<p>The tables <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code> and <code class="docutils literal notranslate"><span class="pre">ROADS</span></code> are created.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are using NoiseModelling with the GUI and wish to visualize the data in a map, you can use the <code class="docutils literal notranslate"><span class="pre">Table_Visualization_Map</span></code> Block. Below is the result with the two table <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code> <em>(left)</em> and <code class="docutils literal notranslate"><span class="pre">ROADS</span></code> <em>(right)</em>.</p>
+<img alt="BUILDINGS and ROADS" src="_images/BUILDINGS_ROADS.png" />
+</div>
+</section>
+</section>
+<section id="step-5-generate-all-traffic-emissions-and-maps">
+<span id="generate-all-traffic-emissions-and-maps"></span><h3>Step 5 : Generate all traffic emissions and maps<a class="headerlink" href="#step-5-generate-all-traffic-emissions-and-maps" title="Permalink to this heading"></a></h3>
+<p>This step consists in generating all the traffic emissions by modifying traffic data according to the road type, using data from <code class="docutils literal notranslate"><span class="pre">ALL_CONFIGURATIONS</span></code> (see <a class="reference internal" href="#all-configuration-result"><span class="std std-ref">Step 1</span></a>).</p>
+<section id="generate-emissions">
+<h4>1. Generate emissions<a class="headerlink" href="#generate-emissions" title="Permalink to this heading"></a></h4>
+<p>To do so, users have first to execute the <code class="docutils literal notranslate"><span class="pre">Data_Simulation</span></code> Block, which has only one <strong>optional</strong> parameter :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">noiseMapLimit</span></code> : final number of maps to be generated (%). If a value is filled, a random selection is applied to keep the percentage(%) of expected maps, based on the LHS (<a class="reference external" href="https://en.wikipedia.org/wiki/Latin_hypercube_sampling">Latin Hypercube Sampling</a>) method.</p></li>
+</ul>
+</section>
+<section id="id5">
+<h4>Execution<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h4>
+<p>For this tutorial, you can fill with this information:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">noiseMapLimit</span></code> : <code class="docutils literal notranslate"><span class="pre">80</span></code></p></li>
+</ul>
+<p>If you are using the Groovy script (Block)</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">DataSimulation</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,[</span>
+<span class="w">                </span><span class="s2">&quot;noiseMapLimit&quot;</span><span class="o">:</span><span class="w"> </span><span class="mi">80</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h4>Result<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h4>
+<p>Two tables are created:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LW_ROADS</span></code> : table containing all traffic emissions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ROADS_GEOM</span></code> : table containing the geometry of roads</p></li>
+</ul>
+</section>
+<section id="calculate-noise-levels">
+<h4>2. Calculate noise levels<a class="headerlink" href="#calculate-noise-levels" title="Permalink to this heading"></a></h4>
+<p>Now, users can calculate the noise levels, emitted from the road sources. To do so, execute the <code class="docutils literal notranslate"><span class="pre">Noise_level_from_source</span></code> Block.</p>
+</section>
+<section id="id7">
+<h4>Execution<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h4>
+<p>For this tutorial, you can fill with this information:</p>
+<ul class="simple">
+<li><p>Source geometry table name (<code class="docutils literal notranslate"><span class="pre">tableSources</span></code>): <code class="docutils literal notranslate"><span class="pre">ROADS_GEOM</span></code></p></li>
+<li><p>Source emission table name (<code class="docutils literal notranslate"><span class="pre">tableSourcesEmission</span></code>): <code class="docutils literal notranslate"><span class="pre">LW_ROADS</span></code></p></li>
+<li><p>Buildings table name (<code class="docutils literal notranslate"><span class="pre">tableBuilding</span></code>): <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code></p></li>
+<li><p>Receivers table name (<code class="docutils literal notranslate"><span class="pre">tableReceivers</span></code>): <code class="docutils literal notranslate"><span class="pre">SENSORS_LOCATION</span></code>,</p></li>
+<li><p>Separate receiver level by source id (<code class="docutils literal notranslate"><span class="pre">confExportSourceId</span></code>): <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p>Maximum source-receiver distance (<code class="docutils literal notranslate"><span class="pre">confMaxSrcDist</span></code>): <code class="docutils literal notranslate"><span class="pre">250</span></code></p></li>
+<li><p>Diffraction on vertical edges (<code class="docutils literal notranslate"><span class="pre">confDiffVertical</span></code>): <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p>Diffraction on horizontal edges (<code class="docutils literal notranslate"><span class="pre">confDiffHorizontal</span></code>): <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
+</ul>
+<p>If you are using the Groovy script (Block)</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">Noise_level_from_source</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="o">[</span>
+<span class="w">                </span><span class="s2">&quot;tableSources&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ROADS_GEOM&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;tableSourcesEmission&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;LW_ROADS&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;tableBuilding&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BUILDINGS&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;tableReceivers&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SENSORS_LOCATION&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;confExportSourceId&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;confMaxSrcDist&quot;</span><span class="o">:</span><span class="w"> </span><span class="mi">250</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;confDiffVertical&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;confDiffHorizontal&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h4>Result<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h4>
+<p>The table <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code> is created and stores all the generated maps <em>(see the three first lines below - you can scroll the table to the right)</em>.</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 25%" />
+<col style="width: 10%" />
+<col style="width: 5%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>IDRECEIVER</p></th>
+<th class="head"><p>PERIOD</p></th>
+<th class="head"><p>THE_GEOM</p></th>
+<th class="head"><p>HZ63</p></th>
+<th class="head"><p>…</p></th>
+<th class="head"><p>HZ8000</p></th>
+<th class="head"><p>LAEQ</p></th>
+<th class="head"><p>LEQ</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1433</p></td>
+<td><p>344</p></td>
+<td><p>SRID=2056;POINT Z (2496912.2844730876 1116884.1525357629 4)</p></td>
+<td><p>44.601295</p></td>
+<td></td>
+<td><p>14.591279</p></td>
+<td><p>38.107693</p></td>
+<td><p>46.40716</p></td>
+</tr>
+<tr class="row-odd"><td><p>1433</p></td>
+<td><p>448</p></td>
+<td><p>SRID=2056;POINT Z (2496912.2844730876 1116884.1525357629 4)</p></td>
+<td><p>46.617485</p></td>
+<td></td>
+<td><p>15.979266</p></td>
+<td><p>40.203373</p></td>
+<td><p>48.37574</p></td>
+</tr>
+<tr class="row-even"><td><p>1433</p></td>
+<td><p>648</p></td>
+<td><p>SRID=2056;POINT Z (2496912.2844730876 1116884.1525357629 4)</p></td>
+<td><p>46.617485</p></td>
+<td></td>
+<td><p>15.979266</p></td>
+<td><p>40.203373</p></td>
+<td><p>48.37574</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="step-6-extract-best-configuration">
+<h3>Step 6 : Extract best configuration<a class="headerlink" href="#step-6-extract-best-configuration" title="Permalink to this heading"></a></h3>
+<p>Many maps have been generated. So now, the best map, <strong>minimizing the difference between the measurements and the simulation</strong>, must be chosen.</p>
+<p>To do so, users have to execute the <code class="docutils literal notranslate"><span class="pre">Extract_Best_Configuration</span></code> script. There are 3 parameters to enter here:</p>
+<ul class="simple">
+<li><p>Measurement table (<code class="docutils literal notranslate"><span class="pre">observationTable</span></code>): name of the table where observed data are stored,</p></li>
+<li><p>Noise map table (<code class="docutils literal notranslate"><span class="pre">noiseMapTable</span></code>): name of the table where simulated data are stored,</p></li>
+<li><p>Temperature tolerance threshold (<code class="docutils literal notranslate"><span class="pre">tempToleranceThreshold</span></code>): tolerance threshold (expressed in °C) for the temperature that allows to extract the map that have a temperature value close to the real temperature.</p></li>
+</ul>
+<p>This process will:</p>
+<ul class="simple">
+<li><p>first determine the LAEQ difference between simulated (<code class="docutils literal notranslate"><span class="pre">noiseMapTable</span></code>) and observed (<code class="docutils literal notranslate"><span class="pre">observationTable</span></code>) values,</p></li>
+<li><p>then calculate, for each time steps and for all maps, the median value of the difference between the two values. <strong>The map having the smallest median value will be the best one</strong>.</p></li>
+</ul>
+<section id="id9">
+<h4>Execution<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h4>
+<p>For this tutorial, you can fill with this information:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">observationTable</span></code> : <code class="docutils literal notranslate"><span class="pre">SENSORS_MEASUREMENTS_TRAINING</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">noiseMapTable</span></code> : <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tempToleranceThreshold</span></code> : <code class="docutils literal notranslate"><span class="pre">5</span></code></p></li>
+</ul>
+<p>If you are using the Groovy script (Block)</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">Extract_Best_Configuration</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,[</span>
+<span class="w">                </span><span class="s2">&quot;observationTable&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SENSORS_MEASUREMENTS_TRAINING&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;noiseMapTable&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RECEIVERS_LEVEL&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;tempToleranceThreshold&quot;</span><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="mi">5</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+</section>
+<section id="id10">
+<h4>Result<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h4>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The best configuration is found for each time step (here 15 minutes)</p>
+</div>
+<p>As a result, the <code class="docutils literal notranslate"><span class="pre">BEST_CONFIGURATION_FULL</span></code> table is created (see table below). This table is made of the following columns:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EPOCH</span></code> : Time of measurement (Epoch format - Unix time, ex:1724567400),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MIN_MEDIAN_DIFF</span></code> : the minimum median of the difference between simulated and measured LAEQs (this is how the best maps are chosen)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IT</span></code> : Unique identifier of the combination (Primary Key - Integer)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PRIMARY_VAL</span></code> : percentage of primary roads traffic, given by <code class="docutils literal notranslate"><span class="pre">trafficValues</span></code> (Double)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SECONDARY_VAL</span></code> : … secondary roads …</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TERTIARY_VAL</span></code> : … tertiary roads …</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OTHERS_VAL</span></code> : … other roads …</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TEMP_VAL</span></code> : temperature (Integer)</p></li>
+</ul>
+<table class="colwidths-given docutils align-default" id="id22">
+<caption><span class="caption-text">Table <code class="docutils literal notranslate"><span class="pre">BEST_CONFIGURATION_FULL</span></code> showing one best configuration for each of the time steps</span><a class="headerlink" href="#id22" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 10%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>EPOCH</p></th>
+<th class="head"><p>MIN_MEDIAN_DIFF</p></th>
+<th class="head"><p>IT</p></th>
+<th class="head"><p>PRIMARY_VAL</p></th>
+<th class="head"><p>SECONDARY_VAL</p></th>
+<th class="head"><p>TERTIARY_VAL</p></th>
+<th class="head"><p>OTHERS_VAL</p></th>
+<th class="head"><p>TEMP_VAL</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1724567400</p></td>
+<td><p>9.3827</p></td>
+<td><p>366</p></td>
+<td><p>2.8</p></td>
+<td><p>2.8</p></td>
+<td><p>0.01</p></td>
+<td><p>0.2</p></td>
+<td><p>10</p></td>
+</tr>
+<tr class="row-odd"><td><p>1724569200</p></td>
+<td><p>11.2629</p></td>
+<td><p>577</p></td>
+<td><p>3.0</p></td>
+<td><p>0.2</p></td>
+<td><p>3.0</p></td>
+<td><p>0.2</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-even"><td><p>1724570100</p></td>
+<td><p>11.2</p></td>
+<td><p>577</p></td>
+<td><p>3.0</p></td>
+<td><p>0.2</p></td>
+<td><p>3.0</p></td>
+<td><p>0.2</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-odd"><td><p>1724571000</p></td>
+<td><p>11.625</p></td>
+<td><p>577</p></td>
+<td><p>3.0</p></td>
+<td><p>0.2</p></td>
+<td><p>3.0</p></td>
+<td><p>0.2</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-even"><td><p>1724568300</p></td>
+<td><p>11.1953</p></td>
+<td><p>679</p></td>
+<td><p>3.0</p></td>
+<td><p>3.0</p></td>
+<td><p>0.2</p></td>
+<td><p>0.2</p></td>
+<td><p>25</p></td>
+</tr>
+<tr class="row-odd"><td><p>1724569201</p></td>
+<td><p>7.8047</p></td>
+<td><p>679</p></td>
+<td><p>3.0</p></td>
+<td><p>3.0</p></td>
+<td><p>0.2</p></td>
+<td><p>0.2</p></td>
+<td><p>25</p></td>
+</tr>
+<tr class="row-even"><td><p>1724569202</p></td>
+<td><p>10.3047</p></td>
+<td><p>679</p></td>
+<td><p>3.0</p></td>
+<td><p>3.0</p></td>
+<td><p>0.2</p></td>
+<td><p>0.2</p></td>
+<td><p>25</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="execute-simulation-generate-the-dynamic-map">
+<h2>Execute Simulation: Generate the Dynamic Map<a class="headerlink" href="#execute-simulation-generate-the-dynamic-map" title="Permalink to this heading"></a></h2>
+<p>This part is made to execute a dynamic traffic calibration process, using the best configuration.</p>
+<section id="step-7-generate-new-receivers">
+<span id="generate-new-receivers"></span><h3>Step 7 : Generate new receivers<a class="headerlink" href="#step-7-generate-new-receivers" title="Permalink to this heading"></a></h3>
+<p>Create a regular grid of receivers between the buildings.</p>
+<p>To do so, use the <code class="docutils literal notranslate"><span class="pre">Regular_Grid</span></code> script (in the <code class="docutils literal notranslate"><span class="pre">/Receivers/</span></code> scripts folder).</p>
+<section id="id11">
+<h4>Execution<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h4>
+<p>For this tutorial, you can fill with this information:</p>
+<ul class="simple">
+<li><p>Buildings table name (<code class="docutils literal notranslate"><span class="pre">buildingTableName</span></code>): <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code></p></li>
+<li><p>Table bounding box name (<code class="docutils literal notranslate"><span class="pre">fenceTableName</span></code>): <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code></p></li>
+<li><p>Source table name (<code class="docutils literal notranslate"><span class="pre">sourcesTableName</span></code>): <code class="docutils literal notranslate"><span class="pre">ROADS</span></code></p></li>
+<li><p>Offset (<code class="docutils literal notranslate"><span class="pre">delta</span></code>): <code class="docutils literal notranslate"><span class="pre">200</span></code> (1 receiver every 200m)</p></li>
+</ul>
+<p>If you are using the Groovy script (Block)</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">Regular_Grid</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,[</span>
+<span class="w">              </span><span class="s2">&quot;buildingTableName&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BUILDINGS&quot;</span><span class="o">,</span>
+<span class="w">              </span><span class="s2">&quot;fenceTableName&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BUILDINGS&quot;</span><span class="o">,</span>
+<span class="w">              </span><span class="s2">&quot;sourcesTableName&quot;</span><span class="o">:</span><span class="s2">&quot;ROADS&quot;</span><span class="o">,</span>
+<span class="w">              </span><span class="s2">&quot;delta&quot;</span><span class="o">:</span><span class="w"> </span><span class="mi">200</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+</section>
+<section id="id12">
+<h4>Result<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h4>
+<p>The table <code class="docutils literal notranslate"><span class="pre">RECEIVERS</span></code> is created.</p>
+<table class="colwidths-given docutils align-default" id="id23">
+<caption><span class="caption-text">Three first lines of the table <code class="docutils literal notranslate"><span class="pre">RECEIVERS</span></code></span><a class="headerlink" href="#id23" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>THE_GEOM</p></th>
+<th class="head"><p>ID_COL</p></th>
+<th class="head"><p>ID_ROW</p></th>
+<th class="head"><p>PK</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>POINT Z(2496682.2844730876 1116854.1525357629 4)</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>POINT Z(2496882.2844730876 1116854.1525357629 4)</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>POINT Z(2497482.2844730876 1116854.1525357629 4)</p></td>
+<td><p>5</p></td>
+<td><p>1</p></td>
+<td><p>5</p></td>
+</tr>
+</tbody>
+</table>
+<a class="reference internal image-reference" href="_images/RECEIVERS.png"><img alt="RECEIVERS map" src="_images/RECEIVERS.png" style="width: 80%;" /></a>
+</section>
+</section>
+<section id="step-8-adding-sensors-as-receivers">
+<h3>Step 8 : Adding sensors as receivers<a class="headerlink" href="#step-8-adding-sensors-as-receivers" title="Permalink to this heading"></a></h3>
+<p><strong>Optionally</strong>, add the sensors location into the <code class="docutils literal notranslate"><span class="pre">RECEIVERS</span></code> table (just created before).</p>
+<section id="id13">
+<h4>Execution<a class="headerlink" href="#id13" title="Permalink to this heading"></a></h4>
+<p>In the <code class="docutils literal notranslate"><span class="pre">Merged_Sensors_Receivers</span></code> Block, fill these information:</p>
+<ul class="simple">
+<li><p>The receiver table (<code class="docutils literal notranslate"><span class="pre">tableReceivers</span></code>): <code class="docutils literal notranslate"><span class="pre">RECEIVERS</span></code></p></li>
+<li><p>The sensors table (<code class="docutils literal notranslate"><span class="pre">tableSensors</span></code>): <code class="docutils literal notranslate"><span class="pre">SENSORS_LOCATION</span></code></p></li>
+</ul>
+<p>If you are using the Groovy script (Block)</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">Merged_Sensors_Receivers</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,[</span>
+<span class="w">                </span><span class="s2">&quot;tableReceivers&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RECEIVERS&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;tableSensors&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SENSORS_LOCATION&quot;</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+</section>
+<section id="id14">
+<h4>Result<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">RECEIVERS</span></code> table has now new points, the sensor’s one</p>
+<a class="reference internal image-reference" href="_images/RECEIVERS_and_SENSORS.png"><img alt="RECEIVERS and SENSORS map" src="_images/RECEIVERS_and_SENSORS.png" style="width: 80%;" /></a>
+</section>
+</section>
+<section id="step-9-generate-dynamic-road-emissions">
+<h3>Step 9 : Generate dynamic road emissions<a class="headerlink" href="#step-9-generate-dynamic-road-emissions" title="Permalink to this heading"></a></h3>
+<p>For each time step (here 15 min), generate an emissions map for all the receivers, corresponding to the best configuration (for this time step).</p>
+<p>To do so, use the <code class="docutils literal notranslate"><span class="pre">NMs_4_BestConfigs</span></code> Block. This Block has two inputs:</p>
+<ul class="simple">
+<li><p>The best configuration table (<code class="docutils literal notranslate"><span class="pre">bestConfig</span></code>)</p></li>
+<li><p>The road emission table (<code class="docutils literal notranslate"><span class="pre">roadEmission</span></code>)</p></li>
+</ul>
+<section id="id15">
+<h4>Execution<a class="headerlink" href="#id15" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bestConfig</span></code> : <code class="docutils literal notranslate"><span class="pre">BEST_CONFIGURATION_FULL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">roadEmission</span></code> : <code class="docutils literal notranslate"><span class="pre">LW_ROADS</span></code></p></li>
+</ul>
+<p>If you are using the Groovy script (Block)</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">NMs_4_BestConfigs</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">)</span>
+<span class="w">                </span><span class="s2">&quot;bestConfig&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BEST_CONFIGURATION_FULL&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;roadEmission&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;LW_ROADS&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="id16">
+<h4>Result<a class="headerlink" href="#id16" title="Permalink to this heading"></a></h4>
+<p>The table <code class="docutils literal notranslate"><span class="pre">LW_ROADS_best</span></code> is created, with the following structure:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">PK</span></code> : Unique Identifier</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IDSOURCE</span></code> : Source id</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PERIOD</span></code> : time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HZ63</span></code> : noise level for the 63 HZ frequency band</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HZ125</span></code> : … for 125 HZ …</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HZ250</span></code> : … for 250 HZ …</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HZ500</span></code> : … for 500 HZ …</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HZ1000</span></code> : … for 1000 HZ …</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HZ2000</span></code> : … for 2000 HZ …</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HZ4000</span></code> : … for 4000 HZ …</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HZ8000</span></code> : … for 8000 HZ …</p></li>
+</ul>
+</section>
+</section>
+<section id="step-10-generate-the-noise-levels">
+<h3>Step 10 : Generate the noise levels<a class="headerlink" href="#step-10-generate-the-noise-levels" title="Permalink to this heading"></a></h3>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">Noise_level_from_source</span></code> Block, we can finally compute the noise level from the network sources emission (<code class="docutils literal notranslate"><span class="pre">LW_ROADS_best</span></code>) based on all the receivers.</p>
+<section id="id17">
+<h4>Execution<a class="headerlink" href="#id17" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>Source geometry table name (<code class="docutils literal notranslate"><span class="pre">tableSources</span></code>): <code class="docutils literal notranslate"><span class="pre">ROADS_GEOM</span></code></p></li>
+<li><p>Source emission table name (<code class="docutils literal notranslate"><span class="pre">tableSourcesEmission</span></code>): <code class="docutils literal notranslate"><span class="pre">LW_ROADS_best</span></code></p></li>
+<li><p>Buildings table name (<code class="docutils literal notranslate"><span class="pre">tableBuilding</span></code>): <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code></p></li>
+<li><p>Receivers table name (<code class="docutils literal notranslate"><span class="pre">tableReceivers</span></code>): <code class="docutils literal notranslate"><span class="pre">RECEIVERS</span></code></p></li>
+<li><p>Separate receiver level by source id (<code class="docutils literal notranslate"><span class="pre">confExportSourceId</span></code>): <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p>Maximum source-receiver distance (<code class="docutils literal notranslate"><span class="pre">confMaxSrcDist</span></code>): <code class="docutils literal notranslate"><span class="pre">250</span></code></p></li>
+<li><p>Diffraction on vertical edges (<code class="docutils literal notranslate"><span class="pre">confDiffVertical</span></code>): <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p>Diffraction on horizontal edges (<code class="docutils literal notranslate"><span class="pre">confDiffHorizontal</span></code>): <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
+</ul>
+<p>If you are using the Groovy script (Block)</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">Noise_level_from_source</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,</span><span class="w"> </span><span class="o">[</span>
+<span class="w">                      </span><span class="s2">&quot;tableSources&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ROADS_GEOM&quot;</span><span class="o">,</span>
+<span class="w">                      </span><span class="s2">&quot;tableSourcesEmission&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;LW_ROADS_best&quot;</span><span class="o">,</span>
+<span class="w">                      </span><span class="s2">&quot;tableBuilding&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BUILDINGS&quot;</span><span class="o">,</span>
+<span class="w">                      </span><span class="s2">&quot;tableReceivers&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RECEIVERS&quot;</span><span class="o">,</span>
+<span class="w">                      </span><span class="s2">&quot;confExportSourceId&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="o">,</span>
+<span class="w">                      </span><span class="s2">&quot;confMaxSrcDist&quot;</span><span class="o">:</span><span class="w"> </span><span class="mi">250</span><span class="o">,</span>
+<span class="w">                      </span><span class="s2">&quot;confDiffVertical&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="o">,</span>
+<span class="w">                      </span><span class="s2">&quot;confDiffHorizontal&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+</section>
+<section id="id18">
+<h4>Result<a class="headerlink" href="#id18" title="Permalink to this heading"></a></h4>
+<p>We obtain the table <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code>.</p>
+</section>
+</section>
+<section id="step-11-create-visualize-the-resulting-table">
+<h3>Step 11 : Create &amp; visualize the resulting table<a class="headerlink" href="#step-11-create-visualize-the-resulting-table" title="Permalink to this heading"></a></h3>
+<p>Create a table, called <code class="docutils literal notranslate"><span class="pre">ASSIMILATED_MAPS</span></code>, containing both sound levels and configuration parameters.</p>
+<p>To do so, execute the <code class="docutils literal notranslate"><span class="pre">Create_Assimilated_Maps</span></code> Block, with the 3 following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bestConfigTable</span></code> : the best configuration table name</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">receiverLevel</span></code> : the receivers level table name</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputTable</span></code> : the output table name</p></li>
+</ul>
+<section id="id19">
+<h4>Execution<a class="headerlink" href="#id19" title="Permalink to this heading"></a></h4>
+<p>For this tutorial, you can fill with this information:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bestConfigTable</span></code> : <code class="docutils literal notranslate"><span class="pre">BEST_CONFIGURATION_FULL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">receiverLevel</span></code> : <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputTable</span></code> : <code class="docutils literal notranslate"><span class="pre">ASSIMILATED_MAPS</span></code></p></li>
+</ul>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">Create_Assimilated_Maps</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,[</span>
+<span class="w">                </span><span class="s2">&quot;bestConfigTable&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BEST_CONFIGURATION_FULL&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;receiverLevel&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RECEIVERS_LEVEL&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="s2">&quot;outputTable&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ASSIMILATED_MAPS&quot;</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+</section>
+<section id="id20">
+<h4>Result<a class="headerlink" href="#id20" title="Permalink to this heading"></a></h4>
+<p>The resulting <code class="docutils literal notranslate"><span class="pre">ASSIMILATED_MAPS</span></code> table has the following columns:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> : time of the measure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LAEQ</span></code> : noise level (dB(A))</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">THE_GEOM</span></code> : receiver’s geometry (POINT)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IDRECEIVER</span></code> : receiver’s unique identifier</p></li>
+</ul>
+<table class="colwidths-given docutils align-default" id="id24">
+<caption><span class="caption-text">Three first lines of the table <code class="docutils literal notranslate"><span class="pre">RECEIVERS</span></code></span><a class="headerlink" href="#id24" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>TIMESTAMP</p></th>
+<th class="head"><p>LAEQ</p></th>
+<th class="head"><p>THE_GEOM</p></th>
+<th class="head"><p>IDRECEIVER</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1724567400</p></td>
+<td><p>38.16436</p></td>
+<td><p>SRID=2056;POINT Z (2496912.2844730876 1116884.1525357629 4)</p></td>
+<td><p>1433</p></td>
+</tr>
+<tr class="row-odd"><td><p>1724567400</p></td>
+<td><p>39.29134</p></td>
+<td><p>SRID=2056;POINT Z (2496912.2844730876 1116864.1525357629 4)</p></td>
+<td><p>1197</p></td>
+</tr>
+<tr class="row-even"><td><p>1724567400</p></td>
+<td><p>42.9573</p></td>
+<td><p>SRID=2056;POINT Z (2496912.2844730876 1116844.1525357629 4)</p></td>
+<td><p>961</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="visualize-the-map">
+<h4>Visualize the map<a class="headerlink" href="#visualize-the-map" title="Permalink to this heading"></a></h4>
+<p>You can now export the <code class="docutils literal notranslate"><span class="pre">ASSIMILATED_MAPS</span></code> table, for example as a Shapefile, using the <code class="docutils literal notranslate"><span class="pre">Export_Table</span></code> Block and then import it into your favorite GIS app (such as <a class="reference external" href="https://qgis.org/">QGIS</a>) to visualize the results.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">exportPath</span></code> : <code class="docutils literal notranslate"><span class="pre">results/ASSIMILATED_MAPS.shp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tableToExport</span></code>: <code class="docutils literal notranslate"><span class="pre">ASSIMILATED_MAPS</span></code></p></li>
+</ul>
+<p>or</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="k">new</span><span class="w"> </span><span class="n">Export_Table</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="n">connection</span><span class="o">,</span>
+<span class="w">                </span><span class="o">[</span><span class="s2">&quot;exportPath&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;results/ASSIMILATED_MAPS.shp&quot;</span><span class="o">,</span>
+<span class="w">                 </span><span class="s2">&quot;tableToExport&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ASSIMILATED_MAPS&quot;</span>
+<span class="o">])</span>
+</pre></div>
+</div>
+<p>The resulting map may looks like this:</p>
+<img alt="ASSIMILATED_MAPS map" src="_images/ASSIMILATED_MAPS_200m.png" />
+<p><strong>Legend</strong>: Here, we applied the color scheme proposed by Beate Tomio (see <a class="reference internal" href="Noise_Map_Color_Scheme.html"><span class="doc">Noise Map Color Scheme</span></a>) on the column <code class="docutils literal notranslate"><span class="pre">LAEQ</span></code>. We also added the input sensors, the buildings (medium grey) and the roads (light grey).</p>
+<p><strong>Remark</strong>: In this example, we have chosen to have a receiver every 200m (see <a class="reference internal" href="#generate-new-receivers"><span class="std std-ref">Step 7</span></a>). To achieve a denser rendering, we could have made the receiver grid denser. Below is an example, on the same area, but with a 20m grid.</p>
+<img alt="ASSIMILATED_MAPS map" src="_images/ASSIMILATED_MAPS.png" />
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Tutorial_Dynamic.html" class="btn btn-neutral float-left" title="Dynamic Maps - GUI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Tutorial_Get_Started_Script.html" class="btn btn-neutral float-right" title="NoiseModelling client line interface (CLI)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

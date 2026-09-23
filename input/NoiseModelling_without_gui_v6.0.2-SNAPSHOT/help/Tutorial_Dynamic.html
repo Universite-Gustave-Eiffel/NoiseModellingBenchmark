@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Maps - GUI &mdash; NoiseModelling 6.0.2-SNAPSHOT documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data Assimilation" href="Tutorial_Data_Assimilation.html" />
+    <link rel="prev" title="MATSim - GUI" href="Tutorial_Matsim.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> NoiseModelling
+          </a>
+              <div class="version">
+                6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">NoiseModelling presentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Numerical_Model.html">Numerical Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation_guide.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Scientific_production.html">Scientific production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community.html">Community</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Input tables &amp; parameters</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input_buildings.html">Buildings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_roads.html">Roads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_source.html">Sound source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_railways.html">Railways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_ground.html">Ground surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_dem.html">DEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_receivers.html">Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input_acoustics.html">Acoustic parameters</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_GUI.html">Get Started - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_Point_Source.html">Noise Map from Point Source - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Noise_Map_From_OSM.html">Noise Map from OSM - GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Matsim.html">MATSim - GUI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dynamic Maps - GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-word-of-caution">A word of caution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#case-1-a-road-network-with-a-single-traffic-flow">Case 1: A Road Network with a Single Traffic Flow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import-the-road-network-with-arbitrary-traffic-flows-and-buildings-from-an-osm-file">Import the road network (with arbitrary traffic flows) and buildings from an OSM file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-receiver-grid-using-25-meters-step-in-a-grid-pattern">Create a receiver grid using 25 meters step in a grid pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#convert-traffic-to-dynamic-traffic-flow">Convert traffic to dynamic traffic flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compute-noise-level-at-receiver-points-for-each-receiver-period-combination">Compute noise level at receiver points for each receiver-period combination</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compute-noise-indicators">Compute noise indicators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compute-iso-surfaces-for-each-time-period">Compute iso-surfaces for each time period</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#export-map-to-qgis">Export Map to QGis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configure-qgis-to-display-time-dependant-map">Configure QGis to display time dependant map</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#case-2-a-road-network-with-traffic-flows-at-regular-intervals">Case 2: A Road Network with Traffic Flows at Regular Intervals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import-buildings-for-your-study-area">Import Buildings for your study area</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#import-the-road-network">Import the road network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Create a receiver grid using 25 meters step in a grid pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#split-geometry-and-traffic-periods">Split geometry and traffic periods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Compute noise level at receiver points for each receiver-period combination</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Compute noise indicators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualizing-results">Visualizing results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#case-3-spatio-temporal-data-of-moving-sources">Case 3: Spatio-Temporal Data of Moving Sources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Import Buildings for your study area</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#import-the-receivers-or-generate-your-set-of-receivers-using-regular-grid-script-for-example">Import the receivers (or generate your set of receivers using Regular_Grid script for example)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Import the road network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#add-primary-key-column-to-the-road-network-optional">Add primary key column to the road network (Optional)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#import-the-vehicle-trajectories">Import the vehicle trajectories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-point-sources-from-the-network-every-10-meters">Create point sources from the network every 10 meters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-table-with-the-noise-level-from-the-vehicles-and-snap-the-vehicles-to-the-point-sources">Create a table with the noise level from the vehicles and snap the vehicles to the point sources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compute-noise-attenuation-for-each-receiver-source-pairs">Compute noise attenuation for each receiver-source pairs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apply-attenuation-on-emission-levels">Apply attenuation on emission levels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Compute noise indicators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Visualizing results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Data_Assimilation.html">Data Assimilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Get_Started_Script.html">NoiseModelling client line interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials_FAQ.html">Tutorials - FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Functions.html">List of functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Interface</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Blocks.html">Blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Builder.html">Builder</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Advanced Users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Own_Blocks.html">Create your own block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModelling_db.html">Access NoiseModelling database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NoiseModellingOnPostGIS.html">Use NoiseModelling with a PostGIS database</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Get_Started_Dev.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Cnossos_Report.html">Conformity to ISO 17534-1:2015</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Noise_Map_Color_Scheme.html">Noise Map Color Scheme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NoiseModelling</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Dynamic Maps - GUI</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Tutorial_Dynamic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dynamic-maps-gui">
+<h1>Dynamic Maps - GUI<a class="headerlink" href="#dynamic-maps-gui" title="Permalink to this heading"></a></h1>
+<p>Many publications have emerged showcasing the use of <strong>NoiseModelling</strong> to create dynamic maps (see <a class="reference external" href="https://noisemodelling.readthedocs.io/en/latest/Scientific_production.html">scientific production</a>).</p>
+<p>If you’d like to achieve similar results but you feel a bit lost, this tutorial is here to help you navigate through the process.</p>
+<p>There are three main approaches to creating dynamic maps using NoiseModelling:</p>
+<ol class="arabic simple">
+<li><p><strong>A road network with a single traffic flow</strong>
+You have a road network and a single traffic flow associated with a specific time period (e.g., 24h). You want to compute dynamic indicators such as <strong>L10</strong>, <strong>L90</strong>, or the <strong>number of events exceeding a threshold</strong> or to get time series for the same time period.</p></li>
+<li><p><strong>A road network with traffic flows at regular intervals</strong>
+You have a road network and traffic flow data available at regular intervals (e.g., hourly or every 15 minutes), and you want to generate a dynamic noise map every 15 min.</p></li>
+<li><p><strong>A road network with associated spatio-temporal data of moving sources</strong>
+You have spatio-temporal information about vehicles moving around a network (e.g., from traffic simulations such as Symuvia or SUMO; or from trajectories of drones). You want to compute <strong>time-series data at each receiver</strong> corresponding to the passage of these sources.</p></li>
+</ol>
+<section id="a-word-of-caution">
+<h2>A word of caution<a class="headerlink" href="#a-word-of-caution" title="Permalink to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In all these cases, we assume that the <strong>sound attenuation between the source and receiver remains constant throughout the calculation</strong>. This is a strong approximation, and there are ways to account for variations, but this tutorial will not cover such specific cases.</p>
+<p>Dynamic mapping has its subtleties, and it’s important to be aware of them to avoid errors. We recommend referring to the following documents for a better understanding of these concepts:</p>
+<ul class="simple">
+<li><p>Can, A., &amp; Aumond, P. (2018). Estimation of road traffic noise emissions: The influence of speed and acceleration. Transportation Research Part D: Transport and Environment, 58, 155-171.</p></li>
+<li><p>Gozalo, G. R., Aumond, P., &amp; Can, A. (2020). Variability in sound power levels: Implications for static and dynamic traffic models. Transportation Research Part D: Transport and Environment, 84, 102339.</p></li>
+<li><p>Le Bescond, V., Can, A., Aumond, P., &amp; Gastineau, P. (2021). Open-source modeling chain for the dynamic assessment of road traffic noise exposure. Transportation Research Part D: Transport and Environment, 94, 102793.</p></li>
+</ul>
+<p>Assumptions are freely made, specific formats are expected, and so on. To understand the required data formats and check the expected structure of the input tables, please refer also to the example input tables and spatial layers!</p>
+</div>
+</section>
+<section id="case-1-a-road-network-with-a-single-traffic-flow">
+<h2>Case 1: A Road Network with a Single Traffic Flow<a class="headerlink" href="#case-1-a-road-network-with-a-single-traffic-flow" title="Permalink to this heading"></a></h2>
+<section id="import-the-road-network-with-arbitrary-traffic-flows-and-buildings-from-an-osm-file">
+<h3>Import the road network (with arbitrary traffic flows) and buildings from an OSM file<a class="headerlink" href="#import-the-road-network-with-arbitrary-traffic-flows-and-buildings-from-an-osm-file" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Import_OSM</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Path</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">osm</span> <span class="pre">file</span></code>: Enter the path of the provided Open Street map file (can be relative to NoiseModelling): <code class="docutils literal notranslate"><span class="pre">resources/map.osm.gz</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Target</span> <span class="pre">projection</span> <span class="pre">identifier</span></code>: Enter the official France projection for this tutorial files <code class="docutils literal notranslate"><span class="pre">2154</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Remove</span> <span class="pre">tunnels</span></code>: Check it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Do</span> <span class="pre">not</span> <span class="pre">import</span> <span class="pre">surface</span></code>: Check it as we will not use this output</p></li>
+</ol>
+<figure class="align-center">
+<img alt="_images/ImportOSM.png" src="_images/ImportOSM.png" />
+</figure>
+</section>
+<section id="create-a-receiver-grid-using-25-meters-step-in-a-grid-pattern">
+<h3>Create a receiver grid using 25 meters step in a grid pattern<a class="headerlink" href="#create-a-receiver-grid-using-25-meters-step-in-a-grid-pattern" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Regular_Grid</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Table</span> <span class="pre">bounding</span> <span class="pre">box</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">ROADS</span></code> The receivers will use  the envelope of the ROADS table.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Offset</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">15</span></code> for 15 meters distance</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Output</span> <span class="pre">triangle</span> <span class="pre">table</span></code>: Check it in order to be able to generate the iso contours</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">height</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">1.5</span></code></p></li>
+</ol>
+<figure class="align-center">
+<img alt="_images/RegularGrid.png" src="_images/RegularGrid.png" />
+</figure>
+</section>
+<section id="convert-traffic-to-dynamic-traffic-flow">
+<h3>Convert traffic to dynamic traffic flow<a class="headerlink" href="#convert-traffic-to-dynamic-traffic-flow" title="Permalink to this heading"></a></h3>
+<p>From the network with traffic flow to individual trajectories with associated Lw</p>
+<ol class="arabic simple">
+<li><p>The Probabilistic method, this method places randomly the vehicles on the network according to the traffic flow</p></li>
+<li><p>The Poisson method places the vehicles on the network according to the traffic flow following a poisson law, it keeps a coherence in the time series of the noise level</p></li>
+</ol>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">Dynamic:Flow_2_Noisy_Vehicles</span></code> Block:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Method</span></code>: Select <code class="docutils literal notranslate"><span class="pre">TNP</span></code> to use the Poisson method</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Roads</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">ROADS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestep</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">duration</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">60</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gridStep</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">10</span></code></p></li>
+</ol>
+</section>
+<section id="compute-noise-level-at-receiver-points-for-each-receiver-period-combination">
+<h3>Compute noise level at receiver points for each receiver-period combination<a class="headerlink" href="#compute-noise-level-at-receiver-points-for-each-receiver-period-combination" title="Permalink to this heading"></a></h3>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">NoiseModelling:Noise_level_from_source</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Buildings</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">geometry</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">SOURCES_GEOM</span></code> Contains only the geometries of the sources (points)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">emission</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">SOURCES_EMISSION</span></code> Contains for each source index and period the noise emission</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Receivers</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">RECEIVERS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Max</span> <span class="pre">Error</span> <span class="pre">(dB)</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">3</span></code> Will skip further sources, reduces the computation time for this tutorial</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Maximum</span> <span class="pre">source</span> <span class="pre">receiver</span> <span class="pre">distance</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">800</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Diffraction</span> <span class="pre">on</span> <span class="pre">horizontal</span> <span class="pre">edges</span></code>: Check it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Order</span> <span class="pre">of</span> <span class="pre">reflexion</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">0</span></code></p></li>
+</ol>
+</section>
+<section id="compute-noise-indicators">
+<h3>Compute noise indicators<a class="headerlink" href="#compute-noise-indicators" title="Permalink to this heading"></a></h3>
+<p>This step is optional, it computes the LA10, LA50 and LA90 time-aggregated indicators at each receiver from the table RECEIVERS_LEVEL</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">Acoustic_Tools:DynamicIndicators</span></code> WPS Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tableName</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">columnName</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">LAEQ</span></code></p></li>
+</ol>
+</section>
+<section id="compute-iso-surfaces-for-each-time-period">
+<h3>Compute iso-surfaces for each time period<a class="headerlink" href="#compute-iso-surfaces-for-each-time-period" title="Permalink to this heading"></a></h3>
+<p>Generate a dynamic iso-contour map for each time period based on the LAEQ of the receivers.</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">Acoustic_Tools:Create_Isosurface</span></code> WPS Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Sound</span> <span class="pre">levels</span> <span class="pre">table</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Polygon</span> <span class="pre">smoothing</span> <span class="pre">coefficient</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">0</span></code></p></li>
+</ol>
+</section>
+<section id="export-map-to-qgis">
+<h3>Export Map to QGis<a class="headerlink" href="#export-map-to-qgis" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Export_Table</span></code> Block to export the following tables as files in any folder.</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CONTOURING_NOISE_MAP</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ROADS</span></code></p></li>
+</ol>
+</section>
+<section id="configure-qgis-to-display-time-dependant-map">
+<h3>Configure QGis to display time dependant map<a class="headerlink" href="#configure-qgis-to-display-time-dependant-map" title="Permalink to this heading"></a></h3>
+<p>Load the 3 files in QGIS. <code class="docutils literal notranslate"><span class="pre">Contouring_noise_map</span></code> must be ordered as the last layer (rendered in the bottom)</p>
+<p>Load the style for contouring noise map:</p>
+<figure class="align-center">
+<img alt="Load style menu in QGis" src="_images/loadstyle.png" />
+</figure>
+<p>Load the style located in the NoiseModelling folder <code class="docutils literal notranslate"><span class="pre">Docs/styles/style_beate_tomio.sld</span></code></p>
+<p>In QGis, in time window, paste the following formulae:</p>
+<p>Start expression: <code class="docutils literal notranslate"><span class="pre">datetime_from_epoch(to_real(&quot;PERIOD&quot;)*1000+1739869220000)</span></code>
+End expression: <code class="docutils literal notranslate"><span class="pre">datetime_from_epoch(to_real(&quot;PERIOD&quot;)*1000+1739869221000)</span></code></p>
+<figure class="align-center">
+<img alt="Layer setting, temporal tab in QGis" src="_images/temporal_settings.png" />
+</figure>
+<p>Epoch is in millisecond, so we multiply by 1000 and add any base epoch time. The step end 1000 milliseconds after the start period.</p>
+<p>With the navigation bar of QGis you can select the period to display.</p>
+<figure class="align-center">
+<img alt="Layer setting, temporal tab in QGis" src="_images/temporal_bar_nav.gif" />
+</figure>
+</section>
+</section>
+<section id="case-2-a-road-network-with-traffic-flows-at-regular-intervals">
+<h2>Case 2: A Road Network with Traffic Flows at Regular Intervals<a class="headerlink" href="#case-2-a-road-network-with-traffic-flows-at-regular-intervals" title="Permalink to this heading"></a></h2>
+<p>This case is similar to the <strong>MATSim</strong> use case (<a class="reference external" href="Matsim_Tutorial.rst">here</a>), but this tutorial generalizes the approach to fit other datasets.</p>
+<p>This sample dataset used in this example was kindly provided by Valentin Le Bescond from Université Gustave Eiffel.</p>
+<section id="import-buildings-for-your-study-area">
+<h3>Import Buildings for your study area<a class="headerlink" href="#import-buildings-for-your-study-area" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">File</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Path</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">File</span></code>: Enter the path of building (can be relative to NoiseModelling): <code class="docutils literal notranslate"><span class="pre">resources/Dynamic/Z_EXPORT_TEST_BUILDINGS.geojson</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Projection</span> <span class="pre">identifier</span></code>: Enter SRID <code class="docutils literal notranslate"><span class="pre">2154</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Output</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">buildings</span></code></p></li>
+</ol>
+</section>
+<section id="import-the-road-network">
+<h3>Import the road network<a class="headerlink" href="#import-the-road-network" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">File</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Path</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">File</span></code>: Enter the path of building (can be relative to NoiseModelling): <code class="docutils literal notranslate"><span class="pre">resources/Dynamic/Z_EXPORT_TEST_TRAFFIC.geojson</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Projection</span> <span class="pre">identifier</span></code>: Enter SRID <code class="docutils literal notranslate"><span class="pre">2154</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Output</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">roads</span></code></p></li>
+</ol>
+</section>
+<section id="id1">
+<h3>Create a receiver grid using 25 meters step in a grid pattern<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Regular_Grid</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Table</span> <span class="pre">bounding</span> <span class="pre">box</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">ROADS</span></code> The receivers will use  the envelope of the <code class="docutils literal notranslate"><span class="pre">ROADS</span></code> table.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Offset</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">25</span></code> for 25 meters distance</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">height</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">1.5</span></code></p></li>
+</ol>
+</section>
+<section id="split-geometry-and-traffic-periods">
+<h3>Split geometry and traffic periods<a class="headerlink" href="#split-geometry-and-traffic-periods" title="Permalink to this heading"></a></h3>
+<p>In the table <code class="docutils literal notranslate"><span class="pre">ROADS</span></code>, the traffic information is given for each period in the <code class="docutils literal notranslate"><span class="pre">PERIOD</span></code> column.</p>
+<p>The following Block aggregates roads by the geometry and places the associated pair <code class="docutils literal notranslate"><span class="pre">IDSOURCE</span></code>/<code class="docutils literal notranslate"><span class="pre">PERIOD</span></code>
+with the corresponding road traffic into the <code class="docutils literal notranslate"><span class="pre">SOURCES_EMISSION</span></code> table.</p>
+<p>Use the Block <code class="docutils literal notranslate"><span class="pre">Dynamic::Split_Sources_Period</span></code> :</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">ROADS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">index</span> <span class="pre">field</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">LINK_ID</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">period</span> <span class="pre">field</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">PERIOD</span></code>.</p></li>
+</ol>
+<p>Two output tables are created <code class="docutils literal notranslate"><span class="pre">SOURCES_GEOM</span></code> and <code class="docutils literal notranslate"><span class="pre">SOURCES_EMISSION</span></code></p>
+</section>
+<section id="id2">
+<h3>Compute noise level at receiver points for each receiver-period combination<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">NoiseModelling:Noise_level_from_source</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Buildings</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">geometry</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">SOURCES_GEOM</span></code> Contains only the geometries of the sources (points)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">emission</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">SOURCES_EMISSION</span></code> Contains for each source index and period the noise emission</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Receivers</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">RECEIVERS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Diffraction</span> <span class="pre">on</span> <span class="pre">horizontal</span> <span class="pre">edges</span></code>: Check it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Order</span> <span class="pre">of</span> <span class="pre">reflexion</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">0</span></code></p></li>
+</ol>
+<p>The <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code> output table is created.</p>
+</section>
+<section id="id3">
+<h3>Compute noise indicators<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<p>This step is optional, it computes the LA10, LA50 and LA90 time-aggregated indicators at each receiver from the table <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code>.</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">Acoustic_Tools:DynamicIndicators</span></code> WPS Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tableName</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">columnName</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">LAEQ</span></code></p></li>
+</ol>
+</section>
+<section id="visualizing-results">
+<h3>Visualizing results<a class="headerlink" href="#visualizing-results" title="Permalink to this heading"></a></h3>
+<p>The result table <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code> can be displayed in QGis, if you filter by <code class="docutils literal notranslate"><span class="pre">PERIOD</span></code>.</p>
+</section>
+</section>
+<section id="case-3-spatio-temporal-data-of-moving-sources">
+<h2>Case 3: Spatio-Temporal Data of Moving Sources<a class="headerlink" href="#case-3-spatio-temporal-data-of-moving-sources" title="Permalink to this heading"></a></h2>
+<p>This sample dataset was kindly provided by Sacha Baclet from KTH (See his <a class="reference external" href="https://orcid.org/0000-0003-2114-8680">ORCID</a>).</p>
+<section id="id4">
+<h3>Import Buildings for your study area<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">File</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Path</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">File</span></code>: Enter the path of building (can be relative to NoiseModelling): <code class="docutils literal notranslate"><span class="pre">resources/Dynamic/buildings_nm_ready_pop_heights.shp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Projection</span> <span class="pre">identifier</span></code>: Enter SRID <code class="docutils literal notranslate"><span class="pre">32635</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Output</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">buildings</span></code></p></li>
+</ol>
+</section>
+<section id="import-the-receivers-or-generate-your-set-of-receivers-using-regular-grid-script-for-example">
+<h3>Import the receivers (or generate your set of receivers using Regular_Grid script for example)<a class="headerlink" href="#import-the-receivers-or-generate-your-set-of-receivers-using-regular-grid-script-for-example" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">File</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Path</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">File</span></code>: Enter the path of building (can be relative to NoiseModelling): <code class="docutils literal notranslate"><span class="pre">resources/Dynamic/receivers_python_method0_50m_pop.shp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Projection</span> <span class="pre">identifier</span></code>: Enter SRID <code class="docutils literal notranslate"><span class="pre">32635</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Output</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">receivers</span></code></p></li>
+</ol>
+</section>
+<section id="id5">
+<h3>Import the road network<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">File</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Path</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">File</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">resources/Dynamic/network_tartu_32635_.geojson</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Projection</span> <span class="pre">identifier</span></code>: Enter SRID <code class="docutils literal notranslate"><span class="pre">32635</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Output</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">network_tartu</span></code></p></li>
+</ol>
+</section>
+<section id="add-primary-key-column-to-the-road-network-optional">
+<h3>Add primary key column to the road network (Optional)<a class="headerlink" href="#add-primary-key-column-to-the-road-network-optional" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Add_Primary_Key</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Name</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">column</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">PK</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Name</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">table</span></code>: Enter SRID <code class="docutils literal notranslate"><span class="pre">network_tartu</span></code></p></li>
+</ol>
+</section>
+<section id="import-the-vehicle-trajectories">
+<h3>Import the vehicle trajectories<a class="headerlink" href="#import-the-vehicle-trajectories" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">File</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Path</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">File</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">resources/Dynamic/SUMO.geojson</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Projection</span> <span class="pre">identifier</span></code>: Enter SRID <code class="docutils literal notranslate"><span class="pre">32635</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Output</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">vehicle</span></code></p></li>
+</ol>
+</section>
+<section id="create-point-sources-from-the-network-every-10-meters">
+<h3>Create point sources from the network every 10 meters<a class="headerlink" href="#create-point-sources-from-the-network-every-10-meters" title="Permalink to this heading"></a></h3>
+<p>This point source will be used to compute the noise attenuation level from them to each receiver.
+The created table will be named <code class="docutils literal notranslate"><span class="pre">SOURCES_GEOM</span></code>.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Point_Source_From_Network</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Input</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">network_tartu</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gridStep</span></code>: Enter SRID <code class="docutils literal notranslate"><span class="pre">10</span></code></p></li>
+</ol>
+</section>
+<section id="create-a-table-with-the-noise-level-from-the-vehicles-and-snap-the-vehicles-to-the-point-sources">
+<h3>Create a table with the noise level from the vehicles and snap the vehicles to the point sources<a class="headerlink" href="#create-a-table-with-the-noise-level-from-the-vehicles-and-snap-the-vehicles-to-the-point-sources" title="Permalink to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Ind_Vehicles_2_Noisy_Vehicles</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">geometry</span> <span class="pre">table</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">SOURCES_GEOM</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Individual</span> <span class="pre">Vehicles</span> <span class="pre">table</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">vehicle</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Snap</span> <span class="pre">distance</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">30</span></code> This is the maximal distance (m) to reattach individual vehicle positions to the source points</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Vehicles</span> <span class="pre">table</span> <span class="pre">format</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">SUMO</span></code></p></li>
+</ol>
+</section>
+<section id="compute-noise-attenuation-for-each-receiver-source-pairs">
+<h3>Compute noise attenuation for each receiver-source pairs<a class="headerlink" href="#compute-noise-attenuation-for-each-receiver-source-pairs" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>Unlike the previous tutorial we will use an alternative approach here by storing the attenuation between all sources and receivers first.</dt><dd><p>This attenuation will be applied later to the emission levels for each period.</p>
+</dd>
+</dl>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">NoiseModelling:Noise_level_from_source</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Buildings</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">BUILDINGS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">geometry</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">SOURCES_GEOM</span></code> Contains only the geometries of the sources (points)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Receivers</span> <span class="pre">table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">RECEIVERS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Maximum</span> <span class="pre">source</span> <span class="pre">receiver</span> <span class="pre">distance</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">300</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Diffraction</span> <span class="pre">on</span> <span class="pre">horizontal</span> <span class="pre">edges</span></code>: Check it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Order</span> <span class="pre">of</span> <span class="pre">reflexion</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Separate</span> <span class="pre">receiver</span> <span class="pre">level</span> <span class="pre">by</span> <span class="pre">source</span> <span class="pre">identifier</span></code>: Check it to have the SOURCEID column on the output</p></li>
+</ol>
+</section>
+<section id="apply-attenuation-on-emission-levels">
+<h3>Apply attenuation on emission levels<a class="headerlink" href="#apply-attenuation-on-emission-levels" title="Permalink to this heading"></a></h3>
+<p>Compute the noise level from the moving vehicles to the receivers.
+The output table is called here <code class="docutils literal notranslate"><span class="pre">LT_GEOM</span></code> and contains the time series of the noise level at each receiver.</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">Dynamic:Noise_From_Attenuation_Matrix</span></code> Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LW(PERIOD)</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">SOURCES_EMISSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Attenuation</span> <span class="pre">Matrix</span> <span class="pre">Table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">RECEIVERS_LEVEL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputTable</span> <span class="pre">Matrix</span> <span class="pre">Table</span> <span class="pre">name</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">LT_GEOM</span></code></p></li>
+</ol>
+</section>
+<section id="id6">
+<h3>Compute noise indicators<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
+<p>This step is optional, it computes the LA10, LA50 and LA90 time-aggregated indicators at each receiver from the table <code class="docutils literal notranslate"><span class="pre">LT_GEOM</span></code></p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">Acoustic_Tools:DynamicIndicators</span></code> WPS Block</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tableName</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">LT_GEOM</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">columnName</span></code>: Enter <code class="docutils literal notranslate"><span class="pre">LAEQ</span></code></p></li>
+</ol>
+</section>
+<section id="id7">
+<h3>Visualizing results<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
+<p>The result table <code class="docutils literal notranslate"><span class="pre">LT_GEOM</span></code> can be displayed into QGis, if you filter by <code class="docutils literal notranslate"><span class="pre">PERIOD</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All this tutorial done with Groovy is written on this unit test source code: <a class="reference external" href="https://github.com/Universite-Gustave-Eiffel/NoiseModelling/blob/main/noisemodelling-scripts/src/test/groovy/org/noise_planet/noisemodelling/scripts/TestDynamic.groovy">Github source</a></p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Tutorial_Matsim.html" class="btn btn-neutral float-left" title="MATSim - GUI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Tutorial_Data_Assimilation.html" class="btn btn-neutral float-right" title="Data Assimilation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, UMRAE - Lab-STICC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
