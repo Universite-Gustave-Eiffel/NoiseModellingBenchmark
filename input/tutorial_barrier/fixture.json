@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "case": "tutorial-barrier",
+  "supported_engine_versions": [
+    "v5.0.1"
+  ],
+  "code_license": "GPL-3.0-only",
+  "data_license": "No separate tutorial-data grant found; fetch locally from official distribution; do not redistribute inputs",
+  "data_source": "https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v5.0.1/NoiseModelling_without_gui-5.0.1.zip",
+  "official_archive_sha256": "876ed1c69525ffa999779a0c4d3d00898d693f6e058fc951d11b4068eddb9f86",
+  "source_resource_sha256": {
+    "ROADS2.dbf": "91dcf2e33bc405ac995186a2b0d353217e353e75d732c020d1691913818985fa",
+    "ROADS2.prj": "ac2f5da6f1cb30b8c88e10d514762f6e7492463233bf1400e8f3a1169e31a840",
+    "ROADS2.shp": "cf61302a68c38af6fa938d903a4ad887bd2dca4fdb14353b833dd6cca8f904ca",
+    "ROADS2.shx": "066245752218049bc37fd7125df7ed37bc9df6727f70dfab506d475a7eaa30ca",
+    "buildings.dbf": "b0b1fdeb15a5186fdbe65a03a3bc6299ce81289ee90c7ee894a5ff1dcf8623c8",
+    "buildings.prj": "ac2f5da6f1cb30b8c88e10d514762f6e7492463233bf1400e8f3a1169e31a840",
+    "buildings.shp": "83bc339602b5081491149db78af0207631c1632c7f303172820d6544db08ff57",
+    "buildings.shx": "572f71dbf9110a708842e4979c26d365a7c5ff10ea3a77de2b4bec19e5df1b6b",
+    "dem.geojson": "b1e6ea2785c5bed13be6c1e4849de0e8765d94b09891a507419e0002f8c473fd",
+    "ground_type.dbf": "4c06016650363124509627654299144d70c62a46d9172da9cf45363e1f2926ab",
+    "ground_type.prj": "ac2f5da6f1cb30b8c88e10d514762f6e7492463233bf1400e8f3a1169e31a840",
+    "ground_type.shp": "91767037a0ef1ecab47b5a7e6cf53bde6b7c7c666ef5ab1d410d0710655da6a6",
+    "ground_type.shx": "e93435eae033066524cba5da041b05b0fcf2c20eb616e95e68e3ac3797aeac5f",
+    "receivers.dbf": "24886c8110aa16a694de44cedd6344ff7ee253fbe54744369a8f68fd68c0461b",
+    "receivers.prj": "ac2f5da6f1cb30b8c88e10d514762f6e7492463233bf1400e8f3a1169e31a840",
+    "receivers.shp": "44b3b51b288f488c304b76a6338ffe2e012a250f20e678216fcc04cd50e4d5eb",
+    "receivers.shx": "dd59c28820c54e1287042afcacceb01e324af68137aa34bdb3b565a7d9fc6e81"
+  },
+  "heights_m": [
+    1,
+    3,
+    5
+  ],
+  "screen_id": 1702,
+  "screen_wkt": "POLYGON((223495.9880411485 6757177.88900822,223515.9880411485 6757177.88900822,223515.9880411485 6757178.08900822,223495.9880411485 6757178.08900822,223495.9880411485 6757177.88900822))",
+  "srid": 2154,
+  "configuration": {
+    "threads": 1,
+    "reflection_order": 1,
+    "maximum_source_distance_m": 150,
+    "maximum_reflection_distance_m": 50,
+    "diffraction_horizontal": true,
+    "diffraction_vertical": true,
+    "temperature_c": 20,
+    "humidity_percent": 70,
+    "wall_absorption": 0.1
+  },
+  "engines": {
+    "v5.0.0": {
+      "release_url": "https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v5.0.0/NoiseModelling_without_gui.zip",
+      "official_archive_sha256": "10351f2d9d6c9807e26d7addb9505cb6db1576c0480bb39fd9f0b244c9a11113",
+      "stock_script_sha256": {
+        "noisemodelling/wps/Import_and_Export/Import_File.groovy": "2a988ed261154d8524711ddafdc75156be152c2059addc1221fd9d3e99540b96",
+        "noisemodelling/wps/NoiseModelling/Noise_level_from_traffic.groovy": "9cbfdefd23b08bc1052aed6f5d3961bf89812bb4847cf8f9f8e3ac66a32503a6",
+        "noisemodelling/wps/Import_and_Export/Export_Table.groovy": "1b3acb6d403ae62883db3433844ee6ecad5cea777a206287a1d69ed782bf37a5"
+      },
+      "packaging_note": "Official v5.0.0 archive contains 5.0.0-SNAPSHOT jar filenames",
+      "status": "Diagnostic pins only: H1 calculation/export completed, but the stock JVM retained an idle non-daemon executor; public family runner refuses this version."
+    },
+    "v5.0.1": {
+      "release_url": "https://github.com/Universite-Gustave-Eiffel/NoiseModelling/releases/download/v5.0.1/NoiseModelling_without_gui-5.0.1.zip",
+      "official_archive_sha256": "876ed1c69525ffa999779a0c4d3d00898d693f6e058fc951d11b4068eddb9f86",
+      "stock_script_sha256": {
+        "noisemodelling/wps/Import_and_Export/Import_File.groovy": "2a988ed261154d8524711ddafdc75156be152c2059addc1221fd9d3e99540b96",
+        "noisemodelling/wps/NoiseModelling/Noise_level_from_traffic.groovy": "4acff632979e085153d3fea095640931820418b2ca87a8a36b55dc406f6f43b9",
+        "noisemodelling/wps/Import_and_Export/Export_Table.groovy": "1b3acb6d403ae62883db3433844ee6ecad5cea777a206287a1d69ed782bf37a5"
+      },
+      "status": "Supported by the public family runner; H1/H3/H5 complete native runs checked."
+    }
+  }
+}

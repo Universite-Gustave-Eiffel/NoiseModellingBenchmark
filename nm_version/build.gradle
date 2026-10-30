@@ -6,6 +6,9 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
+import org.gradle.api.tasks.compile.GroovyCompile
+import org.gradle.api.tasks.testing.Test
+
 plugins {
     // Apply the groovy Plugin to add support for Groovy.
     id 'groovy'
@@ -26,11 +29,62 @@ dependencies {
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
+        languageVersion = JavaLanguageVersion.of(
+                providers.gradleProperty('nmJavaLanguage').orElse('11').get() as int)
     }
 }
 
 application {
     // Define the main class for the application.
     mainClass = 'org.noisemodelling.runner.Main'
+}
+
+// A small fixture-only test task. Legacy scripts target several incompatible NM
+// versions, so they and the generated AppTest are not compiled by this task.
+// Use an already installed official 5.0.1 distribution; no engine build is needed.
+def tutorialStock = rootProject.file(
+        providers.gradleProperty('nmStockDir').orElse('input/NoiseModelling_without_gui_v5.0.1').get())
+def tutorialLibraries = fileTree(new File(tutorialStock, 'lib')) { include '*.jar' }
+def tutorialGroovy = fileTree(new File(tutorialStock, 'lib')) { include 'groovy-*.jar' }
+def tutorialClasses = layout.buildDirectory.dir('classes/groovy/tutorialFixtureTest')
+def tutorialLauncher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(
+            providers.gradleProperty('nmJavaLanguage').orElse('11').get() as int)
+}
+
+def compileTutorialFixtureTest = tasks.register('compileTutorialFixtureTest', GroovyCompile) {
+    source files('src/main/groovy/runscriptTutorialV5.groovy',
+            'src/test/groovy/TutorialBarrierFamilyTest.groovy')
+    classpath = tutorialLibraries
+    groovyClasspath = tutorialGroovy
+    destinationDirectory = tutorialClasses
+    javaLauncher = tutorialLauncher
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
+    options.encoding = 'UTF-8'
+    groovyOptions.encoding = 'UTF-8'
+    doFirst {
+        if (!new File(tutorialStock, 'lib/groovy-2.5.23.jar').isFile() ||
+                !new File(tutorialStock, 'lib/junit-4.13.2.jar').isFile()) {
+            throw new GradleException('Set -PnmStockDir to an official NoiseModelling 5.0.1 distribution')
+        }
+    }
+}
+
+tasks.register('tutorialFixtureTest', Test) {
+    group = 'verification'
+    description = 'Check the tutorial fixture and native receiver comparison, without running a noise map'
+    dependsOn compileTutorialFixtureTest
+    testClassesDirs = files(tutorialClasses)
+    classpath = files(tutorialClasses, tutorialLibraries)
+    javaLauncher = tutorialLauncher
+    useJUnit()
+    maxParallelForks = 1
+    enableAssertions = false
+    workingDir = rootProject.projectDir
+    systemProperty 'nmBenchmarkRoot', rootProject.projectDir.absolutePath
+    systemProperty 'nmPython', providers.gradleProperty('nmPython').orElse('python3').get()
+    inputs.file(rootProject.file('compare_versions.py'))
+    filter { includeTestsMatching 'TutorialBarrierFamilyTest' }
+    testLogging { events 'passed', 'failed', 'skipped' }
 }

@@ -13,3 +13,5 @@ plugins {
 
 rootProject.name = 'NoiseModellingBenchmark'
 include('nm_v5.0')
+// Keep the existing project name while using its checked-in directory.
+project(':nm_v5.0').projectDir = file('nm_version')

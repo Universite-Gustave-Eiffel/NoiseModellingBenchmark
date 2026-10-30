@@ -1,15 +1,140 @@
 # NoiseModelling Benchmark website generator
 
-This code will download:
-
-1. main versions of NoiseModelling
-2. reference input data (Clisson)
-
-Then will run with the same parameters and output the result as a static website and publish it on github pages.
-
-To generate the static site (linux/macos only):
+Run from the repository root. The existing benchmark downloads NoiseModelling
+versions and uses the Clisson reference input, then publishes results as a
+static website. The tutorial adapter requires Python 3.11 or later and Java 17;
+set `JAVA_HOME` to the selected JDK. It uses the engine's existing command-line
+launcher. A controlled single-processor JVM profile can be selected explicitly:
 
 ```bash
-bash run.sh
+export JAVA_HOME=/path/to/jdk-17
+export JAVA_OPTS="-Xms128m -Xmx4g -XX:ActiveProcessorCount=1"
 ```
 
+The heap/processor options above are optional and should be kept the same when
+comparing runs. The tutorial calculation itself requests one native thread.
+
+```bash
+bash benchmark_run.sh --version v5.0.1
+bash benchmark_run.sh --aggregate-only
+```
+
+Running `bash benchmark_run.sh` keeps the existing sequential Clisson workflow.
+The website is generated in `website/`.
+
+## Tutorial barrier family
+
+The additional case uses the official NoiseModelling 5.0.1 tutorial scene
+(EPSG:2154). One fixed screen footprint, building PK 1702, is evaluated at three
+heights: 1, 3 and 5 metres. Each height has its own fresh database workspace.
+The supported command-line workflow uses the official **v5.0.1** distribution
+and exactly the pinned **5.0.1 tutorial data**. Other versions need a validated
+adapter before they can run this case.
+
+A diagnostic v5.0.0 H1 run produced the complete native export, but its stock
+JVM remained alive after export. Because of this observed shutdown limitation,
+the public command refuses v5.0.0. Its diagnostic script/archive pins are kept
+for future adapter work; they do not establish a supported workflow.
+
+```bash
+bash benchmark_run.sh --case tutorial-barrier --version v5.0.1
+bash benchmark_run.sh --aggregate-only
+```
+
+The existing engine downloader obtains the selected official distribution and
+the 5.0.1 fixture distribution if needed. The command always supplies the 5.0.1
+fixture directory explicitly to `input/tutorial_barrier/prepare_tutorial.py`.
+The preparation script selects the engine's declared stock-script hashes,
+stages the fixed tutorial resources and writes `PINS.json`. Run families
+sequentially when sharing a checkout and its preparation receipt. It checks the declared resource hashes and the three stock
+Groovy scripts which the case actually loads. The Groovy entry point rechecks
+these bytes before importing data or loading the scripts. The tutorial assets
+remain local inputs from the official distribution; they are not included in
+this contribution. A separate tutorial-data redistribution grant has not been
+identified; data licensing remains **UNKNOWN** here. Input and generated export
+payloads stay local. Their source and licensing information is recorded in
+`input/tutorial_barrier/fixture.json`.
+
+Outputs are stored in:
+
+```text
+output/v5.0.1/tutorial-barrier/H1/
+output/v5.0.1/tutorial-barrier/H3/
+output/v5.0.1/tutorial-barrier/H5/
+```
+
+
+Each directory contains `workspace/`, `simulation.log`, `stats_v5.0.1.json`,
+`RECEIVERS_LEVEL.csv`, `RECEIVERS_LEVEL.geojson`, `IDENTITY.json` and the complete
+CSV observer result. Existing height directories are refused rather than
+reused. Keep reference outputs in a separate checkout or directory for a
+repeat comparison.
+
+Statistics record preparation, native calculation, export and complete script
+seconds. Script time ends after the full native exports and excludes the small
+JSON receipts, JVM startup and shutdown. Resource staging by the preparation
+script and CSV validation are separate steps outside this script timer. The separate
+`website/tutorial-barrier.html` table displays all three heights; its JSON is
+under `website/data/tutorial-barrier/`. Clisson results and charts keep their
+existing paths. Existing CI artifacts for `output/<version>/` also include any
+completed tutorial cases.
+
+## Complete receiver comparisons
+
+The existing `compare_versions.py` handles both numerical GeoJSON comparisons
+and complete native CSV observation. Aggregation validates every available
+tutorial export, compares like heights across available engine versions and
+retains the existing LAEQ comparison. The CSV observer covers every column and
+row, including the header and serialized order; it does not sample or
+canonicalize the output.
+
+```bash
+python3 compare_versions.py --check-receivers-csv \
+  output/v5.0.1/tutorial-barrier/H1/RECEIVERS_LEVEL.csv
+
+python3 compare_versions.py --compare-receivers-csv \
+  /path/to/reference/H1/RECEIVERS_LEVEL.csv \
+  output/v5.0.1/tutorial-barrier/H1/RECEIVERS_LEVEL.csv
+```
+
+`IDENTITY.json` is read beside each CSV. `--identity-a` and `--identity-b` can
+supply explicit sidecar paths. The identity binds the engine version, dataset
+hashes, screen height and footprint, screen PK 1702, SRID 2154, configuration,
+actual stock-script hashes, source counts, complete native row count and all
+native column names.
+
+Missing identities or required IDRECEIVER/PERIOD/THE_GEOM/LAEQ/LEQ columns,
+duplicate receiver/period
+keys, nonfinite fields, malformed rows or disagreement with the declared header/count are refused. Native
+propagation can omit source receivers, so the exported row count is checked
+against the native result table rather than a presumed receiver/period product.
+
+The dataset, height, footprint, screen identifier, SRID, source-table counts and
+configuration must agree between files.
+Across engine versions, script hashes can differ; for repeated runs of the same
+version, different loaded-script hashes are refused. Byte differences between
+valid exports are reported as differences, including expected changes across
+engine versions.
+
+CSV mode emits JSON and exits with:
+
+- `0`: a valid single export, or two valid byte-identical exports;
+- `1`: valid comparable exports with different bytes;
+- `2`: an invalid or incompatible export/identity contract.
+
+Comparison and validation run after simulation, outside the recorded native
+calculation and script timing.
+
+## Fixture and observer tests
+
+Run the existing Gradle test target with a local official 5.0.1 distribution:
+
+```bash
+./gradlew :nm_v5.0:tutorialFixtureTest \
+  -PnmStockDir=/absolute/path/to/NoiseModelling_without_gui_v5.0.1 \
+  -PnmJavaLanguage=17
+```
+
+This target compiles the tutorial case and runs fixture/observer unit checks;
+it does not perform noise calculations. A native family run is the separate,
+explicit `benchmark_run.sh --case tutorial-barrier --version v5.0.1` command.
