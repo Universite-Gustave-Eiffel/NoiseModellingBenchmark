@@ -136,6 +136,62 @@ run_simulation() {
     fi
 }
 
+# An opt-in additional case. The historical Clisson entry points and paths stay
+# unchanged; existing output/<version> CI artifacts also carry this family.
+run_tutorial_family() {
+    local version="$1"
+    if [ "$version" != "v5.0.1" ]; then
+        if [ "$version" = "v5.0.0" ]; then
+            echo "tutorial-barrier v5.0.0 is unsupported: the stock JVM can remain alive after export (known shutdown limitation)" >&2
+        else
+            echo "tutorial-barrier currently supports v5.0.1 only; other versions need an adapter" >&2
+        fi
+        return 2
+    fi
+    local nm_dir="$INPUT_DIR/NoiseModelling_without_gui_${version}"
+    local fixture_nm_dir="$INPUT_DIR/NoiseModelling_without_gui_v5.0.1"
+    local family_dir="$OUTPUT_DIR/$version/tutorial-barrier"
+    local height
+    for height in 1 3 5; do
+        if [ -e "$family_dir/H$height" ]; then
+            echo "Refusing to overwrite tutorial case $family_dir/H$height" >&2
+            return 2
+        fi
+    done
+    # Keep the dataset fixed independently of future engine adapters.
+    if [ ! -d "$fixture_nm_dir" ]; then
+        download_nm_version "v5.0.1" "${NM_VERSIONS[v5.0.1]}" || return 1
+    fi
+    if [ ! -d "$nm_dir" ]; then
+        download_nm_version "$version" "${NM_VERSIONS[$version]}" || return 1
+    fi
+    local stock_dir fixture_stock_dir fixture_dir pins_file script wps_bin
+    stock_dir=$(cd "$nm_dir" && pwd -P) || return 1
+    fixture_stock_dir=$(cd "$fixture_nm_dir" && pwd -P) || return 1
+    python3 input/tutorial_barrier/prepare_tutorial.py \
+        --engine-version "$version" --stock-dir "$stock_dir" \
+        --fixture-stock-dir "$fixture_stock_dir" || return 1
+    fixture_dir=$(cd input/tutorial_barrier/resources && pwd) || return 1
+    pins_file="$(pwd)/input/tutorial_barrier/PINS.json"
+    script="$(pwd)/nm_version/src/main/groovy/runscriptTutorialV5.groovy"
+    wps_bin=$(find_wps_binary "$stock_dir") || return 1
+    mkdir -p "$family_dir" || return 1
+    for height in 1 3 5; do
+        local out_dir="$family_dir/H$height"
+        mkdir "$out_dir" || return 2
+        mkdir "$out_dir/workspace" || return 1
+        out_dir=$(cd "$out_dir" && pwd) || return 1
+        echo "Running tutorial-barrier H${height}, $version"
+        "$wps_bin" -w "$out_dir/workspace" -s "$script" \
+            -NM_version "$version" -barrier_height "$height" \
+            -output_dir "$out_dir" -stock_dir "$stock_dir" \
+            -fixture_dir "$fixture_dir" -pins_file "$pins_file" \
+            > "$out_dir/simulation.log" 2>&1 || return 1
+        python3 compare_versions.py --check-receivers-csv "$out_dir/RECEIVERS_LEVEL.csv" \
+            > "$out_dir/CSV_OBSERVER.json" || return 1
+    done
+}
+
 aggregate_results() {
     local agg_file="$DATA_DIR/results.json"
 
@@ -280,17 +336,49 @@ run_all_sequential() {
 }
 
 main() {
-    case "${1:-}" in
-        --version)
-            run_one_version "$2"
-            ;;
-        --aggregate-only)
-            run_aggregate_only
-            ;;
-        *)
-            run_all_sequential
-            ;;
-    esac
+    local mode="all" version="" benchmark_case="clisson"
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --version)
+                if [ "$#" -lt 2 ] || [ -z "$2" ]; then
+                    echo "--version requires a version" >&2
+                    return 2
+                fi
+                mode="version"; version="$2"; shift 2
+                ;;
+            --case)
+                if [ "$#" -lt 2 ] || [ -z "$2" ]; then
+                    echo "--case requires clisson or tutorial-barrier" >&2
+                    return 2
+                fi
+                benchmark_case="$2"; shift 2
+                ;;
+            --aggregate-only)
+                mode="aggregate"; shift
+                ;;
+            *)
+                echo "Usage: bash benchmark_run.sh [--version VERSION] [--case clisson|tutorial-barrier] [--aggregate-only]" >&2
+                return 2
+                ;;
+        esac
+    done
+    if [ "$benchmark_case" != "clisson" ] && [ "$benchmark_case" != "tutorial-barrier" ]; then
+        echo "Unknown benchmark case: $benchmark_case" >&2
+        return 2
+    fi
+    if [ "$mode" = "aggregate" ]; then
+        run_aggregate_only
+    elif [ "$benchmark_case" = "tutorial-barrier" ]; then
+        if [ "$mode" != "version" ]; then
+            echo "tutorial-barrier requires --version v5.0.1" >&2
+            return 2
+        fi
+        run_tutorial_family "$version"
+    elif [ "$mode" = "version" ]; then
+        run_one_version "$version"
+    else
+        run_all_sequential
+    fi
 }
 
 main "$@"
